@@ -1,5 +1,20 @@
 # Changelog
 
+## 0.1.0-alpha.6 (2026-05-18)
+
+Full Changelog: [v0.1.0-alpha.5...v0.1.0-alpha.6](https://github.com/turbopuffer/turbopuffer-csharp/compare/v0.1.0-alpha.5...v0.1.0-alpha.6)
+
+### Features
+
+* add toggleable request and response compression ([#13](https://github.com/turbopuffer/turbopuffer-csharp/issues/13)) ([05b4c40](https://github.com/turbopuffer/turbopuffer-csharp/commit/05b4c40787c90e56078beaf55a0bb266f36ec69f))
+* spec: rename csharp SDK package to Turbopuffer ([29fe3cd](https://github.com/turbopuffer/turbopuffer-csharp/commit/29fe3cd9722e1449227279b216e85080dd6d89cc))
+
+
+### Bug Fixes
+
+* serialize boxed apigen subtypes correctly ([#16](https://github.com/turbopuffer/turbopuffer-csharp/issues/16)) ([604552c](https://github.com/turbopuffer/turbopuffer-csharp/commit/604552c5b27e9fbcc398689ebdf4d808ec0c330c))
+* wrap BranchFrom request body in branch_from_namespace ([#14](https://github.com/turbopuffer/turbopuffer-csharp/issues/14)) ([cef1e6c](https://github.com/turbopuffer/turbopuffer-csharp/commit/cef1e6c17de8dc273b76ed04a84fc4accff869c1))
+
 ## 0.1.0-alpha.5 (2026-05-18)
 
 Full Changelog: [v0.1.0-alpha.4...v0.1.0-alpha.5](https://github.com/turbopuffer/turbopuffer-csharp/compare/v0.1.0-alpha.4...v0.1.0-alpha.5)
