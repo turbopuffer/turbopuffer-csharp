@@ -77,12 +77,12 @@ public record class NamespaceWriteParams : ParamsBase
     /// <summary>
     /// The filter specifying which documents to delete.
     /// </summary>
-    public JsonElement? DeleteByFilter
+    public Filter? DeleteByFilter
     {
         get
         {
             this._rawBodyData.Freeze();
-            return this._rawBodyData.GetNullableStruct<JsonElement>("delete_by_filter");
+            return this._rawBodyData.GetNullableClass<Filter>("delete_by_filter");
         }
         init
         {
@@ -120,12 +120,12 @@ public record class NamespaceWriteParams : ParamsBase
     /// A condition evaluated against the current value of each document targeted
     /// by a delete write. Only documents that pass the condition are deleted.
     /// </summary>
-    public JsonElement? DeleteCondition
+    public Filter? DeleteCondition
     {
         get
         {
             this._rawBodyData.Freeze();
-            return this._rawBodyData.GetNullableStruct<JsonElement>("delete_condition");
+            return this._rawBodyData.GetNullableClass<Filter>("delete_condition");
         }
         init
         {
@@ -292,12 +292,12 @@ public record class NamespaceWriteParams : ParamsBase
     /// A condition evaluated against the current value of each document targeted
     /// by a patch write. Only documents that pass the condition are patched.
     /// </summary>
-    public JsonElement? PatchCondition
+    public Filter? PatchCondition
     {
         get
         {
             this._rawBodyData.Freeze();
-            return this._rawBodyData.GetNullableStruct<JsonElement>("patch_condition");
+            return this._rawBodyData.GetNullableClass<Filter>("patch_condition");
         }
         init
         {
@@ -406,12 +406,12 @@ public record class NamespaceWriteParams : ParamsBase
     /// A condition evaluated against the current value of each document targeted
     /// by an upsert write. Only documents that pass the condition are upserted.
     /// </summary>
-    public JsonElement? UpsertCondition
+    public Filter? UpsertCondition
     {
         get
         {
             this._rawBodyData.Freeze();
-            return this._rawBodyData.GetNullableStruct<JsonElement>("upsert_condition");
+            return this._rawBodyData.GetNullableClass<Filter>("upsert_condition");
         }
         init
         {

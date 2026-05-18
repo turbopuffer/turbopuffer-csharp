@@ -323,7 +323,7 @@ NamespaceWriteParams parameters = new
 {
     // Documented properties can still be added here.
     // In case of conflict, these parameters take precedence over the custom parameters.
-    DeleteByFilter = JsonSerializer.Deserialize<JsonElement>("{}")
+    DeleteByFilter = Filter.Eq("attr", "value")
 };
 ```
 
