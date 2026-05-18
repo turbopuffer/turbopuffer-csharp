@@ -113,7 +113,7 @@ The `WithOptions` method does not affect the original client or service.
 
 To send a request to the Turbopuffer API, build an instance of some `Params` class and pass it to the corresponding client method. When the response is received, it will be deserialized into an instance of a C# class.
 
-For example, `client.Namespaces1.Write` should be called with an instance of `NamespaceWriteParams`, and it will return an instance of `Task<NamespaceWriteResponse>`.
+For example, `client.Namespace("ns").Write` should be called with an instance of `NamespaceWriteParams`, and it will return an instance of `Task<NamespaceWriteResponse>`.
 
 ## Raw responses
 
@@ -122,7 +122,7 @@ The SDK defines methods that deserialize responses into instances of C# classes.
 To access this data, prefix any HTTP method call on a client or service with `WithRawResponse`:
 
 ```csharp
-var response = await client.WithRawResponse.Namespaces1();
+var response = await client.WithRawResponse.Namespace("ns").Write(parameters);
 var statusCode = response.StatusCode;
 var headers = response.Headers;
 ```
@@ -133,10 +133,10 @@ For non-streaming responses, you can deserialize the response into an instance o
 
 ```csharp
 using System;
-using Turbopuffer.Client.Models;
+using Turbopuffer.Client.Models.Namespaces;
 
-var response = await client.WithRawResponse.Namespaces1();
-ClientNamespacesPage deserialized = await response.Deserialize();
+var response = await client.WithRawResponse.Namespace("ns").Write(parameters);
+NamespaceWriteResponse deserialized = await response.Deserialize();
 Console.WriteLine(deserialized);
 ```
 
@@ -398,7 +398,7 @@ To access undocumented response properties, the `RawData` property can be used:
 ```csharp
 using System.Text.Json;
 
-var response = client.Namespaces1.Write(parameters)
+var response = client.Namespace("ns").Write(parameters)
 if (response.RawData.TryGetValue("my_custom_key", out JsonElement value))
 {
     // Do something with `value`
@@ -416,7 +416,7 @@ By default, the SDK will not throw an exception in this case. It will throw `Tur
 If you would prefer to check that the response is completely well-typed upfront, then either call `Validate`:
 
 ```csharp
-var response = client.Namespaces1.Write(parameters);
+var response = client.Namespace("ns").Write(parameters);
 response.Validate();
 ```
 
@@ -437,7 +437,7 @@ var response = await client
     .WithOptions(options =>
         options with { ResponseValidation = true }
     )
-    .Namespaces1.Write(parameters);
+    .Namespace("ns").Write(parameters);
 
 Console.WriteLine(response);
 ```
