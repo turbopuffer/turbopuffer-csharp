@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace Turbopuffer.Client.Examples;
+namespace Turbopuffer.Examples;
 
 static class Program
 {
@@ -22,7 +22,7 @@ static class Program
         if (args.Length != 1 || !Examples.TryGetValue(args[0], out var run))
         {
             Console.Error.WriteLine(
-                "usage: dotnet run --project examples/Turbopuffer.Client.Examples <example>"
+                "usage: dotnet run --project examples/Turbopuffer.Examples <example>"
             );
             Console.Error.WriteLine("");
             Console.Error.WriteLine("available examples:");

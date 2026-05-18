@@ -1,15 +1,15 @@
 // Upserts several large batches of documents and prints the total time taken.
 //
-// Run this example with: dotnet run --project examples/Turbopuffer.Client.Examples BulkWrite
+// Run this example with: dotnet run --project examples/Turbopuffer.Examples BulkWrite
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Text.Json;
 using System.Threading.Tasks;
-using Turbopuffer.Client;
-using Turbopuffer.Client.Models.Namespaces;
+using Turbopuffer;
+using Turbopuffer.Models.Namespaces;
 
-namespace Turbopuffer.Client.Examples;
+namespace Turbopuffer.Examples;
 
 static class BulkWrite
 {
