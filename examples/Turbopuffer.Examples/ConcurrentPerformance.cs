@@ -2,7 +2,7 @@
 // This example writes data to a number of namespaces and makes concurrent
 // queries while monitoring total execution time and peak memory usage.
 //
-// Run this example with: dotnet run --project examples/Turbopuffer.Client.Examples ConcurrentPerformance
+// Run this example with: dotnet run --project examples/Turbopuffer.Examples ConcurrentPerformance
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -10,11 +10,11 @@ using System.Linq;
 using System.Net.Http;
 using System.Text.Json;
 using System.Threading.Tasks;
-using Turbopuffer.Client;
-using Turbopuffer.Client.Exceptions;
-using Turbopuffer.Client.Models.Namespaces;
+using Turbopuffer;
+using Turbopuffer.Exceptions;
+using Turbopuffer.Models.Namespaces;
 
-namespace Turbopuffer.Client.Examples;
+namespace Turbopuffer.Examples;
 
 static class ConcurrentPerformance
 {

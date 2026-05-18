@@ -1,16 +1,16 @@
 // A straightforward example of storing and retrieving documents via vector
 // similarity search.
 //
-// Run this example with: dotnet run --project examples/Turbopuffer.Client.Examples WriteAndQuery
+// Run this example with: dotnet run --project examples/Turbopuffer.Examples WriteAndQuery
 using System;
 using System.Collections.Generic;
 using System.Text.Json;
 using System.Threading.Tasks;
-using Turbopuffer.Client;
-using Turbopuffer.Client.Exceptions;
-using Turbopuffer.Client.Models.Namespaces;
+using Turbopuffer;
+using Turbopuffer.Exceptions;
+using Turbopuffer.Models.Namespaces;
 
-namespace Turbopuffer.Client.Examples;
+namespace Turbopuffer.Examples;
 
 static class WriteAndQuery
 {
