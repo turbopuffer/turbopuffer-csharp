@@ -9,12 +9,12 @@ cd -- "$(dirname -- "$0")/.."
 echo "==> Running tests"
 dotnet test
 
-for example in examples/Turbopuffer.Examples/*.cs; do
+for example in examples/Turbopuffer.Client.Examples/*.cs; do
   example=$(basename "$example" .cs)
   # Program.cs is the driver that dispatches to the examples, not an example.
   if [ "$example" = "Program" ]; then
     continue
   fi
   echo "==> Running $example example"
-  dotnet run --project examples/Turbopuffer.Examples "$example"
+  dotnet run --project examples/Turbopuffer.Client.Examples "$example"
 done
