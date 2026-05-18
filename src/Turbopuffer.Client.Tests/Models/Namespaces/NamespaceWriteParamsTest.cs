@@ -16,9 +16,9 @@ public class NamespaceWriteParamsTest : TestBase
             Namespace = "namespace",
             BranchFromNamespace = "string",
             CopyFromNamespace = "string",
-            DeleteByFilter = JsonSerializer.Deserialize<JsonElement>("{}"),
+            DeleteByFilter = new FilterRaw(JsonSerializer.Deserialize<JsonElement>("{}")),
             DeleteByFilterAllowPartial = true,
-            DeleteCondition = JsonSerializer.Deserialize<JsonElement>("{}"),
+            DeleteCondition = new FilterRaw(JsonSerializer.Deserialize<JsonElement>("{}")),
             Deletes = ["182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"],
             DisableBackpressure = true,
             DistanceMetric = DistanceMetric.CosineDistance,
@@ -37,7 +37,7 @@ public class NamespaceWriteParamsTest : TestBase
                 ID = ["182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"],
                 Vector = new([new([0])]),
             },
-            PatchCondition = JsonSerializer.Deserialize<JsonElement>("{}"),
+            PatchCondition = new FilterRaw(JsonSerializer.Deserialize<JsonElement>("{}")),
             PatchRows = [new() { ID = "182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e", Vector = new([0]) }],
             ReturnAffectedIds = true,
             Schema = new Dictionary<string, AttributeSchema>() { { "foo", "string" } },
@@ -46,7 +46,7 @@ public class NamespaceWriteParamsTest : TestBase
                 ID = ["182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"],
                 Vector = new([new([0])]),
             },
-            UpsertCondition = JsonSerializer.Deserialize<JsonElement>("{}"),
+            UpsertCondition = new FilterRaw(JsonSerializer.Deserialize<JsonElement>("{}")),
             UpsertRows = [new() { ID = "182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e", Vector = new([0]) }],
         };
 
@@ -97,12 +97,18 @@ public class NamespaceWriteParamsTest : TestBase
         Assert.Equal(expectedCopyFromNamespace, parameters.CopyFromNamespace);
         Assert.NotNull(parameters.DeleteByFilter);
         Assert.True(
-            JsonElement.DeepEquals(expectedDeleteByFilter, parameters.DeleteByFilter.Value)
+            JsonElement.DeepEquals(
+                expectedDeleteByFilter,
+                ((FilterRaw)parameters.DeleteByFilter).Value
+            )
         );
         Assert.Equal(expectedDeleteByFilterAllowPartial, parameters.DeleteByFilterAllowPartial);
         Assert.NotNull(parameters.DeleteCondition);
         Assert.True(
-            JsonElement.DeepEquals(expectedDeleteCondition, parameters.DeleteCondition.Value)
+            JsonElement.DeepEquals(
+                expectedDeleteCondition,
+                ((FilterRaw)parameters.DeleteCondition).Value
+            )
         );
         Assert.NotNull(parameters.Deletes);
         Assert.Equal(expectedDeletes.Count, parameters.Deletes.Count);
@@ -118,7 +124,10 @@ public class NamespaceWriteParamsTest : TestBase
         Assert.Equal(expectedPatchColumns, parameters.PatchColumns);
         Assert.NotNull(parameters.PatchCondition);
         Assert.True(
-            JsonElement.DeepEquals(expectedPatchCondition, parameters.PatchCondition.Value)
+            JsonElement.DeepEquals(
+                expectedPatchCondition,
+                ((FilterRaw)parameters.PatchCondition).Value
+            )
         );
         Assert.NotNull(parameters.PatchRows);
         Assert.Equal(expectedPatchRows.Count, parameters.PatchRows.Count);
@@ -138,7 +147,10 @@ public class NamespaceWriteParamsTest : TestBase
         Assert.Equal(expectedUpsertColumns, parameters.UpsertColumns);
         Assert.NotNull(parameters.UpsertCondition);
         Assert.True(
-            JsonElement.DeepEquals(expectedUpsertCondition, parameters.UpsertCondition.Value)
+            JsonElement.DeepEquals(
+                expectedUpsertCondition,
+                ((FilterRaw)parameters.UpsertCondition).Value
+            )
         );
         Assert.NotNull(parameters.UpsertRows);
         Assert.Equal(expectedUpsertRows.Count, parameters.UpsertRows.Count);
@@ -285,9 +297,9 @@ public class NamespaceWriteParamsTest : TestBase
             Namespace = "namespace",
             BranchFromNamespace = "string",
             CopyFromNamespace = "string",
-            DeleteByFilter = JsonSerializer.Deserialize<JsonElement>("{}"),
+            DeleteByFilter = new FilterRaw(JsonSerializer.Deserialize<JsonElement>("{}")),
             DeleteByFilterAllowPartial = true,
-            DeleteCondition = JsonSerializer.Deserialize<JsonElement>("{}"),
+            DeleteCondition = new FilterRaw(JsonSerializer.Deserialize<JsonElement>("{}")),
             Deletes = ["182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"],
             DisableBackpressure = true,
             DistanceMetric = DistanceMetric.CosineDistance,
@@ -306,7 +318,7 @@ public class NamespaceWriteParamsTest : TestBase
                 ID = ["182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"],
                 Vector = new([new([0])]),
             },
-            PatchCondition = JsonSerializer.Deserialize<JsonElement>("{}"),
+            PatchCondition = new FilterRaw(JsonSerializer.Deserialize<JsonElement>("{}")),
             PatchRows = [new() { ID = "182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e", Vector = new([0]) }],
             ReturnAffectedIds = true,
             Schema = new Dictionary<string, AttributeSchema>() { { "foo", "string" } },
@@ -315,7 +327,7 @@ public class NamespaceWriteParamsTest : TestBase
                 ID = ["182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"],
                 Vector = new([new([0])]),
             },
-            UpsertCondition = JsonSerializer.Deserialize<JsonElement>("{}"),
+            UpsertCondition = new FilterRaw(JsonSerializer.Deserialize<JsonElement>("{}")),
             UpsertRows = [new() { ID = "182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e", Vector = new([0]) }],
         };
 
