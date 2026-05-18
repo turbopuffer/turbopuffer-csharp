@@ -40,13 +40,20 @@ public sealed record class Columns : JsonModel
     }
 
     /// <summary>
-    /// Sets the raw values for an arbitrary column.
+    /// Sets the values for an arbitrary column, serializing each value to JSON.
+    /// Mirrors <see cref="Row.Set{T}(string, T)"/> for columnar writes. Use
+    /// <c>T</c> of <c>object?</c> for mixed or nullable columns, or
+    /// <c>JsonElement</c> to set pre-serialized raw values.
     /// </summary>
-    public Columns SetColumn(string column, IReadOnlyList<JsonElement> values)
+    public Columns SetColumn<T>(string column, IEnumerable<T> values)
     {
         this._rawData.Set<ImmutableArray<JsonElement>>(
             column,
-            ImmutableArray.ToImmutableArray(values)
+            ImmutableArray.CreateRange(
+                values.Select(value =>
+                    JsonSerializer.SerializeToElement(value, ModelBase.SerializerOptions)
+                )
+            )
         );
         return this;
     }

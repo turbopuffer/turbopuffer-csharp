@@ -216,9 +216,9 @@ public abstract class Filter : RankByText
 
     public static FilterNot Not(Filter filter) => new FilterNot(filter);
 
-    public static FilterAnd And(Filter[] filters) => new FilterAnd(filters);
+    public static FilterAnd And(params Filter[] filters) => new FilterAnd(filters);
 
-    public static FilterOr Or(Filter[] filters) => new FilterOr(filters);
+    public static FilterOr Or(params Filter[] filters) => new FilterOr(filters);
 }
 
 public sealed class FilterRaw(JsonElement value) : Filter
@@ -892,7 +892,7 @@ public abstract class RankBy
     public static RankByAttribute Attribute(string attr, RankByAttributeOrder order) =>
         new RankByAttribute(attr, order);
 
-    public static RankByAttributes Attributes(RankByAttribute[] items) =>
+    public static RankByAttributes Attributes(params RankByAttribute[] items) =>
         new RankByAttributes(items);
 }
 
@@ -1052,9 +1052,11 @@ public abstract class RankByText : RankBy
         Bm25ClauseParams @params
     ) => new RankByTextBM25ArrayWithParams(attr, value, @params);
 
-    public static RankByTextSum Sum(RankByText[] subqueries) => new RankByTextSum(subqueries);
+    public static RankByTextSum Sum(params RankByText[] subqueries) =>
+        new RankByTextSum(subqueries);
 
-    public static RankByTextMax Max(RankByText[] subqueries) => new RankByTextMax(subqueries);
+    public static RankByTextMax Max(params RankByText[] subqueries) =>
+        new RankByTextMax(subqueries);
 
     public static RankByTextProduct Product(double weight, RankByText subquery) =>
         new RankByTextProduct(weight, subquery);
