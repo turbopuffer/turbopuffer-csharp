@@ -1,6 +1,6 @@
 // Upserts several large batches of documents and prints the total time taken.
 //
-// Run this example with: dotnet run --project examples/Turbopuffer.Examples -p:Example=BulkWrite
+// Run this example with: dotnet run --project examples/Turbopuffer.Examples BulkWrite
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -20,7 +20,7 @@ static class BulkWrite
     // discount (50%) without being close to the limit (256MB).
     const int BatchSize = 1500;
 
-    static async Task Main()
+    public static async Task Run()
     {
         using var client = new TurbopufferClient
         {

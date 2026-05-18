@@ -52,7 +52,7 @@ jobs:
         run: ./scripts/build
 
   test:
-    timeout-minutes: 10
+    timeout-minutes: 15
     name: test
     runs-on: ${{ github.repository == 'stainless-sdks/turbopuffer-csharp' && 'depot-windows-2022' || 'windows-latest' }}
     if: github.event_name == 'push' || github.event.pull_request.head.repo.fork
@@ -67,3 +67,5 @@ jobs:
       - name: Run tests
         run: ./scripts/test
         shell: bash
+        env:
+          TURBOPUFFER_API_KEY: ${{ secrets.TURBOPUFFER_API_KEY }}

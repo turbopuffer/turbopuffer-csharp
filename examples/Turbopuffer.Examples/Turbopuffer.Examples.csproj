@@ -7,9 +7,6 @@
     <IsPackable>false</IsPackable>
     <Nullable>enable</Nullable>
     <ImplicitUsings>disable</ImplicitUsings>
-    <!-- Each example exposes its own Main(); pick one with -p:Example=<name>. -->
-    <Example Condition="'$(Example)' == ''">WriteAndQuery</Example>
-    <StartupObject>Turbopuffer.Examples.$(Example)</StartupObject>
   </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\src\Turbopuffer\Turbopuffer.csproj" />
