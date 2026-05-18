@@ -1,10 +1,10 @@
-# Turbopuffer C# API Library
+# turbopuffer C# API Library <a href="https://turbopuffer.com"><img src="https://github.com/user-attachments/assets/8d6cca4c-10b7-4d3a-9782-696053baf44e" align="right"></a>
 
-The Turbopuffer C# SDK provides convenient access to the [Turbopuffer REST API](https://turbopuffer.com/docs/auth) from applications written in C#.
+The turbopuffer C# SDK provides convenient access to the [turbopuffer HTTP API](https://turbopuffer.com/docs/auth) from applications written in C#.
 
 It is generated with [Stainless](https://www.stainless.com/).
 
-The REST API documentation can be found on [turbopuffer.com](https://turbopuffer.com/docs/auth).
+The HTTP API documentation can be found on [turbopuffer.com/docs](https://turbopuffer.com/docs/auth).
 
 ## Installation
 
@@ -30,7 +30,6 @@ TurbopufferClient client = new();
 
 NamespaceWriteParams parameters = new()
 {
-    Namespace = "products",
     DistanceMetric = DistanceMetric.CosineDistance,
     UpsertRows =
     [
@@ -47,7 +46,7 @@ NamespaceWriteParams parameters = new()
     ],
 };
 
-var response = await client.Namespaces1.Write(parameters);
+var response = await client.Namespace("products").Write(parameters);
 
 Console.WriteLine(response);
 ```

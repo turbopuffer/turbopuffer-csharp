@@ -87,10 +87,12 @@ public sealed class TurbopufferClient : ITurbopufferClient
         return new TurbopufferClient(modifier(this._options));
     }
 
-    readonly Lazy<INamespaceService> _namespaces1;
-    public INamespaceService Namespaces1
+    /// <inheritdoc/>
+    public INamespaceService Namespace(string @namespace)
     {
-        get { return _namespaces1.Value; }
+        return new NamespaceService(
+            this.WithOptions(options => options with { DefaultNamespace = @namespace })
+        );
     }
 
     /// <inheritdoc/>
@@ -112,7 +114,6 @@ public sealed class TurbopufferClient : ITurbopufferClient
         _options = new();
 
         _withRawResponse = new(() => new TurbopufferClientWithRawResponse(this._options));
-        _namespaces1 = new(() => new NamespaceService(this));
     }
 
     public TurbopufferClient(ClientOptions options)
@@ -204,10 +205,12 @@ public sealed class TurbopufferClientWithRawResponse : ITurbopufferClientWithRaw
         return new TurbopufferClientWithRawResponse(modifier(this._options));
     }
 
-    readonly Lazy<INamespaceServiceWithRawResponse> _namespaces;
-    public INamespaceServiceWithRawResponse Namespaces
+    /// <inheritdoc/>
+    public INamespaceServiceWithRawResponse Namespace(string @namespace)
     {
-        get { return _namespaces.Value; }
+        return new NamespaceServiceWithRawResponse(
+            this.WithOptions(options => options with { DefaultNamespace = @namespace })
+        );
     }
 
     /// <inheritdoc/>
@@ -437,8 +440,6 @@ public sealed class TurbopufferClientWithRawResponse : ITurbopufferClientWithRaw
     public TurbopufferClientWithRawResponse()
     {
         _options = new();
-
-        _namespaces = new(() => new NamespaceServiceWithRawResponse(this));
     }
 
     public TurbopufferClientWithRawResponse(ClientOptions options)
