@@ -49,11 +49,11 @@ public sealed record class Columns : JsonModel
     {
         this._rawData.Set<ImmutableArray<JsonElement>>(
             column,
-            ImmutableArray.CreateRange(
-                values.Select(value =>
+            [
+                .. values.Select(value =>
                     JsonSerializer.SerializeToElement(value, ModelBase.SerializerOptions)
-                )
-            )
+                ),
+            ]
         );
         return this;
     }
