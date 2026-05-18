@@ -1,0 +1,42 @@
+name: Regenerate Custom Types
+
+on:
+  push:
+    branches:
+      - next
+      - preview/**
+
+jobs:
+  regenerate:
+    name: regenerate custom types
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
+        with:
+          ref: ${{ github.ref }}
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Set up .NET
+        uses: actions/setup-dotnet@67a3573c9a986a3f9c594539f4ab511d57bb3ce9 # v4.3.1
+        with:
+          dotnet-version: '8.0.x'
+
+      - name: Run bootstrap
+        run: ./scripts/bootstrap
+
+      - name: Regenerate custom types
+        run: ./scripts/gen
+
+      - name: Commit and push if changed
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add src/Turbopuffer/Models/Namespaces/CustomTypes.cs
+          if ! git diff --staged --quiet; then
+            git commit -m "chore: regenerate custom types"
+            git push
+          else
+            echo "No changes to custom types"
+          fi
