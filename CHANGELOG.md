@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.1.0-alpha.2 (2026-05-18)
+
+Full Changelog: [v0.1.0-alpha.1...v0.1.0-alpha.2](https://github.com/turbopuffer/turbopuffer-csharp/compare/v0.1.0-alpha.1...v0.1.0-alpha.2)
+
+### Features
+
+* publish csharp ([b2b5204](https://github.com/turbopuffer/turbopuffer-csharp/commit/b2b52043d550cfe3f783675d4e76ad68191f6aee))
+
 ## 0.1.0-alpha.1 (2026-05-18)
 
 Full Changelog: [v0.0.1...v0.1.0-alpha.1](https://github.com/turbopuffer/turbopuffer-csharp/compare/v0.0.1...v0.1.0-alpha.1)
