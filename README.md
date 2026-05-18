@@ -8,10 +8,10 @@ The REST API documentation can be found on [turbopuffer.com](https://turbopuffer
 
 ## Installation
 
-Install the package from [NuGet](https://www.nuget.org/packages/Turbopuffer):
+Install the package from [NuGet](https://www.nuget.org/packages/Turbopuffer.Client):
 
 ```bash
-dotnet add package Turbopuffer
+dotnet add package Turbopuffer.Client
 ```
 
 ## Requirements
@@ -24,8 +24,8 @@ See the [`examples`](examples) directory for complete and runnable examples.
 
 ```csharp
 using System;
-using Turbopuffer;
-using Turbopuffer.Models.Namespaces;
+using Turbopuffer.Client;
+using Turbopuffer.Client.Models.Namespaces;
 
 TurbopufferClient client = new();
 
@@ -58,7 +58,7 @@ Console.WriteLine(response);
 Configure the client using environment variables:
 
 ```csharp
-using Turbopuffer;
+using Turbopuffer.Client;
 
 // Configured using the TURBOPUFFER_API_KEY, TURBOPUFFER_REGION and TURBOPUFFER_BASE_URL environment variables
 TurbopufferClient client = new();
@@ -67,7 +67,7 @@ TurbopufferClient client = new();
 Or manually:
 
 ```csharp
-using Turbopuffer;
+using Turbopuffer.Client;
 
 TurbopufferClient client = new()
 {
@@ -134,7 +134,7 @@ For non-streaming responses, you can deserialize the response into an instance o
 
 ```csharp
 using System;
-using Turbopuffer.Models;
+using Turbopuffer.Client.Models;
 
 var response = await client.WithRawResponse.Namespaces1();
 ClientNamespacesPage deserialized = await response.Deserialize();
@@ -225,7 +225,7 @@ The API may also explicitly instruct the SDK to retry or not retry a request.
 To set a custom number of retries, configure the client using the `MaxRetries` method:
 
 ```csharp
-using Turbopuffer;
+using Turbopuffer.Client;
 
 TurbopufferClient client = new() { MaxRetries = 5 };
 ```
@@ -252,7 +252,7 @@ To set a custom timeout, configure the client using the `Timeout` option:
 
 ```csharp
 using System;
-using Turbopuffer;
+using Turbopuffer.Client;
 
 TurbopufferClient client = new() { Timeout = TimeSpan.FromSeconds(42) };
 ```
@@ -278,7 +278,7 @@ To route requests through a proxy, configure your client with a custom [`HttpCli
 ```csharp
 using System.Net;
 using System.Net.Http;
-using Turbopuffer;
+using Turbopuffer.Client;
 
 var httpClient = new HttpClient
 (
@@ -302,7 +302,7 @@ To set undocumented parameters, a constructor exists that accepts dictionaries f
 ```csharp
 using System.Collections.Generic;
 using System.Text.Json;
-using Turbopuffer.Models.Namespaces;
+using Turbopuffer.Client.Models.Namespaces;
 
 NamespaceWriteParams parameters = new
 (
@@ -335,7 +335,7 @@ This can also be used to set a documented parameter to an undocumented or not ye
 ```csharp
 using System.Collections.Generic;
 using System.Text.Json;
-using Turbopuffer.Models.Namespaces;
+using Turbopuffer.Client.Models.Namespaces;
 
 var parameters = NamespaceBranchFromParams.FromRawUnchecked
 (
@@ -359,7 +359,7 @@ Undocumented properties, or undocumented values of documented properties, on nes
 ```csharp
 using System.Collections.Generic;
 using System.Text.Json;
-using Turbopuffer.Models.Namespaces;
+using Turbopuffer.Client.Models.Namespaces;
 
 NamespaceWriteParams parameters = new()
 {
@@ -378,7 +378,7 @@ Required properties on the nested parameter can also be changed or omitted using
 ```csharp
 using System.Collections.Generic;
 using System.Text.Json;
-using Turbopuffer.Models.Namespaces;
+using Turbopuffer.Client.Models.Namespaces;
 
 NamespaceWriteParams parameters = new()
 {
@@ -424,7 +424,7 @@ response.Validate();
 Or configure the client using the `ResponseValidation` option:
 
 ```csharp
-using Turbopuffer;
+using Turbopuffer.Client;
 
 TurbopufferClient client = new() { ResponseValidation = true };
 ```
