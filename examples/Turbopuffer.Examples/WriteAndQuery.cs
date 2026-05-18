@@ -69,14 +69,10 @@ static class WriteAndQuery
         var query = await nsClient.Query(
             new NamespaceQueryParams
             {
-                RankBy = JsonSerializer.SerializeToElement(
-                    RankBy.Ann("vector", [3.0f, 4.0f, 5.0f])
-                ),
+                RankBy = RankBy.Ann("vector", [3.0f, 4.0f, 5.0f]),
                 TopK = 10,
                 IncludeAttributes = true,
-                Filters = JsonSerializer.SerializeToElement(
-                    Filter.And([Filter.Gt("age", 30), Filter.Lt("age", 35)])
-                ),
+                Filters = Filter.And([Filter.Gt("age", 30), Filter.Lt("age", 35)]),
             }
         );
         Console.WriteLine($"Query result:\n{query}");
@@ -105,9 +101,7 @@ static class WriteAndQuery
         var query2 = await nsClient.Query(
             new NamespaceQueryParams
             {
-                RankBy = JsonSerializer.SerializeToElement(
-                    RankBy.Attribute("id", RankByAttributeOrder.ASC)
-                ),
+                RankBy = RankBy.Attribute("id", RankByAttributeOrder.ASC),
                 TopK = 10,
                 IncludeAttributes = true,
             }

@@ -79,17 +79,23 @@ public class NamespaceServiceTest : TestBase
                     [
                         new()
                         {
-                            AggregateBy = new Dictionary<string, JsonElement>()
+                            AggregateBy = new Dictionary<string, AggregateBy>()
                             {
-                                { "foo", JsonSerializer.SerializeToElement("bar") },
+                                {
+                                    "foo",
+                                    new AggregateByRaw(JsonSerializer.SerializeToElement("bar"))
+                                },
                             },
                             DistanceMetric = DistanceMetric.CosineDistance,
                             ExcludeAttributes = ["string"],
-                            Filters = JsonSerializer.Deserialize<JsonElement>("{}"),
-                            GroupBy = [JsonSerializer.Deserialize<JsonElement>("{}")],
+                            Filters = new FilterRaw(JsonSerializer.Deserialize<JsonElement>("{}")),
+                            GroupBy =
+                            [
+                                new GroupByRaw(JsonSerializer.Deserialize<JsonElement>("{}")),
+                            ],
                             IncludeAttributes = true,
                             Limit = 0,
-                            RankBy = JsonSerializer.Deserialize<JsonElement>("{}"),
+                            RankBy = new RankByRaw(JsonSerializer.Deserialize<JsonElement>("{}")),
                             TopK = 0,
                         },
                     ],

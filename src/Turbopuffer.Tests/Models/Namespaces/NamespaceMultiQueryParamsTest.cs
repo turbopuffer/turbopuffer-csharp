@@ -19,17 +19,17 @@ public class NamespaceMultiQueryParamsTest : TestBase
             [
                 new()
                 {
-                    AggregateBy = new Dictionary<string, JsonElement>()
+                    AggregateBy = new Dictionary<string, AggregateBy>()
                     {
-                        { "foo", JsonSerializer.SerializeToElement("bar") },
+                        { "foo", new AggregateByRaw(JsonSerializer.SerializeToElement("bar")) },
                     },
                     DistanceMetric = DistanceMetric.CosineDistance,
                     ExcludeAttributes = ["string"],
-                    Filters = JsonSerializer.Deserialize<JsonElement>("{}"),
-                    GroupBy = [JsonSerializer.Deserialize<JsonElement>("{}")],
+                    Filters = new FilterRaw(JsonSerializer.Deserialize<JsonElement>("{}")),
+                    GroupBy = [new GroupByRaw(JsonSerializer.Deserialize<JsonElement>("{}"))],
                     IncludeAttributes = true,
                     Limit = 0,
-                    RankBy = JsonSerializer.Deserialize<JsonElement>("{}"),
+                    RankBy = new RankByRaw(JsonSerializer.Deserialize<JsonElement>("{}")),
                     TopK = 0,
                 },
             ],
@@ -42,17 +42,17 @@ public class NamespaceMultiQueryParamsTest : TestBase
         [
             new()
             {
-                AggregateBy = new Dictionary<string, JsonElement>()
+                AggregateBy = new Dictionary<string, AggregateBy>()
                 {
-                    { "foo", JsonSerializer.SerializeToElement("bar") },
+                    { "foo", new AggregateByRaw(JsonSerializer.SerializeToElement("bar")) },
                 },
                 DistanceMetric = DistanceMetric.CosineDistance,
                 ExcludeAttributes = ["string"],
-                Filters = JsonSerializer.Deserialize<JsonElement>("{}"),
-                GroupBy = [JsonSerializer.Deserialize<JsonElement>("{}")],
+                Filters = new FilterRaw(JsonSerializer.Deserialize<JsonElement>("{}")),
+                GroupBy = [new GroupByRaw(JsonSerializer.Deserialize<JsonElement>("{}"))],
                 IncludeAttributes = true,
                 Limit = 0,
-                RankBy = JsonSerializer.Deserialize<JsonElement>("{}"),
+                RankBy = new RankByRaw(JsonSerializer.Deserialize<JsonElement>("{}")),
                 TopK = 0,
             },
         ];
@@ -82,17 +82,17 @@ public class NamespaceMultiQueryParamsTest : TestBase
             [
                 new()
                 {
-                    AggregateBy = new Dictionary<string, JsonElement>()
+                    AggregateBy = new Dictionary<string, AggregateBy>()
                     {
-                        { "foo", JsonSerializer.SerializeToElement("bar") },
+                        { "foo", new AggregateByRaw(JsonSerializer.SerializeToElement("bar")) },
                     },
                     DistanceMetric = DistanceMetric.CosineDistance,
                     ExcludeAttributes = ["string"],
-                    Filters = JsonSerializer.Deserialize<JsonElement>("{}"),
-                    GroupBy = [JsonSerializer.Deserialize<JsonElement>("{}")],
+                    Filters = new FilterRaw(JsonSerializer.Deserialize<JsonElement>("{}")),
+                    GroupBy = [new GroupByRaw(JsonSerializer.Deserialize<JsonElement>("{}"))],
                     IncludeAttributes = true,
                     Limit = 0,
-                    RankBy = JsonSerializer.Deserialize<JsonElement>("{}"),
+                    RankBy = new RankByRaw(JsonSerializer.Deserialize<JsonElement>("{}")),
                     TopK = 0,
                 },
             ],
@@ -114,17 +114,17 @@ public class NamespaceMultiQueryParamsTest : TestBase
             [
                 new()
                 {
-                    AggregateBy = new Dictionary<string, JsonElement>()
+                    AggregateBy = new Dictionary<string, AggregateBy>()
                     {
-                        { "foo", JsonSerializer.SerializeToElement("bar") },
+                        { "foo", new AggregateByRaw(JsonSerializer.SerializeToElement("bar")) },
                     },
                     DistanceMetric = DistanceMetric.CosineDistance,
                     ExcludeAttributes = ["string"],
-                    Filters = JsonSerializer.Deserialize<JsonElement>("{}"),
-                    GroupBy = [JsonSerializer.Deserialize<JsonElement>("{}")],
+                    Filters = new FilterRaw(JsonSerializer.Deserialize<JsonElement>("{}")),
+                    GroupBy = [new GroupByRaw(JsonSerializer.Deserialize<JsonElement>("{}"))],
                     IncludeAttributes = true,
                     Limit = 0,
-                    RankBy = JsonSerializer.Deserialize<JsonElement>("{}"),
+                    RankBy = new RankByRaw(JsonSerializer.Deserialize<JsonElement>("{}")),
                     TopK = 0,
                 },
             ],
@@ -150,17 +150,17 @@ public class NamespaceMultiQueryParamsTest : TestBase
             [
                 new()
                 {
-                    AggregateBy = new Dictionary<string, JsonElement>()
+                    AggregateBy = new Dictionary<string, AggregateBy>()
                     {
-                        { "foo", JsonSerializer.SerializeToElement("bar") },
+                        { "foo", new AggregateByRaw(JsonSerializer.SerializeToElement("bar")) },
                     },
                     DistanceMetric = DistanceMetric.CosineDistance,
                     ExcludeAttributes = ["string"],
-                    Filters = JsonSerializer.Deserialize<JsonElement>("{}"),
-                    GroupBy = [JsonSerializer.Deserialize<JsonElement>("{}")],
+                    Filters = new FilterRaw(JsonSerializer.Deserialize<JsonElement>("{}")),
+                    GroupBy = [new GroupByRaw(JsonSerializer.Deserialize<JsonElement>("{}"))],
                     IncludeAttributes = true,
                     Limit = 0,
-                    RankBy = JsonSerializer.Deserialize<JsonElement>("{}"),
+                    RankBy = new RankByRaw(JsonSerializer.Deserialize<JsonElement>("{}")),
                     TopK = 0,
                 },
             ],
@@ -188,17 +188,17 @@ public class NamespaceMultiQueryParamsTest : TestBase
             [
                 new()
                 {
-                    AggregateBy = new Dictionary<string, JsonElement>()
+                    AggregateBy = new Dictionary<string, AggregateBy>()
                     {
-                        { "foo", JsonSerializer.SerializeToElement("bar") },
+                        { "foo", new AggregateByRaw(JsonSerializer.SerializeToElement("bar")) },
                     },
                     DistanceMetric = DistanceMetric.CosineDistance,
                     ExcludeAttributes = ["string"],
-                    Filters = JsonSerializer.Deserialize<JsonElement>("{}"),
-                    GroupBy = [JsonSerializer.Deserialize<JsonElement>("{}")],
+                    Filters = new FilterRaw(JsonSerializer.Deserialize<JsonElement>("{}")),
+                    GroupBy = [new GroupByRaw(JsonSerializer.Deserialize<JsonElement>("{}"))],
                     IncludeAttributes = true,
                     Limit = 0,
-                    RankBy = JsonSerializer.Deserialize<JsonElement>("{}"),
+                    RankBy = new RankByRaw(JsonSerializer.Deserialize<JsonElement>("{}")),
                     TopK = 0,
                 },
             ],
@@ -219,23 +219,23 @@ public class QueryTest : TestBase
     {
         var model = new Query
         {
-            AggregateBy = new Dictionary<string, JsonElement>()
+            AggregateBy = new Dictionary<string, AggregateBy>()
             {
-                { "foo", JsonSerializer.SerializeToElement("bar") },
+                { "foo", new AggregateByRaw(JsonSerializer.SerializeToElement("bar")) },
             },
             DistanceMetric = DistanceMetric.CosineDistance,
             ExcludeAttributes = ["string"],
-            Filters = JsonSerializer.Deserialize<JsonElement>("{}"),
-            GroupBy = [JsonSerializer.Deserialize<JsonElement>("{}")],
+            Filters = new FilterRaw(JsonSerializer.Deserialize<JsonElement>("{}")),
+            GroupBy = [new GroupByRaw(JsonSerializer.Deserialize<JsonElement>("{}"))],
             IncludeAttributes = true,
             Limit = 0,
-            RankBy = JsonSerializer.Deserialize<JsonElement>("{}"),
+            RankBy = new RankByRaw(JsonSerializer.Deserialize<JsonElement>("{}")),
             TopK = 0,
         };
 
-        Dictionary<string, JsonElement> expectedAggregateBy = new()
+        Dictionary<string, AggregateBy> expectedAggregateBy = new()
         {
-            { "foo", JsonSerializer.SerializeToElement("bar") },
+            { "foo", new AggregateByRaw(JsonSerializer.SerializeToElement("bar")) },
         };
         ApiEnum<string, DistanceMetric> expectedDistanceMetric = DistanceMetric.CosineDistance;
         List<string> expectedExcludeAttributes = ["string"];
@@ -252,7 +252,12 @@ public class QueryTest : TestBase
         {
             Assert.True(model.AggregateBy.TryGetValue(item.Key, out var value));
 
-            Assert.True(JsonElement.DeepEquals(value, model.AggregateBy[item.Key]));
+            Assert.True(
+                JsonElement.DeepEquals(
+                    ((AggregateByRaw)item.Value).Value,
+                    ((AggregateByRaw)model.AggregateBy[item.Key]).Value
+                )
+            );
         }
         Assert.Equal(expectedDistanceMetric, model.DistanceMetric);
         Assert.NotNull(model.ExcludeAttributes);
@@ -262,17 +267,19 @@ public class QueryTest : TestBase
             Assert.Equal(expectedExcludeAttributes[i], model.ExcludeAttributes[i]);
         }
         Assert.NotNull(model.Filters);
-        Assert.True(JsonElement.DeepEquals(expectedFilters, model.Filters.Value));
+        Assert.True(JsonElement.DeepEquals(expectedFilters, ((FilterRaw)model.Filters).Value));
         Assert.NotNull(model.GroupBy);
         Assert.Equal(expectedGroupBy.Count, model.GroupBy.Count);
         for (int i = 0; i < expectedGroupBy.Count; i++)
         {
-            Assert.True(JsonElement.DeepEquals(expectedGroupBy[i], model.GroupBy[i]));
+            Assert.True(
+                JsonElement.DeepEquals(expectedGroupBy[i], ((GroupByRaw)model.GroupBy[i]).Value)
+            );
         }
         Assert.Equal(expectedIncludeAttributes, model.IncludeAttributes);
         Assert.Equal(expectedLimit, model.Limit);
         Assert.NotNull(model.RankBy);
-        Assert.True(JsonElement.DeepEquals(expectedRankBy, model.RankBy.Value));
+        Assert.True(JsonElement.DeepEquals(expectedRankBy, ((RankByRaw)model.RankBy).Value));
         Assert.Equal(expectedTopK, model.TopK);
     }
 
@@ -281,17 +288,17 @@ public class QueryTest : TestBase
     {
         var model = new Query
         {
-            AggregateBy = new Dictionary<string, JsonElement>()
+            AggregateBy = new Dictionary<string, AggregateBy>()
             {
-                { "foo", JsonSerializer.SerializeToElement("bar") },
+                { "foo", new AggregateByRaw(JsonSerializer.SerializeToElement("bar")) },
             },
             DistanceMetric = DistanceMetric.CosineDistance,
             ExcludeAttributes = ["string"],
-            Filters = JsonSerializer.Deserialize<JsonElement>("{}"),
-            GroupBy = [JsonSerializer.Deserialize<JsonElement>("{}")],
+            Filters = new FilterRaw(JsonSerializer.Deserialize<JsonElement>("{}")),
+            GroupBy = [new GroupByRaw(JsonSerializer.Deserialize<JsonElement>("{}"))],
             IncludeAttributes = true,
             Limit = 0,
-            RankBy = JsonSerializer.Deserialize<JsonElement>("{}"),
+            RankBy = new RankByRaw(JsonSerializer.Deserialize<JsonElement>("{}")),
             TopK = 0,
         };
 
@@ -306,17 +313,17 @@ public class QueryTest : TestBase
     {
         var model = new Query
         {
-            AggregateBy = new Dictionary<string, JsonElement>()
+            AggregateBy = new Dictionary<string, AggregateBy>()
             {
-                { "foo", JsonSerializer.SerializeToElement("bar") },
+                { "foo", new AggregateByRaw(JsonSerializer.SerializeToElement("bar")) },
             },
             DistanceMetric = DistanceMetric.CosineDistance,
             ExcludeAttributes = ["string"],
-            Filters = JsonSerializer.Deserialize<JsonElement>("{}"),
-            GroupBy = [JsonSerializer.Deserialize<JsonElement>("{}")],
+            Filters = new FilterRaw(JsonSerializer.Deserialize<JsonElement>("{}")),
+            GroupBy = [new GroupByRaw(JsonSerializer.Deserialize<JsonElement>("{}"))],
             IncludeAttributes = true,
             Limit = 0,
-            RankBy = JsonSerializer.Deserialize<JsonElement>("{}"),
+            RankBy = new RankByRaw(JsonSerializer.Deserialize<JsonElement>("{}")),
             TopK = 0,
         };
 
@@ -324,9 +331,9 @@ public class QueryTest : TestBase
         var deserialized = JsonSerializer.Deserialize<Query>(element, ModelBase.SerializerOptions);
         Assert.NotNull(deserialized);
 
-        Dictionary<string, JsonElement> expectedAggregateBy = new()
+        Dictionary<string, AggregateBy> expectedAggregateBy = new()
         {
-            { "foo", JsonSerializer.SerializeToElement("bar") },
+            { "foo", new AggregateByRaw(JsonSerializer.SerializeToElement("bar")) },
         };
         ApiEnum<string, DistanceMetric> expectedDistanceMetric = DistanceMetric.CosineDistance;
         List<string> expectedExcludeAttributes = ["string"];
@@ -343,7 +350,12 @@ public class QueryTest : TestBase
         {
             Assert.True(deserialized.AggregateBy.TryGetValue(item.Key, out var value));
 
-            Assert.True(JsonElement.DeepEquals(value, deserialized.AggregateBy[item.Key]));
+            Assert.True(
+                JsonElement.DeepEquals(
+                    ((AggregateByRaw)item.Value).Value,
+                    ((AggregateByRaw)deserialized.AggregateBy[item.Key]).Value
+                )
+            );
         }
         Assert.Equal(expectedDistanceMetric, deserialized.DistanceMetric);
         Assert.NotNull(deserialized.ExcludeAttributes);
@@ -353,17 +365,24 @@ public class QueryTest : TestBase
             Assert.Equal(expectedExcludeAttributes[i], deserialized.ExcludeAttributes[i]);
         }
         Assert.NotNull(deserialized.Filters);
-        Assert.True(JsonElement.DeepEquals(expectedFilters, deserialized.Filters.Value));
+        Assert.True(
+            JsonElement.DeepEquals(expectedFilters, ((FilterRaw)deserialized.Filters).Value)
+        );
         Assert.NotNull(deserialized.GroupBy);
         Assert.Equal(expectedGroupBy.Count, deserialized.GroupBy.Count);
         for (int i = 0; i < expectedGroupBy.Count; i++)
         {
-            Assert.True(JsonElement.DeepEquals(expectedGroupBy[i], deserialized.GroupBy[i]));
+            Assert.True(
+                JsonElement.DeepEquals(
+                    expectedGroupBy[i],
+                    ((GroupByRaw)deserialized.GroupBy[i]).Value
+                )
+            );
         }
         Assert.Equal(expectedIncludeAttributes, deserialized.IncludeAttributes);
         Assert.Equal(expectedLimit, deserialized.Limit);
         Assert.NotNull(deserialized.RankBy);
-        Assert.True(JsonElement.DeepEquals(expectedRankBy, deserialized.RankBy.Value));
+        Assert.True(JsonElement.DeepEquals(expectedRankBy, ((RankByRaw)deserialized.RankBy).Value));
         Assert.Equal(expectedTopK, deserialized.TopK);
     }
 
@@ -372,17 +391,17 @@ public class QueryTest : TestBase
     {
         var model = new Query
         {
-            AggregateBy = new Dictionary<string, JsonElement>()
+            AggregateBy = new Dictionary<string, AggregateBy>()
             {
-                { "foo", JsonSerializer.SerializeToElement("bar") },
+                { "foo", new AggregateByRaw(JsonSerializer.SerializeToElement("bar")) },
             },
             DistanceMetric = DistanceMetric.CosineDistance,
             ExcludeAttributes = ["string"],
-            Filters = JsonSerializer.Deserialize<JsonElement>("{}"),
-            GroupBy = [JsonSerializer.Deserialize<JsonElement>("{}")],
+            Filters = new FilterRaw(JsonSerializer.Deserialize<JsonElement>("{}")),
+            GroupBy = [new GroupByRaw(JsonSerializer.Deserialize<JsonElement>("{}"))],
             IncludeAttributes = true,
             Limit = 0,
-            RankBy = JsonSerializer.Deserialize<JsonElement>("{}"),
+            RankBy = new RankByRaw(JsonSerializer.Deserialize<JsonElement>("{}")),
             TopK = 0,
         };
 
@@ -484,17 +503,17 @@ public class QueryTest : TestBase
     {
         var model = new Query
         {
-            AggregateBy = new Dictionary<string, JsonElement>()
+            AggregateBy = new Dictionary<string, AggregateBy>()
             {
-                { "foo", JsonSerializer.SerializeToElement("bar") },
+                { "foo", new AggregateByRaw(JsonSerializer.SerializeToElement("bar")) },
             },
             DistanceMetric = DistanceMetric.CosineDistance,
             ExcludeAttributes = ["string"],
-            Filters = JsonSerializer.Deserialize<JsonElement>("{}"),
-            GroupBy = [JsonSerializer.Deserialize<JsonElement>("{}")],
+            Filters = new FilterRaw(JsonSerializer.Deserialize<JsonElement>("{}")),
+            GroupBy = [new GroupByRaw(JsonSerializer.Deserialize<JsonElement>("{}"))],
             IncludeAttributes = true,
             Limit = 0,
-            RankBy = JsonSerializer.Deserialize<JsonElement>("{}"),
+            RankBy = new RankByRaw(JsonSerializer.Deserialize<JsonElement>("{}")),
             TopK = 0,
         };
 

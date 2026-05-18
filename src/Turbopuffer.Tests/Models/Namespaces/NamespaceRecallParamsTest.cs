@@ -12,10 +12,10 @@ public class NamespaceRecallParamsTest : TestBase
         var parameters = new NamespaceRecallParams
         {
             Namespace = "namespace",
-            Filters = JsonSerializer.Deserialize<JsonElement>("{}"),
+            Filters = new FilterRaw(JsonSerializer.Deserialize<JsonElement>("{}")),
             IncludeGroundTruth = true,
             Num = 0,
-            RankBy = JsonSerializer.Deserialize<JsonElement>("{}"),
+            RankBy = new RankByRaw(JsonSerializer.Deserialize<JsonElement>("{}")),
             TopK = 0,
         };
 
@@ -28,11 +28,11 @@ public class NamespaceRecallParamsTest : TestBase
 
         Assert.Equal(expectedNamespace, parameters.Namespace);
         Assert.NotNull(parameters.Filters);
-        Assert.True(JsonElement.DeepEquals(expectedFilters, parameters.Filters.Value));
+        Assert.True(JsonElement.DeepEquals(expectedFilters, ((FilterRaw)parameters.Filters).Value));
         Assert.Equal(expectedIncludeGroundTruth, parameters.IncludeGroundTruth);
         Assert.Equal(expectedNum, parameters.Num);
         Assert.NotNull(parameters.RankBy);
-        Assert.True(JsonElement.DeepEquals(expectedRankBy, parameters.RankBy.Value));
+        Assert.True(JsonElement.DeepEquals(expectedRankBy, ((RankByRaw)parameters.RankBy).Value));
         Assert.Equal(expectedTopK, parameters.TopK);
     }
 
@@ -103,10 +103,10 @@ public class NamespaceRecallParamsTest : TestBase
         var parameters = new NamespaceRecallParams
         {
             Namespace = "namespace",
-            Filters = JsonSerializer.Deserialize<JsonElement>("{}"),
+            Filters = new FilterRaw(JsonSerializer.Deserialize<JsonElement>("{}")),
             IncludeGroundTruth = true,
             Num = 0,
-            RankBy = JsonSerializer.Deserialize<JsonElement>("{}"),
+            RankBy = new RankByRaw(JsonSerializer.Deserialize<JsonElement>("{}")),
             TopK = 0,
         };
 
