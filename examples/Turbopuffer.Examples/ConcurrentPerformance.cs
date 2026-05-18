@@ -2,7 +2,7 @@
 // This example writes data to a number of namespaces and makes concurrent
 // queries while monitoring total execution time and peak memory usage.
 //
-// Run this example with: dotnet run --project examples/Turbopuffer.Examples -p:Example=ConcurrentPerformance
+// Run this example with: dotnet run --project examples/Turbopuffer.Examples ConcurrentPerformance
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -27,7 +27,7 @@ static class ConcurrentPerformance
     const int VectorDimensions = 1024;
     const string NamespacePrefix = "turbopuffer-csharp-concurrent-performance-";
 
-    static async Task Main()
+    public static async Task Run()
     {
         Console.WriteLine($"Max concurrent requests: {MaxConcurrentRequests}");
         Console.WriteLine($"Number of namespaces: {NumNamespaces}");

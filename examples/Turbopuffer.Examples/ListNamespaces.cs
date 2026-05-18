@@ -1,6 +1,6 @@
 // A simple example that lists all extant namespaces.
 //
-// Run this example with: dotnet run --project examples/Turbopuffer.Examples -p:Example=ListNamespaces
+// Run this example with: dotnet run --project examples/Turbopuffer.Examples ListNamespaces
 using System;
 using System.Threading.Tasks;
 using Turbopuffer;
@@ -9,7 +9,7 @@ namespace Turbopuffer.Examples;
 
 static class ListNamespaces
 {
-    static async Task Main()
+    public static async Task Run()
     {
         using var client = new TurbopufferClient
         {
