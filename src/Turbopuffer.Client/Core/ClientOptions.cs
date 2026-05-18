@@ -27,7 +27,10 @@ public record struct ClientOptions()
     /// own timeout handler and cause premature cancellation.</para>
     /// </summary>
     public HttpClient HttpClient { get; set; } =
-        new(new HttpClientHandler() { AutomaticDecompression = DecompressionMethods.Available })
+        // Automatic decompression is disabled so that the SDK fully controls the
+        // Accept-Encoding header (see <see cref="Compression"/>). Gzip responses
+        // are decompressed manually in HttpResponse.ReadAsStream.
+        new(new HttpClientHandler() { AutomaticDecompression = DecompressionMethods.None })
         {
             Timeout = global::System.Threading.Timeout.InfiniteTimeSpan,
         };
@@ -143,4 +146,15 @@ public record struct ClientOptions()
     }
 
     public string? DefaultNamespace { get; set; }
+
+    /// <summary>
+    /// Whether to gzip-compress requests and advertise gzip compression on responses.
+    ///
+    /// <para>Defaults to false. When set to true, the SDK gzip-compresses request bodies
+    /// (sending <c>Content-Encoding: gzip</c>) and lets the default <see cref="HttpClient"/>
+    /// advertise and transparently decompress gzip responses. When false, the SDK sends
+    /// <c>Accept-Encoding: identity</c> to prevent the server from returning compressed
+    /// responses and leaves request bodies uncompressed.</para>
+    /// </summary>
+    public bool Compression { get; set; } = false;
 }

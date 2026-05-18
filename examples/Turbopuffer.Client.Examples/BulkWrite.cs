@@ -26,6 +26,9 @@ static class BulkWrite
         {
             // pick the right region: https://turbopuffer.com/docs/regions
             Region = "gcp-us-central1",
+            // gzip-compress request bodies (also serves as a basic integration test
+            // that compression works end-to-end against a live server)
+            Compression = true,
         };
 
         var ns = "turbopuffer-csharp-bulk-upsert-test";
