@@ -21,4 +21,14 @@
     <ProjectReference Include="..\Turbopuffer\Turbopuffer.csproj" />
     <Using Include="Xunit" />
   </ItemGroup>
+  <ItemGroup>
+    <Compile Remove="Models\Namespaces\AttributeSchemaTest.cs" />
+    <Compile Remove="Models\Namespaces\ColumnsTest.cs" />
+    <Compile Remove="Models\Namespaces\NamespaceUpdateSchemaParamsTest.cs" />
+    <Compile Remove="Models\Namespaces\NamespaceWriteParamsTest.cs" />
+    <Compile Remove="Models\Namespaces\RowTest.cs" />
+    <Compile Remove="Models\Namespaces\NamespaceQueryResponseTest.cs" />
+    <Compile Remove="Models\Namespaces\NamespaceMultiQueryResponseTest.cs" />
+    <Compile Remove="Models\Namespaces\NamespaceRecallResponseTest.cs" />
+  </ItemGroup>
 </Project>

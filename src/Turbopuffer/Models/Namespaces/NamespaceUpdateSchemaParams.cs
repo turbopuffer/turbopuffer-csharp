@@ -25,14 +25,13 @@ public record class NamespaceUpdateSchemaParams : ParamsBase
     /// <summary>
     /// The desired schema for the namespace.
     /// </summary>
-    public IReadOnlyDictionary<string, AttributeSchema>? Schema
+    public IReadOnlyDictionary<string, AttributeSchemaConfig>? Schema
     {
         get
         {
-            return WrappedJsonSerializer.GetNullableClass<Dictionary<string, AttributeSchema>>(
-                this.RawBodyData,
-                "RawBodyData"
-            );
+            return WrappedJsonSerializer.GetNullableClass<
+                Dictionary<string, AttributeSchemaConfig>
+            >(this.RawBodyData, "RawBodyData");
         }
         init { this.RawBodyData = JsonSerializer.SerializeToElement(value); }
     }
