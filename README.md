@@ -270,6 +270,28 @@ var page = await client
 Console.WriteLine(page);
 ```
 
+### Compression
+
+Compression defaults to off. When enabled, the SDK gzip-compresses request bodies and lets the
+default `HttpClient` advertise and transparently decompress gzip responses. Set the `Compression`
+option to `true`:
+
+```csharp
+using Turbopuffer.Client;
+
+TurbopufferClient client = new() { Compression = true };
+```
+
+Or configure a single method call using [`WithOptions`](#modifying-configuration):
+
+```csharp
+var page = await client
+    .WithOptions(options =>
+        options with { Compression = true }
+    )
+    .Namespaces(parameters);
+```
+
 ### Proxies
 
 To route requests through a proxy, configure your client with a custom [`HttpClient`](https://learn.microsoft.com/en-us/dotnet/api/system.net.http.httpclient?view=net-10.0):

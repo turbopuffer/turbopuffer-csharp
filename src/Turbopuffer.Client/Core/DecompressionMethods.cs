@@ -8,6 +8,8 @@ static class DecompressionMethods
 {
     internal static readonly Net::DecompressionMethods Available;
 
+    internal static readonly Net::DecompressionMethods None = Net::DecompressionMethods.None;
+
     static DecompressionMethods()
     {
         try

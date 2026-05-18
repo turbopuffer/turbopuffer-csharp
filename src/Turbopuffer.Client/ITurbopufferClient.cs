@@ -49,6 +49,9 @@ public interface ITurbopufferClient : IDisposable
 
     string? DefaultNamespace { get; init; }
 
+    /// <inheritdoc cref="ClientOptions.Compression" />
+    bool Compression { get; init; }
+
     /// <summary>
     /// Returns a view of this service that provides access to raw HTTP responses
     /// for each method.
@@ -109,6 +112,9 @@ public interface ITurbopufferClientWithRawResponse : IDisposable
     string? Region { get; init; }
 
     string? DefaultNamespace { get; init; }
+
+    /// <inheritdoc cref="ClientOptions.Compression" />
+    bool Compression { get; init; }
 
     /// <summary>
     /// Returns a view of this service with the given option modifications applied.

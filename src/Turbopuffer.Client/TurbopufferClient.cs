@@ -73,6 +73,13 @@ public sealed class TurbopufferClient : ITurbopufferClient
         init { this._options.DefaultNamespace = value; }
     }
 
+    /// <inheritdoc/>
+    public bool Compression
+    {
+        get { return this._options.Compression; }
+        init { this._options.Compression = value; }
+    }
+
     readonly Lazy<ITurbopufferClientWithRawResponse> _withRawResponse;
 
     /// <inheritdoc/>
@@ -198,6 +205,13 @@ public sealed class TurbopufferClientWithRawResponse : ITurbopufferClientWithRaw
     }
 
     /// <inheritdoc/>
+    public bool Compression
+    {
+        get { return this._options.Compression; }
+        init { this._options.Compression = value; }
+    }
+
+    /// <inheritdoc/>
     public ITurbopufferClientWithRawResponse WithOptions(
         Func<ClientOptions, ClientOptions> modifier
     )
@@ -316,6 +330,20 @@ public sealed class TurbopufferClientWithRawResponse : ITurbopufferClientWithRaw
         if (!requestMessage.Headers.Contains("x-stainless-retry-count"))
         {
             requestMessage.Headers.Add("x-stainless-retry-count", retryCount.ToString());
+        }
+        if (this._options.Compression)
+        {
+            // Gzip-compress the request body so it is uploaded compressed.
+            if (requestMessage.Content != null)
+            {
+                requestMessage.Content = new GzipContent(requestMessage.Content);
+            }
+        }
+        else if (!requestMessage.Headers.Contains("Accept-Encoding"))
+        {
+            // When compression is disabled, set Accept-Encoding to identity to prevent
+            // the server from returning compressed responses.
+            requestMessage.Headers.Add("Accept-Encoding", "identity");
         }
         using CancellationTokenSource timeoutCts = new(
             this.Timeout ?? ClientOptions.DefaultTimeout
