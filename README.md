@@ -8,9 +8,10 @@ The HTTP API documentation can be found on [turbopuffer.com/docs](https://turbop
 
 ## Installation
 
+Install the package from [NuGet](https://www.nuget.org/packages/Turbopuffer):
+
 ```bash
-git clone git@github.com:turbopuffer/turbopuffer-csharp.git
-dotnet add reference turbopuffer-csharp/src/Turbopuffer
+dotnet add package Turbopuffer
 ```
 
 ## Requirements
