@@ -357,14 +357,14 @@ public record class NamespaceWriteParams : ParamsBase
     /// <summary>
     /// The schema of the attributes attached to the documents.
     /// </summary>
-    public IReadOnlyDictionary<string, AttributeSchema>? Schema
+    public IReadOnlyDictionary<string, AttributeSchemaConfig>? Schema
     {
         get
         {
             this._rawBodyData.Freeze();
-            return this._rawBodyData.GetNullableClass<FrozenDictionary<string, AttributeSchema>>(
-                "schema"
-            );
+            return this._rawBodyData.GetNullableClass<
+                FrozenDictionary<string, AttributeSchemaConfig>
+            >("schema");
         }
         init
         {
@@ -373,7 +373,7 @@ public record class NamespaceWriteParams : ParamsBase
                 return;
             }
 
-            this._rawBodyData.Set<FrozenDictionary<string, AttributeSchema>?>(
+            this._rawBodyData.Set<FrozenDictionary<string, AttributeSchemaConfig>?>(
                 "schema",
                 value == null ? null : FrozenDictionary.ToFrozenDictionary(value)
             );

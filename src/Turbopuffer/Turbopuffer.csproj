@@ -17,4 +17,11 @@
   <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
     <PackageReference Include="System.Collections.Immutable" Version="8.0.0" />
   </ItemGroup>
+  <ItemGroup>
+    <!-- These files are obsoleted by custom code. Ignoring them like this rather than removing them from the tree minimizes Stainless-generated conflicts. -->
+    <Compile Remove="Models\Namespaces\AttributeSchema.cs" />
+    <Compile Remove="Models\Namespaces\Columns.cs" />
+    <Compile Remove="Models\Namespaces\ID.cs" />
+    <Compile Remove="Models\Namespaces\Row.cs" />
+  </ItemGroup>
 </Project>
