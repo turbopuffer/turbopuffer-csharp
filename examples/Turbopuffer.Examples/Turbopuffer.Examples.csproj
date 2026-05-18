@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net8.0</TargetFramework>
+    <RootNamespace>Turbopuffer.Examples</RootNamespace>
+    <BuildPackage>false</BuildPackage>
+    <IsPackable>false</IsPackable>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>disable</ImplicitUsings>
+    <!-- Each example exposes its own Main(); pick one with -p:Example=<name>. -->
+    <Example Condition="'$(Example)' == ''">WriteAndQuery</Example>
+    <StartupObject>Turbopuffer.Examples.$(Example)</StartupObject>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\Turbopuffer\Turbopuffer.csproj" />
+  </ItemGroup>
+</Project>
