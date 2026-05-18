@@ -19,6 +19,7 @@ public abstract class AggregateBy
         new AggregateByCountDeprecated(attr);
 }
 
+[JsonConverter(typeof(AggregateByJsonConverter))]
 public sealed class AggregateByRaw(JsonElement value) : AggregateBy
 {
     public JsonElement Value { get; } = value;
@@ -29,6 +30,9 @@ public sealed class AggregateByRaw(JsonElement value) : AggregateBy
 
 internal sealed class AggregateByJsonConverter : JsonConverter<AggregateBy>
 {
+    public override bool CanConvert(Type typeToConvert) =>
+        typeof(AggregateBy).IsAssignableFrom(typeToConvert);
+
     public override AggregateBy Read(
         ref Utf8JsonReader reader,
         Type typeToConvert,
@@ -42,6 +46,7 @@ internal sealed class AggregateByJsonConverter : JsonConverter<AggregateBy>
     ) => value.WriteJson(writer, options);
 }
 
+[JsonConverter(typeof(AggregateByJsonConverter))]
 public sealed class AggregateByCount : AggregateBy
 {
     internal override void WriteJson(Utf8JsonWriter writer, JsonSerializerOptions options)
@@ -52,6 +57,7 @@ public sealed class AggregateByCount : AggregateBy
     }
 }
 
+[JsonConverter(typeof(AggregateByJsonConverter))]
 public sealed class AggregateByCountDeprecated(string attr) : AggregateBy
 {
     public string Attr { get; } = attr;
@@ -65,6 +71,7 @@ public sealed class AggregateByCountDeprecated(string attr) : AggregateBy
     }
 }
 
+[JsonConverter(typeof(AggregateByJsonConverter))]
 public sealed class AggregateBySum(string attr) : AggregateBy
 {
     public string Attr { get; } = attr;
@@ -86,6 +93,7 @@ public abstract class Expr
     public static ExprRefNew RefNew(string refNew) => new ExprRefNew(refNew);
 }
 
+[JsonConverter(typeof(ExprJsonConverter))]
 public sealed class ExprRaw(JsonElement value) : Expr
 {
     public JsonElement Value { get; } = value;
@@ -96,6 +104,9 @@ public sealed class ExprRaw(JsonElement value) : Expr
 
 internal sealed class ExprJsonConverter : JsonConverter<Expr>
 {
+    public override bool CanConvert(Type typeToConvert) =>
+        typeof(Expr).IsAssignableFrom(typeToConvert);
+
     public override Expr Read(
         ref Utf8JsonReader reader,
         Type typeToConvert,
@@ -106,6 +117,7 @@ internal sealed class ExprJsonConverter : JsonConverter<Expr>
         value.WriteJson(writer, options);
 }
 
+[JsonConverter(typeof(ExprJsonConverter))]
 public sealed class ExprRefNew(string refNew) : Expr
 {
     public new string RefNew { get; } = refNew;
@@ -221,6 +233,7 @@ public abstract class Filter : RankByText
     public static FilterOr Or(params Filter[] filters) => new FilterOr(filters);
 }
 
+[JsonConverter(typeof(FilterJsonConverter))]
 public sealed class FilterRaw(JsonElement value) : Filter
 {
     public JsonElement Value { get; } = value;
@@ -231,6 +244,9 @@ public sealed class FilterRaw(JsonElement value) : Filter
 
 internal sealed class FilterJsonConverter : JsonConverter<Filter>
 {
+    public override bool CanConvert(Type typeToConvert) =>
+        typeof(Filter).IsAssignableFrom(typeToConvert);
+
     public override Filter Read(
         ref Utf8JsonReader reader,
         Type typeToConvert,
@@ -244,6 +260,7 @@ internal sealed class FilterJsonConverter : JsonConverter<Filter>
     ) => value.WriteJson(writer, options);
 }
 
+[JsonConverter(typeof(FilterJsonConverter))]
 public sealed class FilterAnd(Filter[] filters) : Filter
 {
     public Filter[] Filters { get; } = filters;
@@ -257,6 +274,7 @@ public sealed class FilterAnd(Filter[] filters) : Filter
     }
 }
 
+[JsonConverter(typeof(FilterJsonConverter))]
 public sealed class FilterAnyGt(string attr, object value) : Filter
 {
     public string Attr { get; } = attr;
@@ -272,6 +290,7 @@ public sealed class FilterAnyGt(string attr, object value) : Filter
     }
 }
 
+[JsonConverter(typeof(FilterJsonConverter))]
 public sealed class FilterAnyGte(string attr, object value) : Filter
 {
     public string Attr { get; } = attr;
@@ -287,6 +306,7 @@ public sealed class FilterAnyGte(string attr, object value) : Filter
     }
 }
 
+[JsonConverter(typeof(FilterJsonConverter))]
 public sealed class FilterAnyLt(string attr, object value) : Filter
 {
     public string Attr { get; } = attr;
@@ -302,6 +322,7 @@ public sealed class FilterAnyLt(string attr, object value) : Filter
     }
 }
 
+[JsonConverter(typeof(FilterJsonConverter))]
 public sealed class FilterAnyLte(string attr, object value) : Filter
 {
     public string Attr { get; } = attr;
@@ -317,6 +338,7 @@ public sealed class FilterAnyLte(string attr, object value) : Filter
     }
 }
 
+[JsonConverter(typeof(FilterJsonConverter))]
 public sealed class FilterContains(string attr, object value) : Filter
 {
     public string Attr { get; } = attr;
@@ -332,6 +354,7 @@ public sealed class FilterContains(string attr, object value) : Filter
     }
 }
 
+[JsonConverter(typeof(FilterJsonConverter))]
 public sealed class FilterContainsAllTokens(string attr, string value) : Filter
 {
     public string Attr { get; } = attr;
@@ -347,6 +370,7 @@ public sealed class FilterContainsAllTokens(string attr, string value) : Filter
     }
 }
 
+[JsonConverter(typeof(FilterJsonConverter))]
 public sealed class FilterContainsAllTokensArray(string attr, string[] value) : Filter
 {
     public string Attr { get; } = attr;
@@ -362,6 +386,7 @@ public sealed class FilterContainsAllTokensArray(string attr, string[] value) : 
     }
 }
 
+[JsonConverter(typeof(FilterJsonConverter))]
 public sealed class FilterContainsAllTokensArrayWithParams(
     string attr,
     string[] value,
@@ -383,6 +408,7 @@ public sealed class FilterContainsAllTokensArrayWithParams(
     }
 }
 
+[JsonConverter(typeof(FilterJsonConverter))]
 public sealed class FilterContainsAllTokensWithParams(
     string attr,
     string value,
@@ -404,6 +430,7 @@ public sealed class FilterContainsAllTokensWithParams(
     }
 }
 
+[JsonConverter(typeof(FilterJsonConverter))]
 public sealed class FilterContainsAny(string attr, object[] value) : Filter
 {
     public string Attr { get; } = attr;
@@ -419,6 +446,7 @@ public sealed class FilterContainsAny(string attr, object[] value) : Filter
     }
 }
 
+[JsonConverter(typeof(FilterJsonConverter))]
 public sealed class FilterContainsAnyToken(string attr, string value) : Filter
 {
     public string Attr { get; } = attr;
@@ -434,6 +462,7 @@ public sealed class FilterContainsAnyToken(string attr, string value) : Filter
     }
 }
 
+[JsonConverter(typeof(FilterJsonConverter))]
 public sealed class FilterContainsAnyTokenArray(string attr, string[] value) : Filter
 {
     public string Attr { get; } = attr;
@@ -449,6 +478,7 @@ public sealed class FilterContainsAnyTokenArray(string attr, string[] value) : F
     }
 }
 
+[JsonConverter(typeof(FilterJsonConverter))]
 public sealed class FilterContainsAnyTokenArrayWithParams(
     string attr,
     string[] value,
@@ -470,6 +500,7 @@ public sealed class FilterContainsAnyTokenArrayWithParams(
     }
 }
 
+[JsonConverter(typeof(FilterJsonConverter))]
 public sealed class FilterContainsAnyTokenWithParams(
     string attr,
     string value,
@@ -491,6 +522,7 @@ public sealed class FilterContainsAnyTokenWithParams(
     }
 }
 
+[JsonConverter(typeof(FilterJsonConverter))]
 public sealed class FilterContainsTokenSequence(string attr, string value) : Filter
 {
     public string Attr { get; } = attr;
@@ -506,6 +538,7 @@ public sealed class FilterContainsTokenSequence(string attr, string value) : Fil
     }
 }
 
+[JsonConverter(typeof(FilterJsonConverter))]
 public sealed class FilterContainsTokenSequenceArray(string attr, string[] value) : Filter
 {
     public string Attr { get; } = attr;
@@ -521,6 +554,7 @@ public sealed class FilterContainsTokenSequenceArray(string attr, string[] value
     }
 }
 
+[JsonConverter(typeof(FilterJsonConverter))]
 public sealed class FilterEq(string attr, object value) : Filter
 {
     public string Attr { get; } = attr;
@@ -536,6 +570,7 @@ public sealed class FilterEq(string attr, object value) : Filter
     }
 }
 
+[JsonConverter(typeof(FilterJsonConverter))]
 public sealed class FilterGlob(string attr, string value) : Filter
 {
     public string Attr { get; } = attr;
@@ -551,6 +586,7 @@ public sealed class FilterGlob(string attr, string value) : Filter
     }
 }
 
+[JsonConverter(typeof(FilterJsonConverter))]
 public sealed class FilterGt(string attr, object value) : Filter
 {
     public string Attr { get; } = attr;
@@ -566,6 +602,7 @@ public sealed class FilterGt(string attr, object value) : Filter
     }
 }
 
+[JsonConverter(typeof(FilterJsonConverter))]
 public sealed class FilterGte(string attr, object value) : Filter
 {
     public string Attr { get; } = attr;
@@ -581,6 +618,7 @@ public sealed class FilterGte(string attr, object value) : Filter
     }
 }
 
+[JsonConverter(typeof(FilterJsonConverter))]
 public sealed class FilterIGlob(string attr, string value) : Filter
 {
     public string Attr { get; } = attr;
@@ -596,6 +634,7 @@ public sealed class FilterIGlob(string attr, string value) : Filter
     }
 }
 
+[JsonConverter(typeof(FilterJsonConverter))]
 public sealed class FilterIn(string attr, object[] value) : Filter
 {
     public string Attr { get; } = attr;
@@ -611,6 +650,7 @@ public sealed class FilterIn(string attr, object[] value) : Filter
     }
 }
 
+[JsonConverter(typeof(FilterJsonConverter))]
 public sealed class FilterLt(string attr, object value) : Filter
 {
     public string Attr { get; } = attr;
@@ -626,6 +666,7 @@ public sealed class FilterLt(string attr, object value) : Filter
     }
 }
 
+[JsonConverter(typeof(FilterJsonConverter))]
 public sealed class FilterLte(string attr, object value) : Filter
 {
     public string Attr { get; } = attr;
@@ -641,6 +682,7 @@ public sealed class FilterLte(string attr, object value) : Filter
     }
 }
 
+[JsonConverter(typeof(FilterJsonConverter))]
 public sealed class FilterNot(Filter filter) : Filter
 {
     public Filter Filter { get; } = filter;
@@ -654,6 +696,7 @@ public sealed class FilterNot(Filter filter) : Filter
     }
 }
 
+[JsonConverter(typeof(FilterJsonConverter))]
 public sealed class FilterNotContains(string attr, object value) : Filter
 {
     public string Attr { get; } = attr;
@@ -669,6 +712,7 @@ public sealed class FilterNotContains(string attr, object value) : Filter
     }
 }
 
+[JsonConverter(typeof(FilterJsonConverter))]
 public sealed class FilterNotContainsAny(string attr, object[] value) : Filter
 {
     public string Attr { get; } = attr;
@@ -684,6 +728,7 @@ public sealed class FilterNotContainsAny(string attr, object[] value) : Filter
     }
 }
 
+[JsonConverter(typeof(FilterJsonConverter))]
 public sealed class FilterNotEq(string attr, object value) : Filter
 {
     public string Attr { get; } = attr;
@@ -699,6 +744,7 @@ public sealed class FilterNotEq(string attr, object value) : Filter
     }
 }
 
+[JsonConverter(typeof(FilterJsonConverter))]
 public sealed class FilterNotGlob(string attr, string value) : Filter
 {
     public string Attr { get; } = attr;
@@ -714,6 +760,7 @@ public sealed class FilterNotGlob(string attr, string value) : Filter
     }
 }
 
+[JsonConverter(typeof(FilterJsonConverter))]
 public sealed class FilterNotIGlob(string attr, string value) : Filter
 {
     public string Attr { get; } = attr;
@@ -729,6 +776,7 @@ public sealed class FilterNotIGlob(string attr, string value) : Filter
     }
 }
 
+[JsonConverter(typeof(FilterJsonConverter))]
 public sealed class FilterNotIn(string attr, object[] value) : Filter
 {
     public string Attr { get; } = attr;
@@ -744,6 +792,7 @@ public sealed class FilterNotIn(string attr, object[] value) : Filter
     }
 }
 
+[JsonConverter(typeof(FilterJsonConverter))]
 public sealed class FilterOr(Filter[] filters) : Filter
 {
     public Filter[] Filters { get; } = filters;
@@ -757,6 +806,7 @@ public sealed class FilterOr(Filter[] filters) : Filter
     }
 }
 
+[JsonConverter(typeof(FilterJsonConverter))]
 public sealed class FilterRegex(string attr, string value) : Filter
 {
     public string Attr { get; } = attr;
@@ -783,6 +833,7 @@ public abstract class GroupBy
         new GroupByExpr(name, value);
 }
 
+[JsonConverter(typeof(GroupByJsonConverter))]
 public sealed class GroupByRaw(JsonElement value) : GroupBy
 {
     public JsonElement Value { get; } = value;
@@ -793,6 +844,9 @@ public sealed class GroupByRaw(JsonElement value) : GroupBy
 
 internal sealed class GroupByJsonConverter : JsonConverter<GroupBy>
 {
+    public override bool CanConvert(Type typeToConvert) =>
+        typeof(GroupBy).IsAssignableFrom(typeToConvert);
+
     public override GroupBy Read(
         ref Utf8JsonReader reader,
         Type typeToConvert,
@@ -806,6 +860,7 @@ internal sealed class GroupByJsonConverter : JsonConverter<GroupBy>
     ) => value.WriteJson(writer, options);
 }
 
+[JsonConverter(typeof(GroupByJsonConverter))]
 public sealed class GroupByAttr(string value) : GroupBy
 {
     public string Value { get; } = value;
@@ -816,6 +871,7 @@ public sealed class GroupByAttr(string value) : GroupBy
     }
 }
 
+[JsonConverter(typeof(GroupByJsonConverter))]
 public sealed class GroupByExpr(string name, GroupByFunction value) : GroupBy
 {
     public string Name { get; } = name;
@@ -839,6 +895,7 @@ public abstract class GroupByFunction
         new GroupByFunctionForEachUnique(attr);
 }
 
+[JsonConverter(typeof(GroupByFunctionJsonConverter))]
 public sealed class GroupByFunctionRaw(JsonElement value) : GroupByFunction
 {
     public JsonElement Value { get; } = value;
@@ -849,6 +906,9 @@ public sealed class GroupByFunctionRaw(JsonElement value) : GroupByFunction
 
 internal sealed class GroupByFunctionJsonConverter : JsonConverter<GroupByFunction>
 {
+    public override bool CanConvert(Type typeToConvert) =>
+        typeof(GroupByFunction).IsAssignableFrom(typeToConvert);
+
     public override GroupByFunction Read(
         ref Utf8JsonReader reader,
         Type typeToConvert,
@@ -862,6 +922,7 @@ internal sealed class GroupByFunctionJsonConverter : JsonConverter<GroupByFuncti
     ) => value.WriteJson(writer, options);
 }
 
+[JsonConverter(typeof(GroupByFunctionJsonConverter))]
 public sealed class GroupByFunctionForEachUnique(string attr) : GroupByFunction
 {
     public string Attr { get; } = attr;
@@ -896,6 +957,7 @@ public abstract class RankBy
         new RankByAttributes(items);
 }
 
+[JsonConverter(typeof(RankByJsonConverter))]
 public sealed class RankByRaw(JsonElement value) : RankBy
 {
     public JsonElement Value { get; } = value;
@@ -906,6 +968,9 @@ public sealed class RankByRaw(JsonElement value) : RankBy
 
 internal sealed class RankByJsonConverter : JsonConverter<RankBy>
 {
+    public override bool CanConvert(Type typeToConvert) =>
+        typeof(RankBy).IsAssignableFrom(typeToConvert);
+
     public override RankBy Read(
         ref Utf8JsonReader reader,
         Type typeToConvert,
@@ -919,6 +984,7 @@ internal sealed class RankByJsonConverter : JsonConverter<RankBy>
     ) => value.WriteJson(writer, options);
 }
 
+[JsonConverter(typeof(RankByJsonConverter))]
 public sealed class RankByAnn(string attr, float[] value) : RankBy
 {
     public string Attr { get; } = attr;
@@ -934,6 +1000,7 @@ public sealed class RankByAnn(string attr, float[] value) : RankBy
     }
 }
 
+[JsonConverter(typeof(RankByJsonConverter))]
 public sealed class RankByAttribute(string attr, RankByAttributeOrder order) : RankBy
 {
     public string Attr { get; } = attr;
@@ -984,6 +1051,7 @@ internal sealed class RankByAttributeOrderJsonConverter : JsonConverter<RankByAt
         );
 }
 
+[JsonConverter(typeof(RankByJsonConverter))]
 public sealed class RankByAttributes(RankByAttribute[] items) : RankBy
 {
     public RankByAttribute[] Items { get; } = items;
@@ -999,6 +1067,7 @@ public sealed class RankByAttributes(RankByAttribute[] items) : RankBy
     }
 }
 
+[JsonConverter(typeof(RankByJsonConverter))]
 public sealed class RankByKnn(string attr, float[] value) : RankBy
 {
     public string Attr { get; } = attr;
@@ -1014,6 +1083,7 @@ public sealed class RankByKnn(string attr, float[] value) : RankBy
     }
 }
 
+[JsonConverter(typeof(RankByJsonConverter))]
 public sealed class RankBySparseKnn(
     string attr,
     System.Collections.Generic.IReadOnlyDictionary<string, double> value
@@ -1076,6 +1146,7 @@ public abstract class RankByText : RankBy
         new RankByTextDist(subquery, origin);
 }
 
+[JsonConverter(typeof(RankByTextJsonConverter))]
 public sealed class RankByTextRaw(JsonElement value) : RankByText
 {
     public JsonElement Value { get; } = value;
@@ -1086,6 +1157,9 @@ public sealed class RankByTextRaw(JsonElement value) : RankByText
 
 internal sealed class RankByTextJsonConverter : JsonConverter<RankByText>
 {
+    public override bool CanConvert(Type typeToConvert) =>
+        typeof(RankByText).IsAssignableFrom(typeToConvert);
+
     public override RankByText Read(
         ref Utf8JsonReader reader,
         Type typeToConvert,
@@ -1099,6 +1173,7 @@ internal sealed class RankByTextJsonConverter : JsonConverter<RankByText>
     ) => value.WriteJson(writer, options);
 }
 
+[JsonConverter(typeof(RankByTextJsonConverter))]
 public sealed class RankByTextAttribute(string attr) : RankByText
 {
     public string Attr { get; } = attr;
@@ -1112,6 +1187,7 @@ public sealed class RankByTextAttribute(string attr) : RankByText
     }
 }
 
+[JsonConverter(typeof(RankByTextJsonConverter))]
 public sealed class RankByTextBM25(string attr, string value) : RankByText
 {
     public string Attr { get; } = attr;
@@ -1127,6 +1203,7 @@ public sealed class RankByTextBM25(string attr, string value) : RankByText
     }
 }
 
+[JsonConverter(typeof(RankByTextJsonConverter))]
 public sealed class RankByTextBM25Array(string attr, string[] value) : RankByText
 {
     public string Attr { get; } = attr;
@@ -1142,6 +1219,7 @@ public sealed class RankByTextBM25Array(string attr, string[] value) : RankByTex
     }
 }
 
+[JsonConverter(typeof(RankByTextJsonConverter))]
 public sealed class RankByTextBM25ArrayWithParams(
     string attr,
     string[] value,
@@ -1163,6 +1241,7 @@ public sealed class RankByTextBM25ArrayWithParams(
     }
 }
 
+[JsonConverter(typeof(RankByTextJsonConverter))]
 public sealed class RankByTextBM25WithParams(string attr, string value, Bm25ClauseParams @params)
     : RankByText
 {
@@ -1181,6 +1260,7 @@ public sealed class RankByTextBM25WithParams(string attr, string value, Bm25Clau
     }
 }
 
+[JsonConverter(typeof(RankByTextJsonConverter))]
 public sealed class RankByTextDecay(RankByText subquery, DecayParams @params) : RankByText
 {
     public RankByText Subquery { get; } = subquery;
@@ -1196,6 +1276,7 @@ public sealed class RankByTextDecay(RankByText subquery, DecayParams @params) : 
     }
 }
 
+[JsonConverter(typeof(RankByTextJsonConverter))]
 public sealed class RankByTextDist(RankByText subquery, object origin) : RankByText
 {
     public RankByText Subquery { get; } = subquery;
@@ -1211,6 +1292,7 @@ public sealed class RankByTextDist(RankByText subquery, object origin) : RankByT
     }
 }
 
+[JsonConverter(typeof(RankByTextJsonConverter))]
 public sealed class RankByTextMax(RankByText[] subqueries) : RankByText
 {
     public RankByText[] Subqueries { get; } = subqueries;
@@ -1224,6 +1306,7 @@ public sealed class RankByTextMax(RankByText[] subqueries) : RankByText
     }
 }
 
+[JsonConverter(typeof(RankByTextJsonConverter))]
 public sealed class RankByTextProduct(double weight, RankByText subquery) : RankByText
 {
     public double Weight { get; } = weight;
@@ -1239,6 +1322,7 @@ public sealed class RankByTextProduct(double weight, RankByText subquery) : Rank
     }
 }
 
+[JsonConverter(typeof(RankByTextJsonConverter))]
 public sealed class RankByTextProduct2(RankByText subquery, double weight) : RankByText
 {
     public RankByText Subquery { get; } = subquery;
@@ -1254,6 +1338,7 @@ public sealed class RankByTextProduct2(RankByText subquery, double weight) : Ran
     }
 }
 
+[JsonConverter(typeof(RankByTextJsonConverter))]
 public sealed class RankByTextSaturate(RankByText subquery, SaturateParams @params) : RankByText
 {
     public RankByText Subquery { get; } = subquery;
@@ -1269,6 +1354,7 @@ public sealed class RankByTextSaturate(RankByText subquery, SaturateParams @para
     }
 }
 
+[JsonConverter(typeof(RankByTextJsonConverter))]
 public sealed class RankByTextSum(RankByText[] subqueries) : RankByText
 {
     public RankByText[] Subqueries { get; } = subqueries;
