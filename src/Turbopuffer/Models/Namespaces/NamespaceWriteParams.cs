@@ -575,12 +575,12 @@ public sealed record class PatchByFilter : JsonModel
     /// <summary>
     /// Filter by attributes. Same syntax as the query endpoint.
     /// </summary>
-    public required JsonElement Filters
+    public required Filter Filters
     {
         get
         {
             this._rawData.Freeze();
-            return this._rawData.GetNotNullStruct<JsonElement>("filters");
+            return this._rawData.GetNotNullClass<Filter>("filters");
         }
         init { this._rawData.Set("filters", value); }
     }

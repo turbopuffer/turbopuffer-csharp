@@ -224,12 +224,12 @@ public sealed record class Query : JsonModel
     /// <summary>
     /// Aggregations to compute over all documents in the namespace that match the filters.
     /// </summary>
-    public IReadOnlyDictionary<string, JsonElement>? AggregateBy
+    public IReadOnlyDictionary<string, AggregateBy>? AggregateBy
     {
         get
         {
             this._rawData.Freeze();
-            return this._rawData.GetNullableClass<FrozenDictionary<string, JsonElement>>(
+            return this._rawData.GetNullableClass<FrozenDictionary<string, AggregateBy>>(
                 "aggregate_by"
             );
         }
@@ -240,7 +240,7 @@ public sealed record class Query : JsonModel
                 return;
             }
 
-            this._rawData.Set<FrozenDictionary<string, JsonElement>?>(
+            this._rawData.Set<FrozenDictionary<string, AggregateBy>?>(
                 "aggregate_by",
                 value == null ? null : FrozenDictionary.ToFrozenDictionary(value)
             );
@@ -299,12 +299,12 @@ public sealed record class Query : JsonModel
     /// Exact filters for attributes to refine search results for. Think of it as
     /// a SQL WHERE clause.
     /// </summary>
-    public JsonElement? Filters
+    public Filter? Filters
     {
         get
         {
             this._rawData.Freeze();
-            return this._rawData.GetNullableStruct<JsonElement>("filters");
+            return this._rawData.GetNullableClass<Filter>("filters");
         }
         init
         {
@@ -321,12 +321,12 @@ public sealed record class Query : JsonModel
     /// Groups documents by the specified attributes (the "group key") before computing
     /// aggregates. Aggregates are computed separately for each group.
     /// </summary>
-    public IReadOnlyList<JsonElement>? GroupBy
+    public IReadOnlyList<GroupBy>? GroupBy
     {
         get
         {
             this._rawData.Freeze();
-            return this._rawData.GetNullableStruct<ImmutableArray<JsonElement>>("group_by");
+            return this._rawData.GetNullableStruct<ImmutableArray<GroupBy>>("group_by");
         }
         init
         {
@@ -335,7 +335,7 @@ public sealed record class Query : JsonModel
                 return;
             }
 
-            this._rawData.Set<ImmutableArray<JsonElement>?>(
+            this._rawData.Set<ImmutableArray<GroupBy>?>(
                 "group_by",
                 value == null ? null : ImmutableArray.ToImmutableArray(value)
             );
@@ -387,12 +387,12 @@ public sealed record class Query : JsonModel
     /// <summary>
     /// How to rank the documents in the namespace.
     /// </summary>
-    public JsonElement? RankBy
+    public RankBy? RankBy
     {
         get
         {
             this._rawData.Freeze();
-            return this._rawData.GetNullableStruct<JsonElement>("rank_by");
+            return this._rawData.GetNullableClass<RankBy>("rank_by");
         }
         init
         {

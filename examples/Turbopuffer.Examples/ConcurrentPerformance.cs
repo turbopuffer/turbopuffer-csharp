@@ -120,9 +120,7 @@ static class ConcurrentPerformance
             .Query(
                 new NamespaceQueryParams
                 {
-                    RankBy = JsonSerializer.SerializeToElement(
-                        RankBy.Ann("vector", GenerateRandomVector())
-                    ),
+                    RankBy = RankBy.Ann("vector", GenerateRandomVector()),
                     TopK = 2,
                     IncludeAttributes = true,
                 }
