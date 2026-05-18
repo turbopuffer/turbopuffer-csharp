@@ -1,5 +1,18 @@
 # Changelog
 
+## 0.1.0-alpha.4 (2026-05-18)
+
+Full Changelog: [v0.1.0-alpha.3...v0.1.0-alpha.4](https://github.com/turbopuffer/turbopuffer-csharp/compare/v0.1.0-alpha.3...v0.1.0-alpha.4)
+
+### Bug Fixes
+
+* improve ergonomics of custom types ([7165003](https://github.com/turbopuffer/turbopuffer-csharp/commit/71650031d5dd97bfb8a65801d523816c3c5dbea5))
+
+
+### Documentation
+
+* fix README API usage and strip header tag for NuGet ([#10](https://github.com/turbopuffer/turbopuffer-csharp/issues/10)) ([e07d83b](https://github.com/turbopuffer/turbopuffer-csharp/commit/e07d83bc9f60240288cb56943cbf1869ecdea87c))
+
 ## 0.1.0-alpha.3 (2026-05-18)
 
 Full Changelog: [v0.1.0-alpha.2...v0.1.0-alpha.3](https://github.com/turbopuffer/turbopuffer-csharp/compare/v0.1.0-alpha.2...v0.1.0-alpha.3)
