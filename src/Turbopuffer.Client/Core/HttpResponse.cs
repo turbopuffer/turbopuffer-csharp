@@ -2,9 +2,12 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
+using System.IO.Compression;
+using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Runtime.CompilerServices;
+using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
 using Turbopuffer.Client.Exceptions;
@@ -83,24 +86,58 @@ public class HttpResponse : IDisposable
             this.CancellationToken,
             cancellationToken
         );
-        return await RawMessage.Content.ReadAsStreamAsync(
+        var stream = await RawMessage.Content.ReadAsStreamAsync(
 #if NET
             cts.Token
 #endif
         ).ConfigureAwait(false);
+        return Decompress(stream);
     }
 
     public async Task<string> ReadAsString(Threading::CancellationToken cancellationToken = default)
     {
-        using var cts = Threading::CancellationTokenSource.CreateLinkedTokenSource(
-            this.CancellationToken,
-            cancellationToken
-        );
-        return await RawMessage.Content.ReadAsStringAsync(
+        // Read via ReadAsStream rather than Content.ReadAsStringAsync so that the
+        // body is decompressed when the server returns Content-Encoding: gzip.
+        using var stream = await this.ReadAsStream(cancellationToken).ConfigureAwait(false);
+        using var reader = new StreamReader(stream, Encoding.UTF8);
+        return await reader.ReadToEndAsync(
 #if NET
-            cts.Token
+            cancellationToken
 #endif
         ).ConfigureAwait(false);
+    }
+
+    /// <summary>
+    /// Wraps the raw response body in a decompressing stream when the server
+    /// returned a compressed body. Automatic decompression is disabled on the
+    /// default <see cref="HttpClient"/> so the SDK can honor
+    /// <see cref="ClientOptions.Compression"/>; this restores transparent
+    /// decompression for gzip responses.
+    /// </summary>
+    Stream Decompress(Stream stream)
+    {
+        var encodings = RawMessage.Content.Headers.ContentEncoding;
+        // A user-supplied HttpClient with its own auto-decompressing handler will
+        // have already stripped Content-Encoding, so an empty list is a no-op.
+        if (encodings.Count == 0)
+        {
+            return stream;
+        }
+
+        // Only the last applied (outermost) encoding needs undoing here.
+        var encoding = encodings.Last();
+        if (string.Equals(encoding, "gzip", StringComparison.OrdinalIgnoreCase))
+        {
+            return new GZipStream(stream, CompressionMode.Decompress);
+        }
+        if (string.Equals(encoding, "identity", StringComparison.OrdinalIgnoreCase))
+        {
+            return stream;
+        }
+
+        throw new TurbopufferIOException(
+            $"Cannot decode response with unsupported Content-Encoding '{encoding}'"
+        );
     }
 
     public void Dispose()
