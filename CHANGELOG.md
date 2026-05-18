@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.1.0-alpha.5 (2026-05-18)
+
+Full Changelog: [v0.1.0-alpha.4...v0.1.0-alpha.5](https://github.com/turbopuffer/turbopuffer-csharp/compare/v0.1.0-alpha.4...v0.1.0-alpha.5)
+
+### Bug Fixes
+
+* type write filter/condition params as Filter instead of JsonElement ([af0a133](https://github.com/turbopuffer/turbopuffer-csharp/commit/af0a13399b06328fbb06d5ebf2ebb2bfaa7067bc))
+
 ## 0.1.0-alpha.4 (2026-05-18)
 
 Full Changelog: [v0.1.0-alpha.3...v0.1.0-alpha.4](https://github.com/turbopuffer/turbopuffer-csharp/compare/v0.1.0-alpha.3...v0.1.0-alpha.4)
