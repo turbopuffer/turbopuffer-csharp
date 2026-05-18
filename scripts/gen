@@ -1,0 +1,19 @@
+#!/usr/bin/env bash
+
+set -e
+
+cd "$(dirname "$0")/.."
+
+apigen_image=ghcr.io/turbopuffer/turbopuffer-apigen:1de39fc19f54adaeeed16ee5bd3185108de71b87
+
+apigen() {
+    if [[ "$TURBOPUFFER_DEV_APIGEN" ]]; then
+        cargo run --manifest-path=../turbopuffer-apigen/Cargo.toml "$@"
+    else
+        docker run -v "$(pwd):/work" "$apigen_image" "$@"
+    fi
+}
+
+echo "==> Generating code"
+apigen c-sharp > src/Turbopuffer/Models/Namespaces/CustomTypes.cs
+scripts/format

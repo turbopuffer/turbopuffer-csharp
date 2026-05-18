@@ -62,7 +62,12 @@ public interface ITurbopufferClient : IDisposable
     /// </summary>
     ITurbopufferClient WithOptions(Func<ClientOptions, ClientOptions> modifier);
 
-    INamespaceService Namespaces1 { get; }
+    /// <summary>
+    /// Returns a namespace-scoped service. All API calls made on the returned
+    /// service operate on the given namespace by default, so callers don't
+    /// need to set <c>Namespace</c> on every <c>NamespaceXxxParams</c>.
+    /// </summary>
+    INamespaceService Namespace(string @namespace);
 
     /// <summary>
     /// List namespaces.
@@ -112,7 +117,13 @@ public interface ITurbopufferClientWithRawResponse : IDisposable
     /// </summary>
     ITurbopufferClientWithRawResponse WithOptions(Func<ClientOptions, ClientOptions> modifier);
 
-    INamespaceServiceWithRawResponse Namespaces { get; }
+    /// <summary>
+    /// Returns a namespace-scoped raw-response service. All API calls made on
+    /// the returned service operate on the given namespace by default, so
+    /// callers don't need to set <c>Namespace</c> on every
+    /// <c>NamespaceXxxParams</c>.
+    /// </summary>
+    INamespaceServiceWithRawResponse Namespace(string @namespace);
 
     /// <summary>
     /// Returns a raw HTTP response for <c>get /v1/namespaces</c>, but is otherwise the
