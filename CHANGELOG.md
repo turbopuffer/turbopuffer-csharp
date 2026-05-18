@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.1.0-alpha.3 (2026-05-18)
+
+Full Changelog: [v0.1.0-alpha.2...v0.1.0-alpha.3](https://github.com/turbopuffer/turbopuffer-csharp/compare/v0.1.0-alpha.2...v0.1.0-alpha.3)
+
+### Features
+
+* spec: rename C# package to Turbopuffer.Client ([f749a74](https://github.com/turbopuffer/turbopuffer-csharp/commit/f749a749a72d08b41074c24df15deb8a54d16753))
+
 ## 0.1.0-alpha.2 (2026-05-18)
 
 Full Changelog: [v0.1.0-alpha.1...v0.1.0-alpha.2](https://github.com/turbopuffer/turbopuffer-csharp/compare/v0.1.0-alpha.1...v0.1.0-alpha.2)
