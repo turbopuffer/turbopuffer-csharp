@@ -33,3 +33,10 @@ dotnet_diagnostic.IDE0057.severity = none # Caused by use of `.Substring(...)`
 dotnet_diagnostic.CA1866.severity = none # Caused by use of `.StartsWith(...)` with single character string
 dotnet_diagnostic.CA1847.severity = none # Caused by use of `.Contains(...)` with single character string
 dotnet_diagnostic.CA2263.severity = none # Caused by use of non-generic `Enum.IsDefined(...)`
+
+# Example code prioritizes readability over the micro-optimizations these
+# rules suggest.
+[examples/**.cs]
+dotnet_diagnostic.IDE0300.severity = none # "Collection initialization can be simplified" is a bit overzealous
+dotnet_diagnostic.IDE0305.severity = none # "Collection initialization can be simplified" is a bit overzealous
+dotnet_diagnostic.CA1861.severity = none # "Prefer 'static readonly' fields over constant array arguments" hurts readability in examples
