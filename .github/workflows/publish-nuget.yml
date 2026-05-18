@@ -19,6 +19,12 @@ jobs:
         with:
           dotnet-version: '8.0.x'
 
+      # NuGet does not render the inline <a>/<img> tag in the README header,
+      # so strip it from the first line before packing. The checkout is
+      # ephemeral, so this edit never makes it back into the repository.
+      - name: Post-process README for NuGet
+        run: sed -i '1s| *<a [^>]*>.*</a>||' README.md
+
       - name: Build and pack
         run: dotnet pack
           --configuration Release
