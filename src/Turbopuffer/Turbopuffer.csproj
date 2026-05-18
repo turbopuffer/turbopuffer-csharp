@@ -3,7 +3,7 @@
     <!-- Metadata -->
     <AssemblyTitle>Turbopuffer C#</AssemblyTitle>
     <AssemblyName>Turbopuffer</AssemblyName>
-    <VersionPrefix>0.1.0-alpha.1</VersionPrefix>
+    <VersionPrefix>0.1.0-alpha.2</VersionPrefix>
     <Description>The official .NET library for the Turbopuffer API.</Description>
     <OutputType>Library</OutputType>
     <PackageReadmeFile>README.md</PackageReadmeFile>
