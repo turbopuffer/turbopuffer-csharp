@@ -25,7 +25,7 @@ public class NamespaceWriteParamsTest : TestBase
             Encryption = new CustomerManaged("key_name"),
             PatchByFilter = new()
             {
-                Filters = JsonSerializer.Deserialize<JsonElement>("{}"),
+                Filters = new FilterRaw(JsonSerializer.Deserialize<JsonElement>("{}")),
                 Patch = new Dictionary<string, JsonElement>()
                 {
                     { "foo", JsonSerializer.SerializeToElement("bar") },
@@ -62,7 +62,7 @@ public class NamespaceWriteParamsTest : TestBase
         Encryption expectedEncryption = new CustomerManaged("key_name");
         PatchByFilter expectedPatchByFilter = new()
         {
-            Filters = JsonSerializer.Deserialize<JsonElement>("{}"),
+            Filters = new FilterRaw(JsonSerializer.Deserialize<JsonElement>("{}")),
             Patch = new Dictionary<string, JsonElement>()
             {
                 { "foo", JsonSerializer.SerializeToElement("bar") },
@@ -294,7 +294,7 @@ public class NamespaceWriteParamsTest : TestBase
             Encryption = new CustomerManaged("key_name"),
             PatchByFilter = new()
             {
-                Filters = JsonSerializer.Deserialize<JsonElement>("{}"),
+                Filters = new FilterRaw(JsonSerializer.Deserialize<JsonElement>("{}")),
                 Patch = new Dictionary<string, JsonElement>()
                 {
                     { "foo", JsonSerializer.SerializeToElement("bar") },
@@ -332,7 +332,7 @@ public class PatchByFilterTest : TestBase
     {
         var model = new PatchByFilter
         {
-            Filters = JsonSerializer.Deserialize<JsonElement>("{}"),
+            Filters = new FilterRaw(JsonSerializer.Deserialize<JsonElement>("{}")),
             Patch = new Dictionary<string, JsonElement>()
             {
                 { "foo", JsonSerializer.SerializeToElement("bar") },
@@ -345,7 +345,7 @@ public class PatchByFilterTest : TestBase
             { "foo", JsonSerializer.SerializeToElement("bar") },
         };
 
-        Assert.True(JsonElement.DeepEquals(expectedFilters, model.Filters));
+        Assert.True(JsonElement.DeepEquals(expectedFilters, ((FilterRaw)model.Filters).Value));
         Assert.Equal(expectedPatch.Count, model.Patch.Count);
         foreach (var item in expectedPatch)
         {
@@ -360,7 +360,7 @@ public class PatchByFilterTest : TestBase
     {
         var model = new PatchByFilter
         {
-            Filters = JsonSerializer.Deserialize<JsonElement>("{}"),
+            Filters = new FilterRaw(JsonSerializer.Deserialize<JsonElement>("{}")),
             Patch = new Dictionary<string, JsonElement>()
             {
                 { "foo", JsonSerializer.SerializeToElement("bar") },
@@ -381,7 +381,7 @@ public class PatchByFilterTest : TestBase
     {
         var model = new PatchByFilter
         {
-            Filters = JsonSerializer.Deserialize<JsonElement>("{}"),
+            Filters = new FilterRaw(JsonSerializer.Deserialize<JsonElement>("{}")),
             Patch = new Dictionary<string, JsonElement>()
             {
                 { "foo", JsonSerializer.SerializeToElement("bar") },
@@ -401,7 +401,9 @@ public class PatchByFilterTest : TestBase
             { "foo", JsonSerializer.SerializeToElement("bar") },
         };
 
-        Assert.True(JsonElement.DeepEquals(expectedFilters, deserialized.Filters));
+        Assert.True(
+            JsonElement.DeepEquals(expectedFilters, ((FilterRaw)deserialized.Filters).Value)
+        );
         Assert.Equal(expectedPatch.Count, deserialized.Patch.Count);
         foreach (var item in expectedPatch)
         {
@@ -416,7 +418,7 @@ public class PatchByFilterTest : TestBase
     {
         var model = new PatchByFilter
         {
-            Filters = JsonSerializer.Deserialize<JsonElement>("{}"),
+            Filters = new FilterRaw(JsonSerializer.Deserialize<JsonElement>("{}")),
             Patch = new Dictionary<string, JsonElement>()
             {
                 { "foo", JsonSerializer.SerializeToElement("bar") },
@@ -431,7 +433,7 @@ public class PatchByFilterTest : TestBase
     {
         var model = new PatchByFilter
         {
-            Filters = JsonSerializer.Deserialize<JsonElement>("{}"),
+            Filters = new FilterRaw(JsonSerializer.Deserialize<JsonElement>("{}")),
             Patch = new Dictionary<string, JsonElement>()
             {
                 { "foo", JsonSerializer.SerializeToElement("bar") },

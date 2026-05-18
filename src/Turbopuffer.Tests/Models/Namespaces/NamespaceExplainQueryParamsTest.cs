@@ -15,26 +15,26 @@ public class NamespaceExplainQueryParamsTest : TestBase
         var parameters = new NamespaceExplainQueryParams
         {
             Namespace = "namespace",
-            AggregateBy = new Dictionary<string, JsonElement>()
+            AggregateBy = new Dictionary<string, AggregateBy>()
             {
-                { "foo", JsonSerializer.SerializeToElement("bar") },
+                { "foo", new AggregateByRaw(JsonSerializer.SerializeToElement("bar")) },
             },
             Consistency = new() { Level = Level.Strong },
             DistanceMetric = DistanceMetric.CosineDistance,
             ExcludeAttributes = ["string"],
-            Filters = JsonSerializer.Deserialize<JsonElement>("{}"),
-            GroupBy = [JsonSerializer.Deserialize<JsonElement>("{}")],
+            Filters = new FilterRaw(JsonSerializer.Deserialize<JsonElement>("{}")),
+            GroupBy = [new GroupByRaw(JsonSerializer.Deserialize<JsonElement>("{}"))],
             IncludeAttributes = true,
             Limit = 0,
-            RankBy = JsonSerializer.Deserialize<JsonElement>("{}"),
+            RankBy = new RankByRaw(JsonSerializer.Deserialize<JsonElement>("{}")),
             TopK = 0,
             VectorEncoding = VectorEncoding.Float,
         };
 
         string expectedNamespace = "namespace";
-        Dictionary<string, JsonElement> expectedAggregateBy = new()
+        Dictionary<string, AggregateBy> expectedAggregateBy = new()
         {
-            { "foo", JsonSerializer.SerializeToElement("bar") },
+            { "foo", new AggregateByRaw(JsonSerializer.SerializeToElement("bar")) },
         };
         Consistency expectedConsistency = new() { Level = Level.Strong };
         ApiEnum<string, DistanceMetric> expectedDistanceMetric = DistanceMetric.CosineDistance;
@@ -54,7 +54,12 @@ public class NamespaceExplainQueryParamsTest : TestBase
         {
             Assert.True(parameters.AggregateBy.TryGetValue(item.Key, out var value));
 
-            Assert.True(JsonElement.DeepEquals(value, parameters.AggregateBy[item.Key]));
+            Assert.True(
+                JsonElement.DeepEquals(
+                    ((AggregateByRaw)item.Value).Value,
+                    ((AggregateByRaw)parameters.AggregateBy[item.Key]).Value
+                )
+            );
         }
         Assert.Equal(expectedConsistency, parameters.Consistency);
         Assert.Equal(expectedDistanceMetric, parameters.DistanceMetric);
@@ -65,17 +70,22 @@ public class NamespaceExplainQueryParamsTest : TestBase
             Assert.Equal(expectedExcludeAttributes[i], parameters.ExcludeAttributes[i]);
         }
         Assert.NotNull(parameters.Filters);
-        Assert.True(JsonElement.DeepEquals(expectedFilters, parameters.Filters.Value));
+        Assert.True(JsonElement.DeepEquals(expectedFilters, ((FilterRaw)parameters.Filters).Value));
         Assert.NotNull(parameters.GroupBy);
         Assert.Equal(expectedGroupBy.Count, parameters.GroupBy.Count);
         for (int i = 0; i < expectedGroupBy.Count; i++)
         {
-            Assert.True(JsonElement.DeepEquals(expectedGroupBy[i], parameters.GroupBy[i]));
+            Assert.True(
+                JsonElement.DeepEquals(
+                    expectedGroupBy[i],
+                    ((GroupByRaw)parameters.GroupBy[i]).Value
+                )
+            );
         }
         Assert.Equal(expectedIncludeAttributes, parameters.IncludeAttributes);
         Assert.Equal(expectedLimit, parameters.Limit);
         Assert.NotNull(parameters.RankBy);
-        Assert.True(JsonElement.DeepEquals(expectedRankBy, parameters.RankBy.Value));
+        Assert.True(JsonElement.DeepEquals(expectedRankBy, ((RankByRaw)parameters.RankBy).Value));
         Assert.Equal(expectedTopK, parameters.TopK);
         Assert.Equal(expectedVectorEncoding, parameters.VectorEncoding);
     }
@@ -177,18 +187,18 @@ public class NamespaceExplainQueryParamsTest : TestBase
         var parameters = new NamespaceExplainQueryParams
         {
             Namespace = "namespace",
-            AggregateBy = new Dictionary<string, JsonElement>()
+            AggregateBy = new Dictionary<string, AggregateBy>()
             {
-                { "foo", JsonSerializer.SerializeToElement("bar") },
+                { "foo", new AggregateByRaw(JsonSerializer.SerializeToElement("bar")) },
             },
             Consistency = new() { Level = Level.Strong },
             DistanceMetric = DistanceMetric.CosineDistance,
             ExcludeAttributes = ["string"],
-            Filters = JsonSerializer.Deserialize<JsonElement>("{}"),
-            GroupBy = [JsonSerializer.Deserialize<JsonElement>("{}")],
+            Filters = new FilterRaw(JsonSerializer.Deserialize<JsonElement>("{}")),
+            GroupBy = [new GroupByRaw(JsonSerializer.Deserialize<JsonElement>("{}"))],
             IncludeAttributes = true,
             Limit = 0,
-            RankBy = JsonSerializer.Deserialize<JsonElement>("{}"),
+            RankBy = new RankByRaw(JsonSerializer.Deserialize<JsonElement>("{}")),
             TopK = 0,
             VectorEncoding = VectorEncoding.Float,
         };

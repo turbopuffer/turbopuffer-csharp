@@ -32,12 +32,12 @@ public record class NamespaceExplainQueryParams : ParamsBase
     /// <summary>
     /// Aggregations to compute over all documents in the namespace that match the filters.
     /// </summary>
-    public IReadOnlyDictionary<string, JsonElement>? AggregateBy
+    public IReadOnlyDictionary<string, AggregateBy>? AggregateBy
     {
         get
         {
             this._rawBodyData.Freeze();
-            return this._rawBodyData.GetNullableClass<FrozenDictionary<string, JsonElement>>(
+            return this._rawBodyData.GetNullableClass<FrozenDictionary<string, AggregateBy>>(
                 "aggregate_by"
             );
         }
@@ -48,7 +48,7 @@ public record class NamespaceExplainQueryParams : ParamsBase
                 return;
             }
 
-            this._rawBodyData.Set<FrozenDictionary<string, JsonElement>?>(
+            this._rawBodyData.Set<FrozenDictionary<string, AggregateBy>?>(
                 "aggregate_by",
                 value == null ? null : FrozenDictionary.ToFrozenDictionary(value)
             );
@@ -130,12 +130,12 @@ public record class NamespaceExplainQueryParams : ParamsBase
     /// Exact filters for attributes to refine search results for. Think of it as
     /// a SQL WHERE clause.
     /// </summary>
-    public JsonElement? Filters
+    public Filter? Filters
     {
         get
         {
             this._rawBodyData.Freeze();
-            return this._rawBodyData.GetNullableStruct<JsonElement>("filters");
+            return this._rawBodyData.GetNullableClass<Filter>("filters");
         }
         init
         {
@@ -152,12 +152,12 @@ public record class NamespaceExplainQueryParams : ParamsBase
     /// Groups documents by the specified attributes (the "group key") before computing
     /// aggregates. Aggregates are computed separately for each group.
     /// </summary>
-    public IReadOnlyList<JsonElement>? GroupBy
+    public IReadOnlyList<GroupBy>? GroupBy
     {
         get
         {
             this._rawBodyData.Freeze();
-            return this._rawBodyData.GetNullableStruct<ImmutableArray<JsonElement>>("group_by");
+            return this._rawBodyData.GetNullableStruct<ImmutableArray<GroupBy>>("group_by");
         }
         init
         {
@@ -166,7 +166,7 @@ public record class NamespaceExplainQueryParams : ParamsBase
                 return;
             }
 
-            this._rawBodyData.Set<ImmutableArray<JsonElement>?>(
+            this._rawBodyData.Set<ImmutableArray<GroupBy>?>(
                 "group_by",
                 value == null ? null : ImmutableArray.ToImmutableArray(value)
             );
@@ -218,12 +218,12 @@ public record class NamespaceExplainQueryParams : ParamsBase
     /// <summary>
     /// How to rank the documents in the namespace.
     /// </summary>
-    public JsonElement? RankBy
+    public RankBy? RankBy
     {
         get
         {
             this._rawBodyData.Freeze();
-            return this._rawBodyData.GetNullableStruct<JsonElement>("rank_by");
+            return this._rawBodyData.GetNullableClass<RankBy>("rank_by");
         }
         init
         {

@@ -29,12 +29,12 @@ public record class NamespaceRecallParams : ParamsBase
     /// <summary>
     /// Filter by attributes. Same syntax as the query endpoint.
     /// </summary>
-    public JsonElement? Filters
+    public Filter? Filters
     {
         get
         {
             this._rawBodyData.Freeze();
-            return this._rawBodyData.GetNullableStruct<JsonElement>("filters");
+            return this._rawBodyData.GetNullableClass<Filter>("filters");
         }
         init
         {
@@ -93,12 +93,12 @@ public record class NamespaceRecallParams : ParamsBase
     /// The ranking function to evaluate recall for. If provided, `num` must be either
     /// null or 1.
     /// </summary>
-    public JsonElement? RankBy
+    public RankBy? RankBy
     {
         get
         {
             this._rawBodyData.Freeze();
-            return this._rawBodyData.GetNullableStruct<JsonElement>("rank_by");
+            return this._rawBodyData.GetNullableClass<RankBy>("rank_by");
         }
         init
         {
