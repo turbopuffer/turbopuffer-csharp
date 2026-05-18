@@ -4,7 +4,7 @@ set -e
 
 cd "$(dirname "$0")/.."
 
-apigen_image=ghcr.io/turbopuffer/turbopuffer-apigen:b83c1f947f3f9cf1c22ff4073247a4a4200f8586
+apigen_image=ghcr.io/turbopuffer/turbopuffer-apigen:18b138f122efb885778c5b00b017c835c9e64693
 
 apigen() {
     if [[ "$TURBOPUFFER_DEV_APIGEN" ]]; then
@@ -15,5 +15,5 @@ apigen() {
 }
 
 echo "==> Generating code"
-apigen c-sharp > src/Turbopuffer.Client/Models/Namespaces/CustomTypes.cs
+apigen c-sharp > src/Turbopuffer/Models/Namespaces/CustomTypes.cs
 scripts/format
