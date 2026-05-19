@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.1.0-alpha.7 (2026-05-19)
+
+Full Changelog: [v0.1.0-alpha.6...v0.1.0-alpha.7](https://github.com/turbopuffer/turbopuffer-csharp/compare/v0.1.0-alpha.6...v0.1.0-alpha.7)
+
+### Bug Fixes
+
+* wrap CopyFrom request body in copy_from_namespace ([#17](https://github.com/turbopuffer/turbopuffer-csharp/issues/17)) ([a581ad3](https://github.com/turbopuffer/turbopuffer-csharp/commit/a581ad3e0c2ff3ad0d76f781687aaf1af462efdd))
+
 ## 0.1.0-alpha.6 (2026-05-18)
 
 Full Changelog: [v0.1.0-alpha.5...v0.1.0-alpha.6](https://github.com/turbopuffer/turbopuffer-csharp/compare/v0.1.0-alpha.5...v0.1.0-alpha.6)
