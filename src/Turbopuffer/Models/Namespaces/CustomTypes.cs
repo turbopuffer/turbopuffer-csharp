@@ -182,6 +182,9 @@ public abstract class Filter : RankByText
 
     public static FilterRegex Regex(string attr, string value) => new FilterRegex(attr, value);
 
+    public static FilterFuzzy Fuzzy(string attr, string value, FuzzyParams @params) =>
+        new FilterFuzzy(attr, value, @params);
+
     public static FilterContainsAllTokens ContainsAllTokens(string attr, string value) =>
         new FilterContainsAllTokens(attr, value);
 
@@ -566,6 +569,24 @@ public sealed class FilterEq(string attr, object value) : Filter
         JsonSerializer.Serialize(writer, this.Attr, options);
         writer.WriteStringValue("Eq");
         JsonSerializer.Serialize(writer, this.Value, options);
+        writer.WriteEndArray();
+    }
+}
+
+[JsonConverter(typeof(FilterJsonConverter))]
+public sealed class FilterFuzzy(string attr, string value, FuzzyParams @params) : Filter
+{
+    public string Attr { get; } = attr;
+    public string Value { get; } = value;
+    public FuzzyParams Params { get; } = @params;
+
+    internal override void WriteJson(Utf8JsonWriter writer, JsonSerializerOptions options)
+    {
+        writer.WriteStartArray();
+        JsonSerializer.Serialize(writer, this.Attr, options);
+        writer.WriteStringValue("Fuzzy");
+        JsonSerializer.Serialize(writer, this.Value, options);
+        JsonSerializer.Serialize(writer, this.Params, options);
         writer.WriteEndArray();
     }
 }
