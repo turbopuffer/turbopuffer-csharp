@@ -3,10 +3,12 @@ using System.Collections;
 using System.Collections.Frozen;
 using System.Collections.Generic;
 using System.Collections.Immutable;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using Turbopuffer.Core;
+using Turbopuffer.Exceptions;
 
 namespace Turbopuffer.Models.Namespaces;
 
@@ -36,6 +38,59 @@ public sealed record class Columns : JsonModel
                 return null;
             }
             return [.. element.EnumerateArray()];
+        }
+    }
+
+    /// <summary>
+    /// Gets the values of a column, deserialized as a list of
+    /// <typeparamref name="T"/>.
+    /// </summary>
+    /// <exception cref="KeyNotFoundException">
+    /// Thrown when the column is absent.
+    /// </exception>
+    /// <exception cref="TurbopufferInvalidDataException">
+    /// Thrown when the column is not an array or its values cannot be
+    /// deserialized as <typeparamref name="T"/>.
+    /// </exception>
+    public IReadOnlyList<T> Get<T>(string column)
+    {
+        if (!this.TryGet<T>(column, out var values))
+        {
+            throw new KeyNotFoundException($"'{column}' is not present");
+        }
+        return values;
+    }
+
+    /// <summary>
+    /// Tries to get the values of a column, deserialized as a list of
+    /// <typeparamref name="T"/>. Returns <c>false</c> if the column is absent.
+    /// </summary>
+    /// <exception cref="TurbopufferInvalidDataException">
+    /// Thrown when the column is present but is not an array or its values
+    /// cannot be deserialized as <typeparamref name="T"/>.
+    /// </exception>
+    public bool TryGet<T>(string column, [MaybeNullWhen(false)] out IReadOnlyList<T> values)
+    {
+        if (!this.RawData.TryGetValue(column, out var element))
+        {
+            values = default;
+            return false;
+        }
+        if (element.ValueKind != JsonValueKind.Array)
+        {
+            throw new TurbopufferInvalidDataException($"'{column}' must be an array");
+        }
+        try
+        {
+            values = JsonSerializer.Deserialize<List<T>>(element, ModelBase.SerializerOptions)!;
+            return true;
+        }
+        catch (JsonException e)
+        {
+            throw new TurbopufferInvalidDataException(
+                $"'{column}' values must be of type {typeof(T).FullName}",
+                e
+            );
         }
     }
 
@@ -191,6 +246,55 @@ public sealed record class Row : JsonModel, IEnumerable<KeyValuePair<string, Jso
             }
 
             this._rawData.Set(key, value.Value);
+        }
+    }
+
+    /// <summary>
+    /// Gets the value for the given key, deserialized as
+    /// <typeparamref name="T"/>.
+    /// </summary>
+    /// <exception cref="KeyNotFoundException">
+    /// Thrown when the key is absent.
+    /// </exception>
+    /// <exception cref="TurbopufferInvalidDataException">
+    /// Thrown when the value cannot be deserialized as
+    /// <typeparamref name="T"/>.
+    /// </exception>
+    public T Get<T>(string key)
+    {
+        if (!this.TryGet<T>(key, out var value))
+        {
+            throw new KeyNotFoundException($"'{key}' is not present");
+        }
+        return value;
+    }
+
+    /// <summary>
+    /// Tries to get the value for the given key, deserialized as
+    /// <typeparamref name="T"/>. Returns <c>false</c> if the key is absent.
+    /// </summary>
+    /// <exception cref="TurbopufferInvalidDataException">
+    /// Thrown when the key is present but its value cannot be deserialized as
+    /// <typeparamref name="T"/>.
+    /// </exception>
+    public bool TryGet<T>(string key, [MaybeNullWhen(false)] out T value)
+    {
+        if (!this.RawData.TryGetValue(key, out var element))
+        {
+            value = default;
+            return false;
+        }
+        try
+        {
+            value = JsonSerializer.Deserialize<T>(element, ModelBase.SerializerOptions)!;
+            return true;
+        }
+        catch (JsonException e)
+        {
+            throw new TurbopufferInvalidDataException(
+                $"'{key}' must be of type {typeof(T).FullName}",
+                e
+            );
         }
     }
 
