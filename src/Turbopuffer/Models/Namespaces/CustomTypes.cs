@@ -138,9 +138,13 @@ public abstract class Filter : RankByText
 
     public static FilterNotEq NotEq(string attr, object value) => new FilterNotEq(attr, value);
 
-    public static FilterIn In(string attr, object[] value) => new FilterIn(attr, value);
+    public static FilterIn<T> In<T>(string attr, System.Collections.Generic.IEnumerable<T> value) =>
+        new FilterIn<T>(attr, System.Linq.Enumerable.ToArray(value));
 
-    public static FilterNotIn NotIn(string attr, object[] value) => new FilterNotIn(attr, value);
+    public static FilterNotIn<T> NotIn<T>(
+        string attr,
+        System.Collections.Generic.IEnumerable<T> value
+    ) => new FilterNotIn<T>(attr, System.Linq.Enumerable.ToArray(value));
 
     public static FilterContains Contains(string attr, object value) =>
         new FilterContains(attr, value);
@@ -148,11 +152,15 @@ public abstract class Filter : RankByText
     public static FilterNotContains NotContains(string attr, object value) =>
         new FilterNotContains(attr, value);
 
-    public static FilterContainsAny ContainsAny(string attr, object[] value) =>
-        new FilterContainsAny(attr, value);
+    public static FilterContainsAny<T> ContainsAny<T>(
+        string attr,
+        System.Collections.Generic.IEnumerable<T> value
+    ) => new FilterContainsAny<T>(attr, System.Linq.Enumerable.ToArray(value));
 
-    public static FilterNotContainsAny NotContainsAny(string attr, object[] value) =>
-        new FilterNotContainsAny(attr, value);
+    public static FilterNotContainsAny<T> NotContainsAny<T>(
+        string attr,
+        System.Collections.Generic.IEnumerable<T> value
+    ) => new FilterNotContainsAny<T>(attr, System.Linq.Enumerable.ToArray(value));
 
     public static FilterLt Lt(string attr, object value) => new FilterLt(attr, value);
 
@@ -188,8 +196,10 @@ public abstract class Filter : RankByText
     public static FilterContainsAllTokens ContainsAllTokens(string attr, string value) =>
         new FilterContainsAllTokens(attr, value);
 
-    public static FilterContainsAllTokensArray ContainsAllTokens(string attr, string[] value) =>
-        new FilterContainsAllTokensArray(attr, value);
+    public static FilterContainsAllTokensArray ContainsAllTokens(
+        string attr,
+        System.Collections.Generic.IEnumerable<string> value
+    ) => new FilterContainsAllTokensArray(attr, System.Linq.Enumerable.ToArray(value));
 
     public static FilterContainsAllTokensWithParams ContainsAllTokens(
         string attr,
@@ -199,15 +209,22 @@ public abstract class Filter : RankByText
 
     public static FilterContainsAllTokensArrayWithParams ContainsAllTokens(
         string attr,
-        string[] value,
+        System.Collections.Generic.IEnumerable<string> value,
         ContainsAllTokensFilterParams @params
-    ) => new FilterContainsAllTokensArrayWithParams(attr, value, @params);
+    ) =>
+        new FilterContainsAllTokensArrayWithParams(
+            attr,
+            System.Linq.Enumerable.ToArray(value),
+            @params
+        );
 
     public static FilterContainsAnyToken ContainsAnyToken(string attr, string value) =>
         new FilterContainsAnyToken(attr, value);
 
-    public static FilterContainsAnyTokenArray ContainsAnyToken(string attr, string[] value) =>
-        new FilterContainsAnyTokenArray(attr, value);
+    public static FilterContainsAnyTokenArray ContainsAnyToken(
+        string attr,
+        System.Collections.Generic.IEnumerable<string> value
+    ) => new FilterContainsAnyTokenArray(attr, System.Linq.Enumerable.ToArray(value));
 
     public static FilterContainsAnyTokenWithParams ContainsAnyToken(
         string attr,
@@ -217,17 +234,22 @@ public abstract class Filter : RankByText
 
     public static FilterContainsAnyTokenArrayWithParams ContainsAnyToken(
         string attr,
-        string[] value,
+        System.Collections.Generic.IEnumerable<string> value,
         ContainsAnyTokenFilterParams @params
-    ) => new FilterContainsAnyTokenArrayWithParams(attr, value, @params);
+    ) =>
+        new FilterContainsAnyTokenArrayWithParams(
+            attr,
+            System.Linq.Enumerable.ToArray(value),
+            @params
+        );
 
     public static FilterContainsTokenSequence ContainsTokenSequence(string attr, string value) =>
         new FilterContainsTokenSequence(attr, value);
 
     public static FilterContainsTokenSequenceArray ContainsTokenSequence(
         string attr,
-        string[] value
-    ) => new FilterContainsTokenSequenceArray(attr, value);
+        System.Collections.Generic.IEnumerable<string> value
+    ) => new FilterContainsTokenSequenceArray(attr, System.Linq.Enumerable.ToArray(value));
 
     public static FilterNot Not(Filter filter) => new FilterNot(filter);
 
@@ -434,10 +456,10 @@ public sealed class FilterContainsAllTokensWithParams(
 }
 
 [JsonConverter(typeof(FilterJsonConverter))]
-public sealed class FilterContainsAny(string attr, object[] value) : Filter
+public sealed class FilterContainsAny<T>(string attr, T[] value) : Filter
 {
     public string Attr { get; } = attr;
-    public object[] Value { get; } = value;
+    public T[] Value { get; } = value;
 
     internal override void WriteJson(Utf8JsonWriter writer, JsonSerializerOptions options)
     {
@@ -656,10 +678,10 @@ public sealed class FilterIGlob(string attr, string value) : Filter
 }
 
 [JsonConverter(typeof(FilterJsonConverter))]
-public sealed class FilterIn(string attr, object[] value) : Filter
+public sealed class FilterIn<T>(string attr, T[] value) : Filter
 {
     public string Attr { get; } = attr;
-    public object[] Value { get; } = value;
+    public T[] Value { get; } = value;
 
     internal override void WriteJson(Utf8JsonWriter writer, JsonSerializerOptions options)
     {
@@ -734,10 +756,10 @@ public sealed class FilterNotContains(string attr, object value) : Filter
 }
 
 [JsonConverter(typeof(FilterJsonConverter))]
-public sealed class FilterNotContainsAny(string attr, object[] value) : Filter
+public sealed class FilterNotContainsAny<T>(string attr, T[] value) : Filter
 {
     public string Attr { get; } = attr;
-    public object[] Value { get; } = value;
+    public T[] Value { get; } = value;
 
     internal override void WriteJson(Utf8JsonWriter writer, JsonSerializerOptions options)
     {
@@ -798,10 +820,10 @@ public sealed class FilterNotIGlob(string attr, string value) : Filter
 }
 
 [JsonConverter(typeof(FilterJsonConverter))]
-public sealed class FilterNotIn(string attr, object[] value) : Filter
+public sealed class FilterNotIn<T>(string attr, T[] value) : Filter
 {
     public string Attr { get; } = attr;
-    public object[] Value { get; } = value;
+    public T[] Value { get; } = value;
 
     internal override void WriteJson(Utf8JsonWriter writer, JsonSerializerOptions options)
     {
@@ -962,9 +984,11 @@ public abstract class RankBy
 {
     internal abstract void WriteJson(Utf8JsonWriter writer, JsonSerializerOptions options);
 
-    public static RankByAnn Ann(string attr, float[] value) => new RankByAnn(attr, value);
+    public static RankByAnn Ann(string attr, System.Collections.Generic.IEnumerable<float> value) =>
+        new RankByAnn(attr, System.Linq.Enumerable.ToArray(value));
 
-    public static RankByKnn Knn(string attr, float[] value) => new RankByKnn(attr, value);
+    public static RankByKnn Knn(string attr, System.Collections.Generic.IEnumerable<float> value) =>
+        new RankByKnn(attr, System.Linq.Enumerable.ToArray(value));
 
     public static RankBySparseKnn SparseKnn(
         string attr,
@@ -1128,8 +1152,10 @@ public abstract class RankByText : RankBy
 {
     public static RankByTextBM25 BM25(string attr, string value) => new RankByTextBM25(attr, value);
 
-    public static RankByTextBM25Array BM25(string attr, string[] value) =>
-        new RankByTextBM25Array(attr, value);
+    public static RankByTextBM25Array BM25(
+        string attr,
+        System.Collections.Generic.IEnumerable<string> value
+    ) => new RankByTextBM25Array(attr, System.Linq.Enumerable.ToArray(value));
 
     public static RankByTextBM25WithParams BM25(
         string attr,
@@ -1139,9 +1165,9 @@ public abstract class RankByText : RankBy
 
     public static RankByTextBM25ArrayWithParams BM25(
         string attr,
-        string[] value,
+        System.Collections.Generic.IEnumerable<string> value,
         Bm25ClauseParams @params
-    ) => new RankByTextBM25ArrayWithParams(attr, value, @params);
+    ) => new RankByTextBM25ArrayWithParams(attr, System.Linq.Enumerable.ToArray(value), @params);
 
     public static RankByTextSum Sum(params RankByText[] subqueries) =>
         new RankByTextSum(subqueries);
