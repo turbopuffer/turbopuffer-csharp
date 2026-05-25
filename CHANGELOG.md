@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.1.3 (2026-05-25)
+
+Full Changelog: [v0.1.2...v0.1.3](https://github.com/turbopuffer/turbopuffer-csharp/compare/v0.1.2...v0.1.3)
+
+### Features
+
+* add non-null accessors to multi-query Result ([#27](https://github.com/turbopuffer/turbopuffer-csharp/issues/27)) ([819f82e](https://github.com/turbopuffer/turbopuffer-csharp/commit/819f82eea09941e78378125b94a0c6457b08c5cf))
+
 ## 0.1.2 (2026-05-25)
 
 Full Changelog: [v0.1.1...v0.1.2](https://github.com/turbopuffer/turbopuffer-csharp/compare/v0.1.1...v0.1.2)
