@@ -585,20 +585,14 @@ public sealed record class PatchByFilter : JsonModel
         init { this._rawData.Set("filters", value); }
     }
 
-    public required IReadOnlyDictionary<string, JsonElement> Patch
+    public required Row Patch
     {
         get
         {
             this._rawData.Freeze();
-            return this._rawData.GetNotNullClass<FrozenDictionary<string, JsonElement>>("patch");
+            return this._rawData.GetNotNullClass<Row>("patch");
         }
-        init
-        {
-            this._rawData.Set<FrozenDictionary<string, JsonElement>>(
-                "patch",
-                FrozenDictionary.ToFrozenDictionary(value)
-            );
-        }
+        init { this._rawData.Set("patch", value); }
     }
 
     /// <inheritdoc/>
