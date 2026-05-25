@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.1.2 (2026-05-25)
+
+Full Changelog: [v0.1.1...v0.1.2](https://github.com/turbopuffer/turbopuffer-csharp/compare/v0.1.1...v0.1.2)
+
+### Features
+
+* add non-null accessors to NamespaceQueryResponse ([#25](https://github.com/turbopuffer/turbopuffer-csharp/issues/25)) ([adb9528](https://github.com/turbopuffer/turbopuffer-csharp/commit/adb95284bfac043f6229fc924edd029803fcca91))
+
 ## 0.1.1 (2026-05-25)
 
 Full Changelog: [v0.1.0...v0.1.1](https://github.com/turbopuffer/turbopuffer-csharp/compare/v0.1.0...v0.1.1)
