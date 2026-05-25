@@ -106,6 +106,29 @@ public sealed record class NamespaceQueryResponse : JsonModel
         }
     }
 
+    /// <summary>
+    /// Returns <see cref="Rows"/>, or throws if it is null.
+    /// </summary>
+    /// <exception cref="System.InvalidOperationException">Thrown if <see cref="Rows"/> is null.</exception>
+    public IReadOnlyList<Row> GetRows() =>
+        this.Rows ?? throw new System.InvalidOperationException("Query did not return Rows");
+
+    /// <summary>
+    /// Returns <see cref="Aggregations"/>, or throws if it is null.
+    /// </summary>
+    /// <exception cref="System.InvalidOperationException">Thrown if <see cref="Aggregations"/> is null.</exception>
+    public IReadOnlyDictionary<string, JsonElement> GetAggregations() =>
+        this.Aggregations
+        ?? throw new System.InvalidOperationException("Query did not return Aggregations");
+
+    /// <summary>
+    /// Returns <see cref="AggregationGroups"/>, or throws if it is null.
+    /// </summary>
+    /// <exception cref="System.InvalidOperationException">Thrown if <see cref="AggregationGroups"/> is null.</exception>
+    public IReadOnlyList<Row> GetAggregationGroups() =>
+        this.AggregationGroups
+        ?? throw new System.InvalidOperationException("Query did not return AggregationGroups");
+
     /// <inheritdoc/>
     public override void Validate()
     {
