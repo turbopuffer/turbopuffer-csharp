@@ -111,14 +111,12 @@ class NamespaceMultiQueryResponseFromRaw : IFromRawJson<NamespaceMultiQueryRespo
 [JsonConverter(typeof(JsonModelConverter<Result, ResultFromRaw>))]
 public sealed record class Result : JsonModel
 {
-    public IReadOnlyList<IReadOnlyDictionary<string, JsonElement>>? AggregationGroups
+    public IReadOnlyList<Row>? AggregationGroups
     {
         get
         {
             this._rawData.Freeze();
-            return this._rawData.GetNullableStruct<
-                ImmutableArray<FrozenDictionary<string, JsonElement>>
-            >("aggregation_groups");
+            return this._rawData.GetNullableStruct<ImmutableArray<Row>>("aggregation_groups");
         }
         init
         {
@@ -127,16 +125,9 @@ public sealed record class Result : JsonModel
                 return;
             }
 
-            this._rawData.Set<ImmutableArray<FrozenDictionary<string, JsonElement>>?>(
+            this._rawData.Set<ImmutableArray<Row>?>(
                 "aggregation_groups",
-                value == null
-                    ? null
-                    : ImmutableArray.ToImmutableArray(
-                        Enumerable.Select(
-                            value,
-                            (item) => FrozenDictionary.ToFrozenDictionary(item)
-                        )
-                    )
+                value == null ? null : ImmutableArray.ToImmutableArray(value)
             );
         }
     }
@@ -188,7 +179,10 @@ public sealed record class Result : JsonModel
     /// <inheritdoc/>
     public override void Validate()
     {
-        _ = this.AggregationGroups;
+        foreach (var item in this.AggregationGroups ?? [])
+        {
+            item.Validate();
+        }
         _ = this.Aggregations;
         foreach (var item in this.Rows ?? [])
         {
