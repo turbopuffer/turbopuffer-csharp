@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.1.1 (2026-05-25)
+
+Full Changelog: [v0.1.0...v0.1.1](https://github.com/turbopuffer/turbopuffer-csharp/compare/v0.1.0...v0.1.1)
+
+### Features
+
+* use Row for AggregationGroups ([#23](https://github.com/turbopuffer/turbopuffer-csharp/issues/23)) ([f6e79ba](https://github.com/turbopuffer/turbopuffer-csharp/commit/f6e79ba038a7e780a7f5190355cd0bdc602960a6))
+
 ## 0.1.0 (2026-05-25)
 
 Full Changelog: [v0.1.0-alpha.7...v0.1.0](https://github.com/turbopuffer/turbopuffer-csharp/compare/v0.1.0-alpha.7...v0.1.0)
