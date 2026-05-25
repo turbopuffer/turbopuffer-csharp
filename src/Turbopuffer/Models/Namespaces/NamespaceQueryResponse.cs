@@ -41,14 +41,12 @@ public sealed record class NamespaceQueryResponse : JsonModel
         init { this._rawData.Set("performance", value); }
     }
 
-    public IReadOnlyList<IReadOnlyDictionary<string, JsonElement>>? AggregationGroups
+    public IReadOnlyList<Row>? AggregationGroups
     {
         get
         {
             this._rawData.Freeze();
-            return this._rawData.GetNullableStruct<
-                ImmutableArray<FrozenDictionary<string, JsonElement>>
-            >("aggregation_groups");
+            return this._rawData.GetNullableStruct<ImmutableArray<Row>>("aggregation_groups");
         }
         init
         {
@@ -57,16 +55,9 @@ public sealed record class NamespaceQueryResponse : JsonModel
                 return;
             }
 
-            this._rawData.Set<ImmutableArray<FrozenDictionary<string, JsonElement>>?>(
+            this._rawData.Set<ImmutableArray<Row>?>(
                 "aggregation_groups",
-                value == null
-                    ? null
-                    : ImmutableArray.ToImmutableArray(
-                        Enumerable.Select(
-                            value,
-                            (item) => FrozenDictionary.ToFrozenDictionary(item)
-                        )
-                    )
+                value == null ? null : ImmutableArray.ToImmutableArray(value)
             );
         }
     }
@@ -120,7 +111,10 @@ public sealed record class NamespaceQueryResponse : JsonModel
     {
         this.Billing.Validate();
         this.Performance.Validate();
-        _ = this.AggregationGroups;
+        foreach (var item in this.AggregationGroups ?? [])
+        {
+            item.Validate();
+        }
         _ = this.Aggregations;
         foreach (var item in this.Rows ?? [])
         {
