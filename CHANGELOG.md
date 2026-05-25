@@ -1,5 +1,16 @@
 # Changelog
 
+## 0.1.0 (2026-05-25)
+
+Full Changelog: [v0.1.0-alpha.7...v0.1.0](https://github.com/turbopuffer/turbopuffer-csharp/compare/v0.1.0-alpha.7...v0.1.0)
+
+### Features
+
+* add typed Get/TryGet to Row and Columns ([#19](https://github.com/turbopuffer/turbopuffer-csharp/issues/19)) ([4ae2e30](https://github.com/turbopuffer/turbopuffer-csharp/commit/4ae2e300929ce478a597c5247b88aa30b3d560f0))
+* emit generic factories for `Filter.In` and similar variants ([#21](https://github.com/turbopuffer/turbopuffer-csharp/issues/21)) ([f6f1afc](https://github.com/turbopuffer/turbopuffer-csharp/commit/f6f1afcd5425ac2fc3fceea935717fcdcceedbf3))
+* spec: force generation of FuzzyParams stainless models ([86b3cc9](https://github.com/turbopuffer/turbopuffer-csharp/commit/86b3cc96763035051ba0751bf125dc64579b7bfe))
+* use Row for PatchByFilter.Patch ([#22](https://github.com/turbopuffer/turbopuffer-csharp/issues/22)) ([54b5f13](https://github.com/turbopuffer/turbopuffer-csharp/commit/54b5f13c3ebb4f8ca56c595661a1a044ba99d4ff))
+
 ## 0.1.0-alpha.7 (2026-05-19)
 
 Full Changelog: [v0.1.0-alpha.6...v0.1.0-alpha.7](https://github.com/turbopuffer/turbopuffer-csharp/compare/v0.1.0-alpha.6...v0.1.0-alpha.7)
