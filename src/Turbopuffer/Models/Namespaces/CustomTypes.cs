@@ -91,6 +91,11 @@ public abstract class Expr
     internal abstract void WriteJson(Utf8JsonWriter writer, JsonSerializerOptions options);
 
     public static ExprRefNew RefNew(string refNew) => new ExprRefNew(refNew);
+
+    public static ExprEmbed Embed(string value) => new ExprEmbed(value);
+
+    public static ExprEmbedWithParams Embed(string value, EmbedParams @params) =>
+        new ExprEmbedWithParams(value, @params);
 }
 
 [JsonConverter(typeof(ExprJsonConverter))]
@@ -115,6 +120,36 @@ internal sealed class ExprJsonConverter : JsonConverter<Expr>
 
     public override void Write(Utf8JsonWriter writer, Expr value, JsonSerializerOptions options) =>
         value.WriteJson(writer, options);
+}
+
+[JsonConverter(typeof(ExprJsonConverter))]
+public sealed class ExprEmbed(string value) : Expr
+{
+    public string Value { get; } = value;
+
+    internal override void WriteJson(Utf8JsonWriter writer, JsonSerializerOptions options)
+    {
+        writer.WriteStartArray();
+        writer.WriteStringValue("Embed");
+        JsonSerializer.Serialize(writer, this.Value, options);
+        writer.WriteEndArray();
+    }
+}
+
+[JsonConverter(typeof(ExprJsonConverter))]
+public sealed class ExprEmbedWithParams(string value, EmbedParams @params) : Expr
+{
+    public string Value { get; } = value;
+    public EmbedParams Params { get; } = @params;
+
+    internal override void WriteJson(Utf8JsonWriter writer, JsonSerializerOptions options)
+    {
+        writer.WriteStartArray();
+        writer.WriteStringValue("Embed");
+        JsonSerializer.Serialize(writer, this.Value, options);
+        JsonSerializer.Serialize(writer, this.Params, options);
+        writer.WriteEndArray();
+    }
 }
 
 [JsonConverter(typeof(ExprJsonConverter))]
@@ -987,8 +1022,12 @@ public abstract class RankBy
     public static RankByAnn Ann(string attr, System.Collections.Generic.IEnumerable<float> value) =>
         new RankByAnn(attr, System.Linq.Enumerable.ToArray(value));
 
+    public static RankByAnnExpr AnnExpr(string attr, Expr expr) => new RankByAnnExpr(attr, expr);
+
     public static RankByKnn Knn(string attr, System.Collections.Generic.IEnumerable<float> value) =>
         new RankByKnn(attr, System.Linq.Enumerable.ToArray(value));
+
+    public static RankByKnnExpr KnnExpr(string attr, Expr expr) => new RankByKnnExpr(attr, expr);
 
     public static RankBySparseKnn SparseKnn(
         string attr,
@@ -1041,6 +1080,22 @@ public sealed class RankByAnn(string attr, float[] value) : RankBy
         JsonSerializer.Serialize(writer, this.Attr, options);
         writer.WriteStringValue("ANN");
         JsonSerializer.Serialize(writer, this.Value, options);
+        writer.WriteEndArray();
+    }
+}
+
+[JsonConverter(typeof(RankByJsonConverter))]
+public sealed class RankByAnnExpr(string attr, Expr expr) : RankBy
+{
+    public string Attr { get; } = attr;
+    public Expr Expr { get; } = expr;
+
+    internal override void WriteJson(Utf8JsonWriter writer, JsonSerializerOptions options)
+    {
+        writer.WriteStartArray();
+        JsonSerializer.Serialize(writer, this.Attr, options);
+        writer.WriteStringValue("ANN");
+        JsonSerializer.Serialize(writer, this.Expr, options);
         writer.WriteEndArray();
     }
 }
@@ -1124,6 +1179,22 @@ public sealed class RankByKnn(string attr, float[] value) : RankBy
         JsonSerializer.Serialize(writer, this.Attr, options);
         writer.WriteStringValue("kNN");
         JsonSerializer.Serialize(writer, this.Value, options);
+        writer.WriteEndArray();
+    }
+}
+
+[JsonConverter(typeof(RankByJsonConverter))]
+public sealed class RankByKnnExpr(string attr, Expr expr) : RankBy
+{
+    public string Attr { get; } = attr;
+    public Expr Expr { get; } = expr;
+
+    internal override void WriteJson(Utf8JsonWriter writer, JsonSerializerOptions options)
+    {
+        writer.WriteStartArray();
+        JsonSerializer.Serialize(writer, this.Attr, options);
+        writer.WriteStringValue("kNN");
+        JsonSerializer.Serialize(writer, this.Expr, options);
         writer.WriteEndArray();
     }
 }
