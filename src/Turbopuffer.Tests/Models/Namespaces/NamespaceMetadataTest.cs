@@ -27,6 +27,7 @@ public class NamespaceMetadataTest : TestBase
                     {
                         Type = "string",
                         Ann = true,
+                        Embed = "string",
                         Filterable = true,
                         FullTextSearch = true,
                         Fuzzy = true,
@@ -62,6 +63,7 @@ public class NamespaceMetadataTest : TestBase
                 {
                     Type = "string",
                     Ann = true,
+                    Embed = "string",
                     Filterable = true,
                     FullTextSearch = true,
                     Fuzzy = true,
@@ -117,6 +119,7 @@ public class NamespaceMetadataTest : TestBase
                     {
                         Type = "string",
                         Ann = true,
+                        Embed = "string",
                         Filterable = true,
                         FullTextSearch = true,
                         Fuzzy = true,
@@ -166,6 +169,7 @@ public class NamespaceMetadataTest : TestBase
                     {
                         Type = "string",
                         Ann = true,
+                        Embed = "string",
                         Filterable = true,
                         FullTextSearch = true,
                         Fuzzy = true,
@@ -208,6 +212,7 @@ public class NamespaceMetadataTest : TestBase
                 {
                     Type = "string",
                     Ann = true,
+                    Embed = "string",
                     Filterable = true,
                     FullTextSearch = true,
                     Fuzzy = true,
@@ -263,6 +268,7 @@ public class NamespaceMetadataTest : TestBase
                     {
                         Type = "string",
                         Ann = true,
+                        Embed = "string",
                         Filterable = true,
                         FullTextSearch = true,
                         Fuzzy = true,
@@ -306,6 +312,7 @@ public class NamespaceMetadataTest : TestBase
                     {
                         Type = "string",
                         Ann = true,
+                        Embed = "string",
                         Filterable = true,
                         FullTextSearch = true,
                         Fuzzy = true,
@@ -340,6 +347,7 @@ public class NamespaceMetadataTest : TestBase
                     {
                         Type = "string",
                         Ann = true,
+                        Embed = "string",
                         Filterable = true,
                         FullTextSearch = true,
                         Fuzzy = true,
@@ -373,6 +381,7 @@ public class NamespaceMetadataTest : TestBase
                     {
                         Type = "string",
                         Ann = true,
+                        Embed = "string",
                         Filterable = true,
                         FullTextSearch = true,
                         Fuzzy = true,
@@ -410,6 +419,7 @@ public class NamespaceMetadataTest : TestBase
                     {
                         Type = "string",
                         Ann = true,
+                        Embed = "string",
                         Filterable = true,
                         FullTextSearch = true,
                         Fuzzy = true,
@@ -446,6 +456,7 @@ public class NamespaceMetadataTest : TestBase
                     {
                         Type = "string",
                         Ann = true,
+                        Embed = "string",
                         Filterable = true,
                         FullTextSearch = true,
                         Fuzzy = true,

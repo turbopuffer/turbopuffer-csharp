@@ -13,6 +13,7 @@ public class AttributeSchemaConfigTest : TestBase
         {
             Type = "string",
             Ann = true,
+            Embed = "string",
             Filterable = true,
             FullTextSearch = true,
             Fuzzy = true,
@@ -23,6 +24,7 @@ public class AttributeSchemaConfigTest : TestBase
 
         string expectedType = "string";
         Ann expectedAnn = true;
+        AttributeEmbed expectedEmbed = "string";
         bool expectedFilterable = true;
         FullTextSearch expectedFullTextSearch = true;
         bool expectedFuzzy = true;
@@ -32,6 +34,7 @@ public class AttributeSchemaConfigTest : TestBase
 
         Assert.Equal(expectedType, model.Type);
         Assert.Equal(expectedAnn, model.Ann);
+        Assert.Equal(expectedEmbed, model.Embed);
         Assert.Equal(expectedFilterable, model.Filterable);
         Assert.Equal(expectedFullTextSearch, model.FullTextSearch);
         Assert.Equal(expectedFuzzy, model.Fuzzy);
@@ -47,6 +50,7 @@ public class AttributeSchemaConfigTest : TestBase
         {
             Type = "string",
             Ann = true,
+            Embed = "string",
             Filterable = true,
             FullTextSearch = true,
             Fuzzy = true,
@@ -71,6 +75,7 @@ public class AttributeSchemaConfigTest : TestBase
         {
             Type = "string",
             Ann = true,
+            Embed = "string",
             Filterable = true,
             FullTextSearch = true,
             Fuzzy = true,
@@ -88,6 +93,7 @@ public class AttributeSchemaConfigTest : TestBase
 
         string expectedType = "string";
         Ann expectedAnn = true;
+        AttributeEmbed expectedEmbed = "string";
         bool expectedFilterable = true;
         FullTextSearch expectedFullTextSearch = true;
         bool expectedFuzzy = true;
@@ -97,6 +103,7 @@ public class AttributeSchemaConfigTest : TestBase
 
         Assert.Equal(expectedType, deserialized.Type);
         Assert.Equal(expectedAnn, deserialized.Ann);
+        Assert.Equal(expectedEmbed, deserialized.Embed);
         Assert.Equal(expectedFilterable, deserialized.Filterable);
         Assert.Equal(expectedFullTextSearch, deserialized.FullTextSearch);
         Assert.Equal(expectedFuzzy, deserialized.Fuzzy);
@@ -112,6 +119,7 @@ public class AttributeSchemaConfigTest : TestBase
         {
             Type = "string",
             Ann = true,
+            Embed = "string",
             Filterable = true,
             FullTextSearch = true,
             Fuzzy = true,
@@ -126,7 +134,7 @@ public class AttributeSchemaConfigTest : TestBase
     [Fact]
     public void OptionalNonNullablePropertiesUnsetAreNotSet_Works()
     {
-        var model = new AttributeSchemaConfig { Type = "string" };
+        var model = new AttributeSchemaConfig { Type = "string", Embed = "string" };
 
         Assert.Null(model.Ann);
         Assert.False(model.RawData.ContainsKey("ann"));
@@ -147,7 +155,7 @@ public class AttributeSchemaConfigTest : TestBase
     [Fact]
     public void OptionalNonNullablePropertiesUnsetValidation_Works()
     {
-        var model = new AttributeSchemaConfig { Type = "string" };
+        var model = new AttributeSchemaConfig { Type = "string", Embed = "string" };
 
         model.Validate();
     }
@@ -158,6 +166,7 @@ public class AttributeSchemaConfigTest : TestBase
         var model = new AttributeSchemaConfig
         {
             Type = "string",
+            Embed = "string",
 
             // Null should be interpreted as omitted for these properties
             Ann = null,
@@ -191,6 +200,7 @@ public class AttributeSchemaConfigTest : TestBase
         var model = new AttributeSchemaConfig
         {
             Type = "string",
+            Embed = "string",
 
             // Null should be interpreted as omitted for these properties
             Ann = null,
@@ -206,12 +216,91 @@ public class AttributeSchemaConfigTest : TestBase
     }
 
     [Fact]
+    public void OptionalNullablePropertiesUnsetAreNotSet_Works()
+    {
+        var model = new AttributeSchemaConfig
+        {
+            Type = "string",
+            Ann = true,
+            Filterable = true,
+            FullTextSearch = true,
+            Fuzzy = true,
+            Glob = true,
+            Regex = true,
+            SparseKnn = new(SparseDistanceMetric.DotProduct),
+        };
+
+        Assert.Null(model.Embed);
+        Assert.False(model.RawData.ContainsKey("embed"));
+    }
+
+    [Fact]
+    public void OptionalNullablePropertiesUnsetValidation_Works()
+    {
+        var model = new AttributeSchemaConfig
+        {
+            Type = "string",
+            Ann = true,
+            Filterable = true,
+            FullTextSearch = true,
+            Fuzzy = true,
+            Glob = true,
+            Regex = true,
+            SparseKnn = new(SparseDistanceMetric.DotProduct),
+        };
+
+        model.Validate();
+    }
+
+    [Fact]
+    public void OptionalNullablePropertiesSetToNullAreSetToNull_Works()
+    {
+        var model = new AttributeSchemaConfig
+        {
+            Type = "string",
+            Ann = true,
+            Filterable = true,
+            FullTextSearch = true,
+            Fuzzy = true,
+            Glob = true,
+            Regex = true,
+            SparseKnn = new(SparseDistanceMetric.DotProduct),
+
+            Embed = null,
+        };
+
+        Assert.Null(model.Embed);
+        Assert.True(model.RawData.ContainsKey("embed"));
+    }
+
+    [Fact]
+    public void OptionalNullablePropertiesSetToNullValidation_Works()
+    {
+        var model = new AttributeSchemaConfig
+        {
+            Type = "string",
+            Ann = true,
+            Filterable = true,
+            FullTextSearch = true,
+            Fuzzy = true,
+            Glob = true,
+            Regex = true,
+            SparseKnn = new(SparseDistanceMetric.DotProduct),
+
+            Embed = null,
+        };
+
+        model.Validate();
+    }
+
+    [Fact]
     public void CopyConstructor_Works()
     {
         var model = new AttributeSchemaConfig
         {
             Type = "string",
             Ann = true,
+            Embed = "string",
             Filterable = true,
             FullTextSearch = true,
             Fuzzy = true,
