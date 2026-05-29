@@ -5,7 +5,7 @@
     <PackageTags>sdk;api;http;library</PackageTags>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <Copyright>Copyright 2026 Turbopuffer</Copyright>
-    <PackageProjectUrl>https://turbopuffer.com/docs/auth</PackageProjectUrl>
+    <PackageProjectUrl>https://turbopuffer.com/docs/overview</PackageProjectUrl>
     <RepositoryUrl>https://www.github.com/turbopuffer/turbopuffer-csharp</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
 
