@@ -4,7 +4,7 @@ The turbopuffer C# SDK provides convenient access to the [turbopuffer HTTP API](
 
 It is generated with [Stainless](https://www.stainless.com/).
 
-The HTTP API documentation can be found on [turbopuffer.com/docs](https://turbopuffer.com/docs/overview).
+The HTTP API documentation can be found at [turbopuffer.com/docs/overview](https://turbopuffer.com/docs/overview).
 
 ## Installation
 
@@ -111,7 +111,7 @@ The `WithOptions` method does not affect the original client or service.
 
 ## Requests and responses
 
-To send a request to the Turbopuffer API, build an instance of some `Params` class and pass it to the corresponding client method. When the response is received, it will be deserialized into an instance of a C# class.
+To send a request to the turbopuffer API, build an instance of some `Params` class and pass it to the corresponding client method. When the response is received, it will be deserialized into an instance of a C# class.
 
 For example, `client.Namespace("ns").Write` should be called with an instance of `NamespaceWriteParams`, and it will return an instance of `Task<NamespaceWriteResponse>`.
 
