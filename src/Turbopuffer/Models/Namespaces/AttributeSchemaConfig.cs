@@ -53,6 +53,21 @@ public sealed record class AttributeSchemaConfig : JsonModel
     }
 
     /// <summary>
+    /// Whether to automatically embed this string attribute into a vector attribute.
+    /// Can be a model name, a detailed configuration object, or `null` to remove
+    /// an existing embedding configuration.
+    /// </summary>
+    public AttributeEmbed? Embed
+    {
+        get
+        {
+            this._rawData.Freeze();
+            return this._rawData.GetNullableClass<AttributeEmbed>("embed");
+        }
+        init { this._rawData.Set("embed", value); }
+    }
+
+    /// <summary>
     /// Whether or not the attributes can be used in filters.
     /// </summary>
     public bool? Filterable
@@ -185,6 +200,7 @@ public sealed record class AttributeSchemaConfig : JsonModel
     {
         _ = this.Type;
         this.Ann?.Validate();
+        this.Embed?.Validate();
         _ = this.Filterable;
         this.FullTextSearch?.Validate();
         _ = this.Fuzzy;

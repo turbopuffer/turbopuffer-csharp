@@ -20,6 +20,7 @@ public class AttributeSchemaTest : TestBase
         {
             Type = "string",
             Ann = true,
+            Embed = "string",
             Filterable = true,
             FullTextSearch = true,
             Fuzzy = true,
@@ -50,6 +51,7 @@ public class AttributeSchemaTest : TestBase
         {
             Type = "string",
             Ann = true,
+            Embed = "string",
             Filterable = true,
             FullTextSearch = true,
             Fuzzy = true,
