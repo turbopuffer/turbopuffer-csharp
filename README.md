@@ -1,10 +1,10 @@
 # Turbopuffer C# API Library
 
-The Turbopuffer C# SDK provides convenient access to the [Turbopuffer REST API](https://turbopuffer.com/docs/auth) from applications written in C#.
+The Turbopuffer C# SDK provides convenient access to the [Turbopuffer REST API](https://turbopuffer.com/docs/overview) from applications written in C#.
 
 It is generated with [Stainless](https://www.stainless.com/).
 
-The REST API documentation can be found on [turbopuffer.com](https://turbopuffer.com/docs/auth).
+The REST API documentation can be found on [turbopuffer.com](https://turbopuffer.com/docs/overview).
 
 ## Installation
 
