@@ -1,5 +1,27 @@
 # Changelog
 
+## 0.2.0-alpha.1 (2026-06-02)
+
+Full Changelog: [v0.1.3...v0.2.0-alpha.1](https://github.com/turbopuffer/turbopuffer-csharp/compare/v0.1.3...v0.2.0-alpha.1)
+
+### Features
+
+* openapi: spec for `rerank_by: ["RRF"]` ([cd78073](https://github.com/turbopuffer/turbopuffer-csharp/commit/cd7807312dd48b40b1bc04bb4129286d8487dff2))
+* rename /docs/auth to /docs/overview ([88a33ca](https://github.com/turbopuffer/turbopuffer-csharp/commit/88a33cafb36f0878ecfe6a6b4cb7dbb03ca15c74))
+* spec: add SDK support for native embedding ([5ba7cef](https://github.com/turbopuffer/turbopuffer-csharp/commit/5ba7cef472a910ae52463fd08ae46507676c6814))
+
+
+### Bug Fixes
+
+* **csharp:** resolve ambiguity in parsing query strings ([7681160](https://github.com/turbopuffer/turbopuffer-csharp/commit/76811605050bb3cf52d5c97ba0b36b029c7c23bd))
+* type rerank_by parameter as RerankBy ([#33](https://github.com/turbopuffer/turbopuffer-csharp/issues/33)) ([584393a](https://github.com/turbopuffer/turbopuffer-csharp/commit/584393a203657dac504466810948eb2ea31a6b4d))
+
+
+### Chores
+
+* bump apigen ([#31](https://github.com/turbopuffer/turbopuffer-csharp/issues/31)) ([325de9c](https://github.com/turbopuffer/turbopuffer-csharp/commit/325de9c7f750c89982220d6192a078dc908dc8a0))
+* fix API docs links ([#30](https://github.com/turbopuffer/turbopuffer-csharp/issues/30)) ([c2f538f](https://github.com/turbopuffer/turbopuffer-csharp/commit/c2f538fc3847f29e73c24b282076eac6e15cff30))
+
 ## 0.1.3 (2026-05-25)
 
 Full Changelog: [v0.1.2...v0.1.3](https://github.com/turbopuffer/turbopuffer-csharp/compare/v0.1.2...v0.1.3)
