@@ -1485,3 +1485,65 @@ public sealed class RankByTextSum(RankByText[] subqueries) : RankByText
         writer.WriteEndArray();
     }
 }
+
+[JsonConverter(typeof(RerankByJsonConverter))]
+public abstract class RerankBy
+{
+    internal abstract void WriteJson(Utf8JsonWriter writer, JsonSerializerOptions options);
+
+    public static RerankByRrf Rrf() => new RerankByRrf();
+
+    public static RerankByRrfWithParams Rrf(RrfParams f1) => new RerankByRrfWithParams(f1);
+}
+
+[JsonConverter(typeof(RerankByJsonConverter))]
+public sealed class RerankByRaw(JsonElement value) : RerankBy
+{
+    public JsonElement Value { get; } = value;
+
+    internal override void WriteJson(Utf8JsonWriter writer, JsonSerializerOptions options) =>
+        this.Value.WriteTo(writer);
+}
+
+internal sealed class RerankByJsonConverter : JsonConverter<RerankBy>
+{
+    public override bool CanConvert(Type typeToConvert) =>
+        typeof(RerankBy).IsAssignableFrom(typeToConvert);
+
+    public override RerankBy Read(
+        ref Utf8JsonReader reader,
+        Type typeToConvert,
+        JsonSerializerOptions options
+    ) => new RerankByRaw(JsonElement.ParseValue(ref reader));
+
+    public override void Write(
+        Utf8JsonWriter writer,
+        RerankBy value,
+        JsonSerializerOptions options
+    ) => value.WriteJson(writer, options);
+}
+
+[JsonConverter(typeof(RerankByJsonConverter))]
+public sealed class RerankByRrf : RerankBy
+{
+    internal override void WriteJson(Utf8JsonWriter writer, JsonSerializerOptions options)
+    {
+        writer.WriteStartArray();
+        writer.WriteStringValue("RRF");
+        writer.WriteEndArray();
+    }
+}
+
+[JsonConverter(typeof(RerankByJsonConverter))]
+public sealed class RerankByRrfWithParams(RrfParams f1) : RerankBy
+{
+    public RrfParams F1 { get; } = f1;
+
+    internal override void WriteJson(Utf8JsonWriter writer, JsonSerializerOptions options)
+    {
+        writer.WriteStartArray();
+        writer.WriteStringValue("RRF");
+        JsonSerializer.Serialize(writer, this.F1, options);
+        writer.WriteEndArray();
+    }
+}
