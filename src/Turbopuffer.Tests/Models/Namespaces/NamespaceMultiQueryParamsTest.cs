@@ -34,6 +34,7 @@ public class NamespaceMultiQueryParamsTest : TestBase
                 },
             ],
             Consistency = new() { Level = NamespaceMultiQueryParamsConsistencyLevel.Strong },
+            RerankBy = JsonSerializer.Deserialize<JsonElement>("{}"),
             VectorEncoding = VectorEncoding.Float,
         };
 
@@ -60,6 +61,7 @@ public class NamespaceMultiQueryParamsTest : TestBase
         {
             Level = NamespaceMultiQueryParamsConsistencyLevel.Strong,
         };
+        JsonElement expectedRerankBy = JsonSerializer.Deserialize<JsonElement>("{}");
         ApiEnum<string, VectorEncoding> expectedVectorEncoding = VectorEncoding.Float;
 
         Assert.Equal(expectedNamespace, parameters.Namespace);
@@ -69,6 +71,8 @@ public class NamespaceMultiQueryParamsTest : TestBase
             Assert.Equal(expectedQueries[i], parameters.Queries[i]);
         }
         Assert.Equal(expectedConsistency, parameters.Consistency);
+        Assert.NotNull(parameters.RerankBy);
+        Assert.True(JsonElement.DeepEquals(expectedRerankBy, parameters.RerankBy.Value));
         Assert.Equal(expectedVectorEncoding, parameters.VectorEncoding);
     }
 
@@ -100,6 +104,8 @@ public class NamespaceMultiQueryParamsTest : TestBase
 
         Assert.Null(parameters.Consistency);
         Assert.False(parameters.RawBodyData.ContainsKey("consistency"));
+        Assert.Null(parameters.RerankBy);
+        Assert.False(parameters.RawBodyData.ContainsKey("rerank_by"));
         Assert.Null(parameters.VectorEncoding);
         Assert.False(parameters.RawBodyData.ContainsKey("vector_encoding"));
     }
@@ -131,11 +137,14 @@ public class NamespaceMultiQueryParamsTest : TestBase
 
             // Null should be interpreted as omitted for these properties
             Consistency = null,
+            RerankBy = null,
             VectorEncoding = null,
         };
 
         Assert.Null(parameters.Consistency);
         Assert.False(parameters.RawBodyData.ContainsKey("consistency"));
+        Assert.Null(parameters.RerankBy);
+        Assert.False(parameters.RawBodyData.ContainsKey("rerank_by"));
         Assert.Null(parameters.VectorEncoding);
         Assert.False(parameters.RawBodyData.ContainsKey("vector_encoding"));
     }
@@ -203,6 +212,7 @@ public class NamespaceMultiQueryParamsTest : TestBase
                 },
             ],
             Consistency = new() { Level = NamespaceMultiQueryParamsConsistencyLevel.Strong },
+            RerankBy = JsonSerializer.Deserialize<JsonElement>("{}"),
             VectorEncoding = VectorEncoding.Float,
         };
 

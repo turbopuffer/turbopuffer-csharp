@@ -69,6 +69,27 @@ public record class NamespaceMultiQueryParams : ParamsBase
     }
 
     /// <summary>
+    /// How to combine the rows returned by each sub-query into a single ranked list.
+    /// </summary>
+    public JsonElement? RerankBy
+    {
+        get
+        {
+            this._rawBodyData.Freeze();
+            return this._rawBodyData.GetNullableStruct<JsonElement>("rerank_by");
+        }
+        init
+        {
+            if (value == null)
+            {
+                return;
+            }
+
+            this._rawBodyData.Set("rerank_by", value);
+        }
+    }
+
+    /// <summary>
     /// The encoding to use for vectors in the response.
     /// </summary>
     public ApiEnum<string, VectorEncoding>? VectorEncoding
