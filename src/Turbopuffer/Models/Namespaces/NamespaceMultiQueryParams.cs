@@ -71,12 +71,12 @@ public record class NamespaceMultiQueryParams : ParamsBase
     /// <summary>
     /// How to combine the rows returned by each sub-query into a single ranked list.
     /// </summary>
-    public JsonElement? RerankBy
+    public RerankBy? RerankBy
     {
         get
         {
             this._rawBodyData.Freeze();
-            return this._rawBodyData.GetNullableStruct<JsonElement>("rerank_by");
+            return this._rawBodyData.GetNullableClass<RerankBy>("rerank_by");
         }
         init
         {

@@ -34,7 +34,7 @@ public class NamespaceMultiQueryParamsTest : TestBase
                 },
             ],
             Consistency = new() { Level = NamespaceMultiQueryParamsConsistencyLevel.Strong },
-            RerankBy = JsonSerializer.Deserialize<JsonElement>("{}"),
+            RerankBy = new RerankByRaw(JsonSerializer.Deserialize<JsonElement>("{}")),
             VectorEncoding = VectorEncoding.Float,
         };
 
@@ -72,7 +72,10 @@ public class NamespaceMultiQueryParamsTest : TestBase
         }
         Assert.Equal(expectedConsistency, parameters.Consistency);
         Assert.NotNull(parameters.RerankBy);
-        Assert.True(JsonElement.DeepEquals(expectedRerankBy, parameters.RerankBy.Value));
+        Assert.IsType<RerankByRaw>(parameters.RerankBy);
+        Assert.True(
+            JsonElement.DeepEquals(expectedRerankBy, ((RerankByRaw)parameters.RerankBy).Value)
+        );
         Assert.Equal(expectedVectorEncoding, parameters.VectorEncoding);
     }
 
@@ -212,7 +215,7 @@ public class NamespaceMultiQueryParamsTest : TestBase
                 },
             ],
             Consistency = new() { Level = NamespaceMultiQueryParamsConsistencyLevel.Strong },
-            RerankBy = JsonSerializer.Deserialize<JsonElement>("{}"),
+            RerankBy = new RerankByRaw(JsonSerializer.Deserialize<JsonElement>("{}")),
             VectorEncoding = VectorEncoding.Float,
         };
 
