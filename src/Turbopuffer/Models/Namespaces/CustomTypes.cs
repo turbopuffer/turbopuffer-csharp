@@ -1022,12 +1022,12 @@ public abstract class RankBy
     public static RankByAnn Ann(string attr, System.Collections.Generic.IEnumerable<float> value) =>
         new RankByAnn(attr, System.Linq.Enumerable.ToArray(value));
 
-    public static RankByAnnExpr AnnExpr(string attr, Expr expr) => new RankByAnnExpr(attr, expr);
+    public static RankByAnnExpr Ann(string attr, Expr expr) => new RankByAnnExpr(attr, expr);
 
     public static RankByKnn Knn(string attr, System.Collections.Generic.IEnumerable<float> value) =>
         new RankByKnn(attr, System.Linq.Enumerable.ToArray(value));
 
-    public static RankByKnnExpr KnnExpr(string attr, Expr expr) => new RankByKnnExpr(attr, expr);
+    public static RankByKnnExpr Knn(string attr, Expr expr) => new RankByKnnExpr(attr, expr);
 
     public static RankBySparseKnn SparseKnn(
         string attr,
