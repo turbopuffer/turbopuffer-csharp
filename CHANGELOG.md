@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.2.0 (2026-06-03)
+
+Full Changelog: [v0.2.0-alpha.1...v0.2.0](https://github.com/turbopuffer/turbopuffer-csharp/compare/v0.2.0-alpha.1...v0.2.0)
+
+### Features
+
+* spec: add support for word_v4 tokenizer ([e50829c](https://github.com/turbopuffer/turbopuffer-csharp/commit/e50829c9c911e84e1800edd6f3af5453ab35bdbd))
+
 ## 0.2.0-alpha.1 (2026-06-02)
 
 Full Changelog: [v0.1.3...v0.2.0-alpha.1](https://github.com/turbopuffer/turbopuffer-csharp/compare/v0.1.3...v0.2.0-alpha.1)
