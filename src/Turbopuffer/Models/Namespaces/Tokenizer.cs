@@ -6,7 +6,7 @@ using Turbopuffer.Exceptions;
 namespace Turbopuffer.Models.Namespaces;
 
 /// <summary>
-/// The tokenizer to use for full-text search on an attribute. Defaults to `word_v3`.
+/// The tokenizer to use for full-text search on an attribute. Defaults to `word_v4`.
 /// </summary>
 [JsonConverter(typeof(TokenizerConverter))]
 public enum Tokenizer
@@ -16,6 +16,7 @@ public enum Tokenizer
     WordV1,
     WordV2,
     WordV3,
+    WordV4,
 }
 
 sealed class TokenizerConverter : JsonConverter<Tokenizer>
@@ -33,6 +34,7 @@ sealed class TokenizerConverter : JsonConverter<Tokenizer>
             "word_v1" => Tokenizer.WordV1,
             "word_v2" => Tokenizer.WordV2,
             "word_v3" => Tokenizer.WordV3,
+            "word_v4" => Tokenizer.WordV4,
             _ => (Tokenizer)(-1),
         };
     }
@@ -52,6 +54,7 @@ sealed class TokenizerConverter : JsonConverter<Tokenizer>
                 Tokenizer.WordV1 => "word_v1",
                 Tokenizer.WordV2 => "word_v2",
                 Tokenizer.WordV3 => "word_v3",
+                Tokenizer.WordV4 => "word_v4",
                 _ => throw new TurbopufferInvalidDataException(
                     string.Format("Invalid value '{0}' in {1}", value, nameof(value))
                 ),
