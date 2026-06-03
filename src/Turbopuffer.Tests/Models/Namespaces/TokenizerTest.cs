@@ -13,6 +13,7 @@ public class TokenizerTest : TestBase
     [InlineData(Tokenizer.WordV1)]
     [InlineData(Tokenizer.WordV2)]
     [InlineData(Tokenizer.WordV3)]
+    [InlineData(Tokenizer.WordV4)]
     public void Validation_Works(Tokenizer rawValue)
     {
         // force implicit conversion because Theory can't do that for us
@@ -38,6 +39,7 @@ public class TokenizerTest : TestBase
     [InlineData(Tokenizer.WordV1)]
     [InlineData(Tokenizer.WordV2)]
     [InlineData(Tokenizer.WordV3)]
+    [InlineData(Tokenizer.WordV4)]
     public void SerializationRoundtrip_Works(Tokenizer rawValue)
     {
         // force implicit conversion because Theory can't do that for us

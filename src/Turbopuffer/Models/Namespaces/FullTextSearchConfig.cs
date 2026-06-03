@@ -186,7 +186,7 @@ public sealed record class FullTextSearchConfig : JsonModel
     }
 
     /// <summary>
-    /// The tokenizer to use for full-text search on an attribute. Defaults to `word_v3`.
+    /// The tokenizer to use for full-text search on an attribute. Defaults to `word_v4`.
     /// </summary>
     public ApiEnum<string, Tokenizer>? Tokenizer
     {
