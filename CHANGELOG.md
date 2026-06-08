@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.3.0 (2026-06-08)
+
+Full Changelog: [v0.2.0...v0.3.0](https://github.com/turbopuffer/turbopuffer-csharp/compare/v0.2.0...v0.3.0)
+
+### Features
+
+* stainless: update sdks to support case-insensitive fuzzy filter ([410c8da](https://github.com/turbopuffer/turbopuffer-csharp/commit/410c8da9e17a55d835117429603cfaefcd0d1844))
+
 ## 0.2.0 (2026-06-03)
 
 Full Changelog: [v0.2.0-alpha.1...v0.2.0](https://github.com/turbopuffer/turbopuffer-csharp/compare/v0.2.0-alpha.1...v0.2.0)
