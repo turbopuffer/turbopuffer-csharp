@@ -36,6 +36,28 @@ public sealed record class FuzzyParams : JsonModel
         }
     }
 
+    /// <summary>
+    /// Whether searching with Fuzzy filter is case-sensitive. Defaults to `true`
+    /// (i.e. case-sensitive).
+    /// </summary>
+    public bool? CaseSensitive
+    {
+        get
+        {
+            this._rawData.Freeze();
+            return this._rawData.GetNullableStruct<bool>("case_sensitive");
+        }
+        init
+        {
+            if (value == null)
+            {
+                return;
+            }
+
+            this._rawData.Set("case_sensitive", value);
+        }
+    }
+
     /// <inheritdoc/>
     public override void Validate()
     {
@@ -43,6 +65,7 @@ public sealed record class FuzzyParams : JsonModel
         {
             item.Validate();
         }
+        _ = this.CaseSensitive;
     }
 
     public FuzzyParams() { }
