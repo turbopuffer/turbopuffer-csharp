@@ -40,6 +40,27 @@ public record class NamespaceCopyFromParams : ParamsBase
     }
 
     /// <summary>
+    /// (Optional) The encryption configuration for the destination namespace.
+    /// </summary>
+    public Encryption? DestEncryption
+    {
+        get
+        {
+            this._rawBodyData.Freeze();
+            return this._rawBodyData.GetNullableClass<Encryption>("dest_encryption");
+        }
+        init
+        {
+            if (value == null)
+            {
+                return;
+            }
+
+            this._rawBodyData.Set("dest_encryption", value);
+        }
+    }
+
+    /// <summary>
     /// (Optional) An API key for the organization containing the source namespace
     /// </summary>
     public string? SourceApiKey
