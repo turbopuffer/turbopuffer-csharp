@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.4.0 (2026-06-09)
+
+Full Changelog: [v0.3.0...v0.4.0](https://github.com/turbopuffer/turbopuffer-csharp/compare/v0.3.0...v0.4.0)
+
+### Features
+
+* tpuf-engine: support dest_encryption in copy_from_namespace ([589e537](https://github.com/turbopuffer/turbopuffer-csharp/commit/589e537f43af49085bf4427684f0cff7d421dc4f))
+
 ## 0.3.0 (2026-06-08)
 
 Full Changelog: [v0.2.0...v0.3.0](https://github.com/turbopuffer/turbopuffer-csharp/compare/v0.2.0...v0.3.0)
