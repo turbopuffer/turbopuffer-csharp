@@ -12,17 +12,20 @@ public class NamespaceCopyFromParamsTest : TestBase
         {
             Namespace = "namespace",
             SourceNamespace = "source_namespace",
+            DestEncryption = new CustomerManaged("key_name"),
             SourceApiKey = "source_api_key",
             SourceRegion = "source_region",
         };
 
         string expectedNamespace = "namespace";
         string expectedSourceNamespace = "source_namespace";
+        Encryption expectedDestEncryption = new CustomerManaged("key_name");
         string expectedSourceApiKey = "source_api_key";
         string expectedSourceRegion = "source_region";
 
         Assert.Equal(expectedNamespace, parameters.Namespace);
         Assert.Equal(expectedSourceNamespace, parameters.SourceNamespace);
+        Assert.Equal(expectedDestEncryption, parameters.DestEncryption);
         Assert.Equal(expectedSourceApiKey, parameters.SourceApiKey);
         Assert.Equal(expectedSourceRegion, parameters.SourceRegion);
     }
@@ -36,6 +39,8 @@ public class NamespaceCopyFromParamsTest : TestBase
             SourceNamespace = "source_namespace",
         };
 
+        Assert.Null(parameters.DestEncryption);
+        Assert.False(parameters.RawBodyData.ContainsKey("dest_encryption"));
         Assert.Null(parameters.SourceApiKey);
         Assert.False(parameters.RawBodyData.ContainsKey("source_api_key"));
         Assert.Null(parameters.SourceRegion);
@@ -51,10 +56,13 @@ public class NamespaceCopyFromParamsTest : TestBase
             SourceNamespace = "source_namespace",
 
             // Null should be interpreted as omitted for these properties
+            DestEncryption = null,
             SourceApiKey = null,
             SourceRegion = null,
         };
 
+        Assert.Null(parameters.DestEncryption);
+        Assert.False(parameters.RawBodyData.ContainsKey("dest_encryption"));
         Assert.Null(parameters.SourceApiKey);
         Assert.False(parameters.RawBodyData.ContainsKey("source_api_key"));
         Assert.Null(parameters.SourceRegion);
@@ -89,6 +97,7 @@ public class NamespaceCopyFromParamsTest : TestBase
         {
             Namespace = "namespace",
             SourceNamespace = "source_namespace",
+            DestEncryption = new CustomerManaged("key_name"),
             SourceApiKey = "source_api_key",
             SourceRegion = "source_region",
         };
