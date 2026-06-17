@@ -284,6 +284,10 @@ public sealed class TurbopufferClientWithRawResponse : ITurbopufferClientWithRaw
 
             if (response != null && (++retries > maxRetries || !ShouldRetry(response)))
             {
+                response = await RespondAsync
+                    .MaybePoll(response, request.Params.Url(this._options), this, cancellationToken)
+                    .ConfigureAwait(false);
+
                 if (response.IsSuccessStatusCode)
                 {
                     return response;
@@ -327,6 +331,7 @@ public sealed class TurbopufferClientWithRawResponse : ITurbopufferClientWithRaw
             Content = request.Params.BodyContent(),
         };
         request.Params.AddHeadersToRequest(requestMessage, this._options);
+        RespondAsync.PrepareRequest(requestMessage);
         if (!requestMessage.Headers.Contains("x-stainless-retry-count"))
         {
             requestMessage.Headers.Add("x-stainless-retry-count", retryCount.ToString());
