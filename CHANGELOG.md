@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.5.0 (2026-06-17)
+
+Full Changelog: [v0.4.0...v0.5.0](https://github.com/turbopuffer/turbopuffer-csharp/compare/v0.4.0...v0.5.0)
+
+### Features
+
+* transparent async polling ([#38](https://github.com/turbopuffer/turbopuffer-csharp/issues/38)) ([5937488](https://github.com/turbopuffer/turbopuffer-csharp/commit/5937488043e8c215b7247722b663e5dc3927ea8d))
+
 ## 0.4.0 (2026-06-09)
 
 Full Changelog: [v0.3.0...v0.4.0](https://github.com/turbopuffer/turbopuffer-csharp/compare/v0.3.0...v0.4.0)
