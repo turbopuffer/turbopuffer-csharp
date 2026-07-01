@@ -41,6 +41,7 @@ public class NamespaceWriteParamsTest : TestBase
             PatchRows = [new() { ID = "182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e", Vector = new([0]) }],
             ReturnAffectedIds = true,
             Schema = new Dictionary<string, AttributeSchema>() { { "foo", "string" } },
+            Sharding = new(1),
             UpsertColumns = new()
             {
                 ID = ["182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"],
@@ -81,6 +82,7 @@ public class NamespaceWriteParamsTest : TestBase
         ];
         bool expectedReturnAffectedIds = true;
         Dictionary<string, AttributeSchema> expectedSchema = new() { { "foo", "string" } };
+        ShardingConfig expectedSharding = new(1);
         Columns expectedUpsertColumns = new()
         {
             ID = ["182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"],
@@ -144,6 +146,7 @@ public class NamespaceWriteParamsTest : TestBase
 
             Assert.Equal(value, parameters.Schema[item.Key]);
         }
+        Assert.Equal(expectedSharding, parameters.Sharding);
         Assert.Equal(expectedUpsertColumns, parameters.UpsertColumns);
         Assert.NotNull(parameters.UpsertCondition);
         Assert.True(
@@ -197,6 +200,8 @@ public class NamespaceWriteParamsTest : TestBase
         Assert.False(parameters.RawBodyData.ContainsKey("return_affected_ids"));
         Assert.Null(parameters.Schema);
         Assert.False(parameters.RawBodyData.ContainsKey("schema"));
+        Assert.Null(parameters.Sharding);
+        Assert.False(parameters.RawBodyData.ContainsKey("sharding"));
         Assert.Null(parameters.UpsertColumns);
         Assert.False(parameters.RawBodyData.ContainsKey("upsert_columns"));
         Assert.Null(parameters.UpsertCondition);
@@ -229,6 +234,7 @@ public class NamespaceWriteParamsTest : TestBase
             PatchRows = null,
             ReturnAffectedIds = null,
             Schema = null,
+            Sharding = null,
             UpsertColumns = null,
             UpsertCondition = null,
             UpsertRows = null,
@@ -266,6 +272,8 @@ public class NamespaceWriteParamsTest : TestBase
         Assert.False(parameters.RawBodyData.ContainsKey("return_affected_ids"));
         Assert.Null(parameters.Schema);
         Assert.False(parameters.RawBodyData.ContainsKey("schema"));
+        Assert.Null(parameters.Sharding);
+        Assert.False(parameters.RawBodyData.ContainsKey("sharding"));
         Assert.Null(parameters.UpsertColumns);
         Assert.False(parameters.RawBodyData.ContainsKey("upsert_columns"));
         Assert.Null(parameters.UpsertCondition);
@@ -322,6 +330,7 @@ public class NamespaceWriteParamsTest : TestBase
             PatchRows = [new() { ID = "182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e", Vector = new([0]) }],
             ReturnAffectedIds = true,
             Schema = new Dictionary<string, AttributeSchema>() { { "foo", "string" } },
+            Sharding = new(1),
             UpsertColumns = new()
             {
                 ID = ["182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"],

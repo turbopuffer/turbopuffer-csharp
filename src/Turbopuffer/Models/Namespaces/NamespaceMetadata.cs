@@ -135,6 +135,30 @@ public sealed record class NamespaceMetadata : JsonModel
         }
     }
 
+    /// <summary>
+    /// Configuration for namespace sharding, which partitions a namespace's documents
+    /// across multiple internal shards to scale indexing and query throughput beyond
+    /// a single machine. Sharding can only be configured on a namespace's inaugural
+    /// write, and cannot be added to or changed on an existing namespace.
+    /// </summary>
+    public ShardingConfig? Sharding
+    {
+        get
+        {
+            this._rawData.Freeze();
+            return this._rawData.GetNullableClass<ShardingConfig>("sharding");
+        }
+        init
+        {
+            if (value == null)
+            {
+                return;
+            }
+
+            this._rawData.Set("sharding", value);
+        }
+    }
+
     /// <inheritdoc/>
     public override void Validate()
     {
@@ -149,6 +173,7 @@ public sealed record class NamespaceMetadata : JsonModel
         }
         _ = this.UpdatedAt;
         this.Pinning?.Validate();
+        this.Sharding?.Validate();
     }
 
     public NamespaceMetadata() { }
