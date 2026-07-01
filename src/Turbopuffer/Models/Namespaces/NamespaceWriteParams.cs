@@ -381,6 +381,30 @@ public record class NamespaceWriteParams : ParamsBase
     }
 
     /// <summary>
+    /// Configuration for namespace sharding, which partitions a namespace's documents
+    /// across multiple internal shards to scale indexing and query throughput beyond
+    /// a single machine. Sharding can only be configured on a namespace's inaugural
+    /// write, and cannot be added to or changed on an existing namespace.
+    /// </summary>
+    public ShardingConfig? Sharding
+    {
+        get
+        {
+            this._rawBodyData.Freeze();
+            return this._rawBodyData.GetNullableClass<ShardingConfig>("sharding");
+        }
+        init
+        {
+            if (value == null)
+            {
+                return;
+            }
+
+            this._rawBodyData.Set("sharding", value);
+        }
+    }
+
+    /// <summary>
     /// A list of documents in columnar format. Each key is a column name, mapped
     /// to an array of values for that column.
     /// </summary>
