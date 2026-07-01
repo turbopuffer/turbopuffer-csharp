@@ -327,7 +327,11 @@ public class AnnTest : TestBase
     [Fact]
     public void ConfigValidationWorks()
     {
-        Ann value = new AnnConfig() { DistanceMetric = DistanceMetric.CosineDistance };
+        Ann value = new AnnConfig()
+        {
+            DistanceMetric = DistanceMetric.CosineDistance,
+            LateInteraction = true,
+        };
         value.Validate();
     }
 
@@ -344,7 +348,11 @@ public class AnnTest : TestBase
     [Fact]
     public void ConfigSerializationRoundtripWorks()
     {
-        Ann value = new AnnConfig() { DistanceMetric = DistanceMetric.CosineDistance };
+        Ann value = new AnnConfig()
+        {
+            DistanceMetric = DistanceMetric.CosineDistance,
+            LateInteraction = true,
+        };
         string element = JsonSerializer.Serialize(value, ModelBase.SerializerOptions);
         var deserialized = JsonSerializer.Deserialize<Ann>(element, ModelBase.SerializerOptions);
 
@@ -357,17 +365,27 @@ public class AnnConfigTest : TestBase
     [Fact]
     public void FieldRoundtrip_Works()
     {
-        var model = new AnnConfig { DistanceMetric = DistanceMetric.CosineDistance };
+        var model = new AnnConfig
+        {
+            DistanceMetric = DistanceMetric.CosineDistance,
+            LateInteraction = true,
+        };
 
         ApiEnum<string, DistanceMetric> expectedDistanceMetric = DistanceMetric.CosineDistance;
+        bool expectedLateInteraction = true;
 
         Assert.Equal(expectedDistanceMetric, model.DistanceMetric);
+        Assert.Equal(expectedLateInteraction, model.LateInteraction);
     }
 
     [Fact]
     public void SerializationRoundtrip_Works()
     {
-        var model = new AnnConfig { DistanceMetric = DistanceMetric.CosineDistance };
+        var model = new AnnConfig
+        {
+            DistanceMetric = DistanceMetric.CosineDistance,
+            LateInteraction = true,
+        };
 
         string json = JsonSerializer.Serialize(model, ModelBase.SerializerOptions);
         var deserialized = JsonSerializer.Deserialize<AnnConfig>(json, ModelBase.SerializerOptions);
@@ -378,7 +396,11 @@ public class AnnConfigTest : TestBase
     [Fact]
     public void FieldRoundtripThroughSerialization_Works()
     {
-        var model = new AnnConfig { DistanceMetric = DistanceMetric.CosineDistance };
+        var model = new AnnConfig
+        {
+            DistanceMetric = DistanceMetric.CosineDistance,
+            LateInteraction = true,
+        };
 
         string element = JsonSerializer.Serialize(model, ModelBase.SerializerOptions);
         var deserialized = JsonSerializer.Deserialize<AnnConfig>(
@@ -388,14 +410,20 @@ public class AnnConfigTest : TestBase
         Assert.NotNull(deserialized);
 
         ApiEnum<string, DistanceMetric> expectedDistanceMetric = DistanceMetric.CosineDistance;
+        bool expectedLateInteraction = true;
 
         Assert.Equal(expectedDistanceMetric, deserialized.DistanceMetric);
+        Assert.Equal(expectedLateInteraction, deserialized.LateInteraction);
     }
 
     [Fact]
     public void Validation_Works()
     {
-        var model = new AnnConfig { DistanceMetric = DistanceMetric.CosineDistance };
+        var model = new AnnConfig
+        {
+            DistanceMetric = DistanceMetric.CosineDistance,
+            LateInteraction = true,
+        };
 
         model.Validate();
     }
@@ -407,6 +435,8 @@ public class AnnConfigTest : TestBase
 
         Assert.Null(model.DistanceMetric);
         Assert.False(model.RawData.ContainsKey("distance_metric"));
+        Assert.Null(model.LateInteraction);
+        Assert.False(model.RawData.ContainsKey("late_interaction"));
     }
 
     [Fact]
@@ -424,10 +454,13 @@ public class AnnConfigTest : TestBase
         {
             // Null should be interpreted as omitted for these properties
             DistanceMetric = null,
+            LateInteraction = null,
         };
 
         Assert.Null(model.DistanceMetric);
         Assert.False(model.RawData.ContainsKey("distance_metric"));
+        Assert.Null(model.LateInteraction);
+        Assert.False(model.RawData.ContainsKey("late_interaction"));
     }
 
     [Fact]
@@ -437,6 +470,7 @@ public class AnnConfigTest : TestBase
         {
             // Null should be interpreted as omitted for these properties
             DistanceMetric = null,
+            LateInteraction = null,
         };
 
         model.Validate();
@@ -445,7 +479,11 @@ public class AnnConfigTest : TestBase
     [Fact]
     public void CopyConstructor_Works()
     {
-        var model = new AnnConfig { DistanceMetric = DistanceMetric.CosineDistance };
+        var model = new AnnConfig
+        {
+            DistanceMetric = DistanceMetric.CosineDistance,
+            LateInteraction = true,
+        };
 
         AnnConfig copied = new(model);
 

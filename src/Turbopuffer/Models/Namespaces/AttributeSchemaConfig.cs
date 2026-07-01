@@ -521,10 +521,34 @@ public sealed record class AnnConfig : JsonModel
         }
     }
 
+    /// <summary>
+    /// Opt in to late-interaction (MUVERA) indexing. Only valid on fixed-dim `[][N]f32`
+    /// vector array attributes, and is required to enable an ANN index on such attributes.
+    /// Defaults to `false`.
+    /// </summary>
+    public bool? LateInteraction
+    {
+        get
+        {
+            this._rawData.Freeze();
+            return this._rawData.GetNullableStruct<bool>("late_interaction");
+        }
+        init
+        {
+            if (value == null)
+            {
+                return;
+            }
+
+            this._rawData.Set("late_interaction", value);
+        }
+    }
+
     /// <inheritdoc/>
     public override void Validate()
     {
         this.DistanceMetric?.Validate();
+        _ = this.LateInteraction;
     }
 
     public AnnConfig() { }
