@@ -1022,10 +1022,20 @@ public abstract class RankBy
     public static RankByAnn Ann(string attr, System.Collections.Generic.IEnumerable<float> value) =>
         new RankByAnn(attr, System.Linq.Enumerable.ToArray(value));
 
+    public static RankByAnnMulti Ann(
+        string attr,
+        System.Collections.Generic.IEnumerable<float[]> value
+    ) => new RankByAnnMulti(attr, System.Linq.Enumerable.ToArray(value));
+
     public static RankByAnnExpr Ann(string attr, Expr expr) => new RankByAnnExpr(attr, expr);
 
     public static RankByKnn Knn(string attr, System.Collections.Generic.IEnumerable<float> value) =>
         new RankByKnn(attr, System.Linq.Enumerable.ToArray(value));
+
+    public static RankByKnnMulti Knn(
+        string attr,
+        System.Collections.Generic.IEnumerable<float[]> value
+    ) => new RankByKnnMulti(attr, System.Linq.Enumerable.ToArray(value));
 
     public static RankByKnnExpr Knn(string attr, Expr expr) => new RankByKnnExpr(attr, expr);
 
@@ -1096,6 +1106,22 @@ public sealed class RankByAnnExpr(string attr, Expr expr) : RankBy
         JsonSerializer.Serialize(writer, this.Attr, options);
         writer.WriteStringValue("ANN");
         JsonSerializer.Serialize(writer, this.Expr, options);
+        writer.WriteEndArray();
+    }
+}
+
+[JsonConverter(typeof(RankByJsonConverter))]
+public sealed class RankByAnnMulti(string attr, float[][] value) : RankBy
+{
+    public string Attr { get; } = attr;
+    public float[][] Value { get; } = value;
+
+    internal override void WriteJson(Utf8JsonWriter writer, JsonSerializerOptions options)
+    {
+        writer.WriteStartArray();
+        JsonSerializer.Serialize(writer, this.Attr, options);
+        writer.WriteStringValue("ANN");
+        JsonSerializer.Serialize(writer, this.Value, options);
         writer.WriteEndArray();
     }
 }
@@ -1195,6 +1221,22 @@ public sealed class RankByKnnExpr(string attr, Expr expr) : RankBy
         JsonSerializer.Serialize(writer, this.Attr, options);
         writer.WriteStringValue("kNN");
         JsonSerializer.Serialize(writer, this.Expr, options);
+        writer.WriteEndArray();
+    }
+}
+
+[JsonConverter(typeof(RankByJsonConverter))]
+public sealed class RankByKnnMulti(string attr, float[][] value) : RankBy
+{
+    public string Attr { get; } = attr;
+    public float[][] Value { get; } = value;
+
+    internal override void WriteJson(Utf8JsonWriter writer, JsonSerializerOptions options)
+    {
+        writer.WriteStartArray();
+        JsonSerializer.Serialize(writer, this.Attr, options);
+        writer.WriteStringValue("kNN");
+        JsonSerializer.Serialize(writer, this.Value, options);
         writer.WriteEndArray();
     }
 }
