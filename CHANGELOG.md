@@ -1,5 +1,24 @@
 # Changelog
 
+## 0.6.0 (2026-07-03)
+
+Full Changelog: [v0.5.0...v0.6.0](https://github.com/turbopuffer/turbopuffer-csharp/compare/v0.5.0...v0.6.0)
+
+### Features
+
+* spec: add sharding config to the openapi spec ([3c2fd20](https://github.com/turbopuffer/turbopuffer-csharp/commit/3c2fd2027e901735e472264e1b35cc3230a7eb17))
+* support late_interaction parameter in sdks ([fc7667c](https://github.com/turbopuffer/turbopuffer-csharp/commit/fc7667c3699708383c75539377d01893dacab6f7))
+
+
+### Chores
+
+* regenerate custom types ([6fce094](https://github.com/turbopuffer/turbopuffer-csharp/commit/6fce094ed9bc509f245d82e7a797b5455cadd97d))
+
+
+### Documentation
+
+* rename /docs/overview to /docs/api-overview ([889a165](https://github.com/turbopuffer/turbopuffer-csharp/commit/889a16563da50911e4b8aba02ffa2760961542d5))
+
 ## 0.5.0 (2026-06-17)
 
 Full Changelog: [v0.4.0...v0.5.0](https://github.com/turbopuffer/turbopuffer-csharp/compare/v0.4.0...v0.5.0)
