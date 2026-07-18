@@ -19,6 +19,10 @@ public class NamespaceQueryParamsTest : TestBase
             {
                 { "foo", JsonSerializer.SerializeToElement("bar") },
             },
+            ComputeAttributes = new Dictionary<string, NamespaceQueryParamsComputeAttribute>()
+            {
+                { "foo", new([JsonSerializer.Deserialize<JsonElement>("{}")]) },
+            },
             Consistency = new() { Level = NamespaceQueryParamsConsistencyLevel.Strong },
             DistanceMetric = DistanceMetric.CosineDistance,
             ExcludeAttributes = ["string"],
@@ -35,6 +39,10 @@ public class NamespaceQueryParamsTest : TestBase
         Dictionary<string, JsonElement> expectedAggregateBy = new()
         {
             { "foo", JsonSerializer.SerializeToElement("bar") },
+        };
+        Dictionary<string, NamespaceQueryParamsComputeAttribute> expectedComputeAttributes = new()
+        {
+            { "foo", new([JsonSerializer.Deserialize<JsonElement>("{}")]) },
         };
         NamespaceQueryParamsConsistency expectedConsistency = new()
         {
@@ -58,6 +66,14 @@ public class NamespaceQueryParamsTest : TestBase
             Assert.True(parameters.AggregateBy.TryGetValue(item.Key, out var value));
 
             Assert.True(JsonElement.DeepEquals(value, parameters.AggregateBy[item.Key]));
+        }
+        Assert.NotNull(parameters.ComputeAttributes);
+        Assert.Equal(expectedComputeAttributes.Count, parameters.ComputeAttributes.Count);
+        foreach (var item in expectedComputeAttributes)
+        {
+            Assert.True(parameters.ComputeAttributes.TryGetValue(item.Key, out var value));
+
+            Assert.Equal(value, parameters.ComputeAttributes[item.Key]);
         }
         Assert.Equal(expectedConsistency, parameters.Consistency);
         Assert.Equal(expectedDistanceMetric, parameters.DistanceMetric);
@@ -90,6 +106,8 @@ public class NamespaceQueryParamsTest : TestBase
 
         Assert.Null(parameters.AggregateBy);
         Assert.False(parameters.RawBodyData.ContainsKey("aggregate_by"));
+        Assert.Null(parameters.ComputeAttributes);
+        Assert.False(parameters.RawBodyData.ContainsKey("compute_attributes"));
         Assert.Null(parameters.Consistency);
         Assert.False(parameters.RawBodyData.ContainsKey("consistency"));
         Assert.Null(parameters.DistanceMetric);
@@ -121,6 +139,7 @@ public class NamespaceQueryParamsTest : TestBase
 
             // Null should be interpreted as omitted for these properties
             AggregateBy = null,
+            ComputeAttributes = null,
             Consistency = null,
             DistanceMetric = null,
             ExcludeAttributes = null,
@@ -135,6 +154,8 @@ public class NamespaceQueryParamsTest : TestBase
 
         Assert.Null(parameters.AggregateBy);
         Assert.False(parameters.RawBodyData.ContainsKey("aggregate_by"));
+        Assert.Null(parameters.ComputeAttributes);
+        Assert.False(parameters.RawBodyData.ContainsKey("compute_attributes"));
         Assert.Null(parameters.Consistency);
         Assert.False(parameters.RawBodyData.ContainsKey("consistency"));
         Assert.Null(parameters.DistanceMetric);
@@ -182,6 +203,10 @@ public class NamespaceQueryParamsTest : TestBase
             {
                 { "foo", JsonSerializer.SerializeToElement("bar") },
             },
+            ComputeAttributes = new Dictionary<string, NamespaceQueryParamsComputeAttribute>()
+            {
+                { "foo", new([JsonSerializer.Deserialize<JsonElement>("{}")]) },
+            },
             Consistency = new() { Level = NamespaceQueryParamsConsistencyLevel.Strong },
             DistanceMetric = DistanceMetric.CosineDistance,
             ExcludeAttributes = ["string"],
@@ -197,6 +222,57 @@ public class NamespaceQueryParamsTest : TestBase
         NamespaceQueryParams copied = new(parameters);
 
         Assert.Equal(parameters, copied);
+    }
+}
+
+public class NamespaceQueryParamsComputeAttributeTest : TestBase
+{
+    [Fact]
+    public void RankByValidationWorks()
+    {
+        NamespaceQueryParamsComputeAttribute value = new(
+            [JsonSerializer.Deserialize<JsonElement>("{}")]
+        );
+        value.Validate();
+    }
+
+    [Fact]
+    public void RankByAttributesValidationWorks()
+    {
+        NamespaceQueryParamsComputeAttribute value = new(
+            [new List<JsonElement>() { JsonSerializer.Deserialize<JsonElement>("{}") }]
+        );
+        value.Validate();
+    }
+
+    [Fact]
+    public void RankBySerializationRoundtripWorks()
+    {
+        NamespaceQueryParamsComputeAttribute value = new(
+            [JsonSerializer.Deserialize<JsonElement>("{}")]
+        );
+        string element = JsonSerializer.Serialize(value, ModelBase.SerializerOptions);
+        var deserialized = JsonSerializer.Deserialize<NamespaceQueryParamsComputeAttribute>(
+            element,
+            ModelBase.SerializerOptions
+        );
+
+        Assert.Equal(value, deserialized);
+    }
+
+    [Fact]
+    public void RankByAttributesSerializationRoundtripWorks()
+    {
+        NamespaceQueryParamsComputeAttribute value = new(
+            [new List<JsonElement>() { JsonSerializer.Deserialize<JsonElement>("{}") }]
+        );
+        string element = JsonSerializer.Serialize(value, ModelBase.SerializerOptions);
+        var deserialized = JsonSerializer.Deserialize<NamespaceQueryParamsComputeAttribute>(
+            element,
+            ModelBase.SerializerOptions
+        );
+
+        Assert.Equal(value, deserialized);
     }
 }
 
