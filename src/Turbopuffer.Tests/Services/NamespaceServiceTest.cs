@@ -82,9 +82,9 @@ public class NamespaceServiceTest : TestBase
                         {
                             { "foo", JsonSerializer.SerializeToElement("bar") },
                         },
-                        ComputeAttributes = new Dictionary<string, QueryComputeAttribute>()
+                        ComputeAttributes = new Dictionary<string, JsonElement>()
                         {
-                            { "foo", new([JsonSerializer.Deserialize<JsonElement>("{}")]) },
+                            { "foo", JsonSerializer.SerializeToElement("bar") },
                         },
                         DistanceMetric = DistanceMetric.CosineDistance,
                         ExcludeAttributes = ["string"],

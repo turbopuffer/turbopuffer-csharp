@@ -23,9 +23,9 @@ public class NamespaceMultiQueryParamsTest : TestBase
                     {
                         { "foo", JsonSerializer.SerializeToElement("bar") },
                     },
-                    ComputeAttributes = new Dictionary<string, QueryComputeAttribute>()
+                    ComputeAttributes = new Dictionary<string, JsonElement>()
                     {
-                        { "foo", new([JsonSerializer.Deserialize<JsonElement>("{}")]) },
+                        { "foo", JsonSerializer.SerializeToElement("bar") },
                     },
                     DistanceMetric = DistanceMetric.CosineDistance,
                     ExcludeAttributes = ["string"],
@@ -51,9 +51,9 @@ public class NamespaceMultiQueryParamsTest : TestBase
                 {
                     { "foo", JsonSerializer.SerializeToElement("bar") },
                 },
-                ComputeAttributes = new Dictionary<string, QueryComputeAttribute>()
+                ComputeAttributes = new Dictionary<string, JsonElement>()
                 {
-                    { "foo", new([JsonSerializer.Deserialize<JsonElement>("{}")]) },
+                    { "foo", JsonSerializer.SerializeToElement("bar") },
                 },
                 DistanceMetric = DistanceMetric.CosineDistance,
                 ExcludeAttributes = ["string"],
@@ -98,9 +98,9 @@ public class NamespaceMultiQueryParamsTest : TestBase
                     {
                         { "foo", JsonSerializer.SerializeToElement("bar") },
                     },
-                    ComputeAttributes = new Dictionary<string, QueryComputeAttribute>()
+                    ComputeAttributes = new Dictionary<string, JsonElement>()
                     {
-                        { "foo", new([JsonSerializer.Deserialize<JsonElement>("{}")]) },
+                        { "foo", JsonSerializer.SerializeToElement("bar") },
                     },
                     DistanceMetric = DistanceMetric.CosineDistance,
                     ExcludeAttributes = ["string"],
@@ -136,9 +136,9 @@ public class NamespaceMultiQueryParamsTest : TestBase
                     {
                         { "foo", JsonSerializer.SerializeToElement("bar") },
                     },
-                    ComputeAttributes = new Dictionary<string, QueryComputeAttribute>()
+                    ComputeAttributes = new Dictionary<string, JsonElement>()
                     {
-                        { "foo", new([JsonSerializer.Deserialize<JsonElement>("{}")]) },
+                        { "foo", JsonSerializer.SerializeToElement("bar") },
                     },
                     DistanceMetric = DistanceMetric.CosineDistance,
                     ExcludeAttributes = ["string"],
@@ -179,9 +179,9 @@ public class NamespaceMultiQueryParamsTest : TestBase
                     {
                         { "foo", JsonSerializer.SerializeToElement("bar") },
                     },
-                    ComputeAttributes = new Dictionary<string, QueryComputeAttribute>()
+                    ComputeAttributes = new Dictionary<string, JsonElement>()
                     {
-                        { "foo", new([JsonSerializer.Deserialize<JsonElement>("{}")]) },
+                        { "foo", JsonSerializer.SerializeToElement("bar") },
                     },
                     DistanceMetric = DistanceMetric.CosineDistance,
                     ExcludeAttributes = ["string"],
@@ -221,9 +221,9 @@ public class NamespaceMultiQueryParamsTest : TestBase
                     {
                         { "foo", JsonSerializer.SerializeToElement("bar") },
                     },
-                    ComputeAttributes = new Dictionary<string, QueryComputeAttribute>()
+                    ComputeAttributes = new Dictionary<string, JsonElement>()
                     {
-                        { "foo", new([JsonSerializer.Deserialize<JsonElement>("{}")]) },
+                        { "foo", JsonSerializer.SerializeToElement("bar") },
                     },
                     DistanceMetric = DistanceMetric.CosineDistance,
                     ExcludeAttributes = ["string"],
@@ -257,9 +257,9 @@ public class QueryTest : TestBase
             {
                 { "foo", JsonSerializer.SerializeToElement("bar") },
             },
-            ComputeAttributes = new Dictionary<string, QueryComputeAttribute>()
+            ComputeAttributes = new Dictionary<string, JsonElement>()
             {
-                { "foo", new([JsonSerializer.Deserialize<JsonElement>("{}")]) },
+                { "foo", JsonSerializer.SerializeToElement("bar") },
             },
             DistanceMetric = DistanceMetric.CosineDistance,
             ExcludeAttributes = ["string"],
@@ -275,9 +275,9 @@ public class QueryTest : TestBase
         {
             { "foo", JsonSerializer.SerializeToElement("bar") },
         };
-        Dictionary<string, QueryComputeAttribute> expectedComputeAttributes = new()
+        Dictionary<string, JsonElement> expectedComputeAttributes = new()
         {
-            { "foo", new([JsonSerializer.Deserialize<JsonElement>("{}")]) },
+            { "foo", JsonSerializer.SerializeToElement("bar") },
         };
         ApiEnum<string, DistanceMetric> expectedDistanceMetric = DistanceMetric.CosineDistance;
         List<string> expectedExcludeAttributes = ["string"];
@@ -302,7 +302,7 @@ public class QueryTest : TestBase
         {
             Assert.True(model.ComputeAttributes.TryGetValue(item.Key, out var value));
 
-            Assert.Equal(value, model.ComputeAttributes[item.Key]);
+            Assert.True(JsonElement.DeepEquals(value, model.ComputeAttributes[item.Key]));
         }
         Assert.Equal(expectedDistanceMetric, model.DistanceMetric);
         Assert.NotNull(model.ExcludeAttributes);
@@ -335,9 +335,9 @@ public class QueryTest : TestBase
             {
                 { "foo", JsonSerializer.SerializeToElement("bar") },
             },
-            ComputeAttributes = new Dictionary<string, QueryComputeAttribute>()
+            ComputeAttributes = new Dictionary<string, JsonElement>()
             {
-                { "foo", new([JsonSerializer.Deserialize<JsonElement>("{}")]) },
+                { "foo", JsonSerializer.SerializeToElement("bar") },
             },
             DistanceMetric = DistanceMetric.CosineDistance,
             ExcludeAttributes = ["string"],
@@ -364,9 +364,9 @@ public class QueryTest : TestBase
             {
                 { "foo", JsonSerializer.SerializeToElement("bar") },
             },
-            ComputeAttributes = new Dictionary<string, QueryComputeAttribute>()
+            ComputeAttributes = new Dictionary<string, JsonElement>()
             {
-                { "foo", new([JsonSerializer.Deserialize<JsonElement>("{}")]) },
+                { "foo", JsonSerializer.SerializeToElement("bar") },
             },
             DistanceMetric = DistanceMetric.CosineDistance,
             ExcludeAttributes = ["string"],
@@ -386,9 +386,9 @@ public class QueryTest : TestBase
         {
             { "foo", JsonSerializer.SerializeToElement("bar") },
         };
-        Dictionary<string, QueryComputeAttribute> expectedComputeAttributes = new()
+        Dictionary<string, JsonElement> expectedComputeAttributes = new()
         {
-            { "foo", new([JsonSerializer.Deserialize<JsonElement>("{}")]) },
+            { "foo", JsonSerializer.SerializeToElement("bar") },
         };
         ApiEnum<string, DistanceMetric> expectedDistanceMetric = DistanceMetric.CosineDistance;
         List<string> expectedExcludeAttributes = ["string"];
@@ -413,7 +413,7 @@ public class QueryTest : TestBase
         {
             Assert.True(deserialized.ComputeAttributes.TryGetValue(item.Key, out var value));
 
-            Assert.Equal(value, deserialized.ComputeAttributes[item.Key]);
+            Assert.True(JsonElement.DeepEquals(value, deserialized.ComputeAttributes[item.Key]));
         }
         Assert.Equal(expectedDistanceMetric, deserialized.DistanceMetric);
         Assert.NotNull(deserialized.ExcludeAttributes);
@@ -446,9 +446,9 @@ public class QueryTest : TestBase
             {
                 { "foo", JsonSerializer.SerializeToElement("bar") },
             },
-            ComputeAttributes = new Dictionary<string, QueryComputeAttribute>()
+            ComputeAttributes = new Dictionary<string, JsonElement>()
             {
-                { "foo", new([JsonSerializer.Deserialize<JsonElement>("{}")]) },
+                { "foo", JsonSerializer.SerializeToElement("bar") },
             },
             DistanceMetric = DistanceMetric.CosineDistance,
             ExcludeAttributes = ["string"],
@@ -568,9 +568,9 @@ public class QueryTest : TestBase
             {
                 { "foo", JsonSerializer.SerializeToElement("bar") },
             },
-            ComputeAttributes = new Dictionary<string, QueryComputeAttribute>()
+            ComputeAttributes = new Dictionary<string, JsonElement>()
             {
-                { "foo", new([JsonSerializer.Deserialize<JsonElement>("{}")]) },
+                { "foo", JsonSerializer.SerializeToElement("bar") },
             },
             DistanceMetric = DistanceMetric.CosineDistance,
             ExcludeAttributes = ["string"],
@@ -585,53 +585,6 @@ public class QueryTest : TestBase
         Query copied = new(model);
 
         Assert.Equal(model, copied);
-    }
-}
-
-public class QueryComputeAttributeTest : TestBase
-{
-    [Fact]
-    public void RankByValidationWorks()
-    {
-        QueryComputeAttribute value = new([JsonSerializer.Deserialize<JsonElement>("{}")]);
-        value.Validate();
-    }
-
-    [Fact]
-    public void RankByAttributesValidationWorks()
-    {
-        QueryComputeAttribute value = new(
-            [new List<JsonElement>() { JsonSerializer.Deserialize<JsonElement>("{}") }]
-        );
-        value.Validate();
-    }
-
-    [Fact]
-    public void RankBySerializationRoundtripWorks()
-    {
-        QueryComputeAttribute value = new([JsonSerializer.Deserialize<JsonElement>("{}")]);
-        string element = JsonSerializer.Serialize(value, ModelBase.SerializerOptions);
-        var deserialized = JsonSerializer.Deserialize<QueryComputeAttribute>(
-            element,
-            ModelBase.SerializerOptions
-        );
-
-        Assert.Equal(value, deserialized);
-    }
-
-    [Fact]
-    public void RankByAttributesSerializationRoundtripWorks()
-    {
-        QueryComputeAttribute value = new(
-            [new List<JsonElement>() { JsonSerializer.Deserialize<JsonElement>("{}") }]
-        );
-        string element = JsonSerializer.Serialize(value, ModelBase.SerializerOptions);
-        var deserialized = JsonSerializer.Deserialize<QueryComputeAttribute>(
-            element,
-            ModelBase.SerializerOptions
-        );
-
-        Assert.Equal(value, deserialized);
     }
 }
 
