@@ -22,6 +22,8 @@ public abstract record class ModelBase
         {
             new FrozenDictionaryConverterFactory(),
             new ApiEnumConverter<string, DistanceMetric>(),
+            new ApiEnumConverter<string, HighlightFragmentBy>(),
+            new ApiEnumConverter<string, HighlightOffsetUnits>(),
             new ApiEnumConverter<string, Language>(),
             new ApiEnumConverter<string, SparseDistanceMetric>(),
             new ApiEnumConverter<string, Tokenizer>(),
