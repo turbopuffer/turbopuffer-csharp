@@ -604,7 +604,7 @@ public sealed record class PatchByFilter : JsonModel
         get
         {
             this._rawData.Freeze();
-            return this._rawData.GetNotNullStruct<JsonElement>("filters");
+            return this._rawData.GetNotAbsentElement("filters");
         }
         init { this._rawData.Set("filters", value); }
     }
