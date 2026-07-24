@@ -10,8 +10,8 @@ namespace Turbopuffer.Models.Namespaces;
 /// <summary>
 /// Additional (optional) parameters for the Highlight compute expression.
 /// </summary>
-[JsonConverter(typeof(JsonModelConverter<HighlightConfig, HighlightConfigFromRaw>))]
-public sealed record class HighlightConfig : JsonModel
+[JsonConverter(typeof(JsonModelConverter<HighlightConfigParams, HighlightConfigParamsFromRaw>))]
+public sealed record class HighlightConfigParams : JsonModel
 {
     /// <summary>
     /// How to split a text attribute into fragments for highlighting.
@@ -111,37 +111,40 @@ public sealed record class HighlightConfig : JsonModel
         _ = this.RankFragmentsBy;
     }
 
-    public HighlightConfig() { }
+    public HighlightConfigParams() { }
 
 #pragma warning disable CS8618
     [SetsRequiredMembers]
-    public HighlightConfig(HighlightConfig highlightConfig)
-        : base(highlightConfig) { }
+    public HighlightConfigParams(HighlightConfigParams highlightConfigParams)
+        : base(highlightConfigParams) { }
 #pragma warning restore CS8618
 
-    public HighlightConfig(IReadOnlyDictionary<string, JsonElement> rawData)
+    public HighlightConfigParams(IReadOnlyDictionary<string, JsonElement> rawData)
     {
         this._rawData = new(rawData);
     }
 
 #pragma warning disable CS8618
     [SetsRequiredMembers]
-    HighlightConfig(FrozenDictionary<string, JsonElement> rawData)
+    HighlightConfigParams(FrozenDictionary<string, JsonElement> rawData)
     {
         this._rawData = new(rawData);
     }
 #pragma warning restore CS8618
 
-    /// <inheritdoc cref="HighlightConfigFromRaw.FromRawUnchecked"/>
-    public static HighlightConfig FromRawUnchecked(IReadOnlyDictionary<string, JsonElement> rawData)
+    /// <inheritdoc cref="HighlightConfigParamsFromRaw.FromRawUnchecked"/>
+    public static HighlightConfigParams FromRawUnchecked(
+        IReadOnlyDictionary<string, JsonElement> rawData
+    )
     {
         return new(FrozenDictionary.ToFrozenDictionary(rawData));
     }
 }
 
-class HighlightConfigFromRaw : IFromRawJson<HighlightConfig>
+class HighlightConfigParamsFromRaw : IFromRawJson<HighlightConfigParams>
 {
     /// <inheritdoc/>
-    public HighlightConfig FromRawUnchecked(IReadOnlyDictionary<string, JsonElement> rawData) =>
-        HighlightConfig.FromRawUnchecked(rawData);
+    public HighlightConfigParams FromRawUnchecked(
+        IReadOnlyDictionary<string, JsonElement> rawData
+    ) => HighlightConfigParams.FromRawUnchecked(rawData);
 }

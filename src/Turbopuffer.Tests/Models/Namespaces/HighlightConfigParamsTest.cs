@@ -4,12 +4,12 @@ using Turbopuffer.Models.Namespaces;
 
 namespace Turbopuffer.Tests.Models.Namespaces;
 
-public class HighlightConfigTest : TestBase
+public class HighlightConfigParamsTest : TestBase
 {
     [Fact]
     public void FieldRoundtrip_Works()
     {
-        var model = new HighlightConfig
+        var model = new HighlightConfigParams
         {
             FragmentBy = HighlightFragmentBy.None,
             FragmentLimit = 0,
@@ -32,7 +32,7 @@ public class HighlightConfigTest : TestBase
     [Fact]
     public void SerializationRoundtrip_Works()
     {
-        var model = new HighlightConfig
+        var model = new HighlightConfigParams
         {
             FragmentBy = HighlightFragmentBy.None,
             FragmentLimit = 0,
@@ -41,7 +41,7 @@ public class HighlightConfigTest : TestBase
         };
 
         string json = JsonSerializer.Serialize(model, ModelBase.SerializerOptions);
-        var deserialized = JsonSerializer.Deserialize<HighlightConfig>(
+        var deserialized = JsonSerializer.Deserialize<HighlightConfigParams>(
             json,
             ModelBase.SerializerOptions
         );
@@ -52,7 +52,7 @@ public class HighlightConfigTest : TestBase
     [Fact]
     public void FieldRoundtripThroughSerialization_Works()
     {
-        var model = new HighlightConfig
+        var model = new HighlightConfigParams
         {
             FragmentBy = HighlightFragmentBy.None,
             FragmentLimit = 0,
@@ -61,7 +61,7 @@ public class HighlightConfigTest : TestBase
         };
 
         string element = JsonSerializer.Serialize(model, ModelBase.SerializerOptions);
-        var deserialized = JsonSerializer.Deserialize<HighlightConfig>(
+        var deserialized = JsonSerializer.Deserialize<HighlightConfigParams>(
             element,
             ModelBase.SerializerOptions
         );
@@ -84,7 +84,7 @@ public class HighlightConfigTest : TestBase
     [Fact]
     public void Validation_Works()
     {
-        var model = new HighlightConfig
+        var model = new HighlightConfigParams
         {
             FragmentBy = HighlightFragmentBy.None,
             FragmentLimit = 0,
@@ -98,7 +98,7 @@ public class HighlightConfigTest : TestBase
     [Fact]
     public void OptionalNonNullablePropertiesUnsetAreNotSet_Works()
     {
-        var model = new HighlightConfig { };
+        var model = new HighlightConfigParams { };
 
         Assert.Null(model.FragmentBy);
         Assert.False(model.RawData.ContainsKey("fragment_by"));
@@ -113,7 +113,7 @@ public class HighlightConfigTest : TestBase
     [Fact]
     public void OptionalNonNullablePropertiesUnsetValidation_Works()
     {
-        var model = new HighlightConfig { };
+        var model = new HighlightConfigParams { };
 
         model.Validate();
     }
@@ -121,7 +121,7 @@ public class HighlightConfigTest : TestBase
     [Fact]
     public void OptionalNonNullablePropertiesSetToNullAreNotSet_Works()
     {
-        var model = new HighlightConfig
+        var model = new HighlightConfigParams
         {
             // Null should be interpreted as omitted for these properties
             FragmentBy = null,
@@ -143,7 +143,7 @@ public class HighlightConfigTest : TestBase
     [Fact]
     public void OptionalNonNullablePropertiesSetToNullValidation_Works()
     {
-        var model = new HighlightConfig
+        var model = new HighlightConfigParams
         {
             // Null should be interpreted as omitted for these properties
             FragmentBy = null,
@@ -158,7 +158,7 @@ public class HighlightConfigTest : TestBase
     [Fact]
     public void CopyConstructor_Works()
     {
-        var model = new HighlightConfig
+        var model = new HighlightConfigParams
         {
             FragmentBy = HighlightFragmentBy.None,
             FragmentLimit = 0,
@@ -166,7 +166,7 @@ public class HighlightConfigTest : TestBase
             RankFragmentsBy = JsonSerializer.Deserialize<JsonElement>("{}"),
         };
 
-        HighlightConfig copied = new(model);
+        HighlightConfigParams copied = new(model);
 
         Assert.Equal(model, copied);
     }
