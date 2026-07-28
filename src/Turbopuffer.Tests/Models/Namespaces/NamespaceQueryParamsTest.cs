@@ -19,9 +19,9 @@ public class NamespaceQueryParamsTest : TestBase
             {
                 { "foo", new AggregateByRaw(JsonSerializer.SerializeToElement("bar")) },
             },
-            ComputeAttributes = new Dictionary<string, JsonElement>()
+            ComputeAttributes = new Dictionary<string, ComputeAttributes>()
             {
-                { "foo", JsonSerializer.SerializeToElement("bar") },
+                { "foo", new ComputeAttributesRaw(JsonSerializer.SerializeToElement("bar")) },
             },
             Consistency = new() { Level = NamespaceQueryParamsConsistencyLevel.Strong },
             DistanceMetric = DistanceMetric.CosineDistance,
@@ -40,9 +40,9 @@ public class NamespaceQueryParamsTest : TestBase
         {
             { "foo", new AggregateByRaw(JsonSerializer.SerializeToElement("bar")) },
         };
-        Dictionary<string, JsonElement> expectedComputeAttributes = new()
+        Dictionary<string, ComputeAttributes> expectedComputeAttributes = new()
         {
-            { "foo", JsonSerializer.SerializeToElement("bar") },
+            { "foo", new ComputeAttributesRaw(JsonSerializer.SerializeToElement("bar")) },
         };
         NamespaceQueryParamsConsistency expectedConsistency = new()
         {
@@ -77,7 +77,12 @@ public class NamespaceQueryParamsTest : TestBase
         {
             Assert.True(parameters.ComputeAttributes.TryGetValue(item.Key, out var value));
 
-            Assert.True(JsonElement.DeepEquals(value, parameters.ComputeAttributes[item.Key]));
+            Assert.True(
+                JsonElement.DeepEquals(
+                    ((ComputeAttributesRaw)item.Value).Value,
+                    ((ComputeAttributesRaw)parameters.ComputeAttributes[item.Key]).Value
+                )
+            );
         }
         Assert.Equal(expectedConsistency, parameters.Consistency);
         Assert.Equal(expectedDistanceMetric, parameters.DistanceMetric);
@@ -106,6 +111,62 @@ public class NamespaceQueryParamsTest : TestBase
         Assert.True(JsonElement.DeepEquals(expectedRankBy, ((RankByRaw)parameters.RankBy).Value));
         Assert.Equal(expectedTopK, parameters.TopK);
         Assert.Equal(expectedVectorEncoding, parameters.VectorEncoding);
+    }
+
+    [Fact]
+    public void ComputeAttributes_Variants_Serialize()
+    {
+        // Exercise every real (non-Raw) variant of the ComputeAttributes union and
+        // assert each serializes to the expected turbolisp wire form.
+        ComputeAttributes vectorDist = ComputeAttributes.VectorDist("vec", [0.5f]);
+        ComputeAttributes highlight = ComputeAttributes.Highlight("body");
+        ComputeAttributes highlightWithConfig = ComputeAttributes.Highlight(
+            "body",
+            new HighlightConfigParams()
+        );
+
+        // The Score branch of the union is a RankBy value; RankBy : ComputeAttributes.
+        ComputeAttributes score = RankBy.Ann("vec", [0.5f]);
+
+        Assert.Equal(
+            "[\"vec\",\"VectorDist\",[0.5]]",
+            JsonSerializer.Serialize(vectorDist, ModelBase.SerializerOptions)
+        );
+        Assert.Equal(
+            "[\"Highlight\",\"body\"]",
+            JsonSerializer.Serialize(highlight, ModelBase.SerializerOptions)
+        );
+        Assert.Equal(
+            "[\"Highlight\",\"body\",{}]",
+            JsonSerializer.Serialize(highlightWithConfig, ModelBase.SerializerOptions)
+        );
+        Assert.Equal(
+            "[\"vec\",\"ANN\",[0.5]]",
+            JsonSerializer.Serialize(score, ModelBase.SerializerOptions)
+        );
+
+        // Prove the typed wire form survives end-to-end through the actual property
+        // type: IReadOnlyDictionary<string, ComputeAttributes>.
+        IReadOnlyDictionary<string, ComputeAttributes> computeAttributes = new Dictionary<
+            string,
+            ComputeAttributes
+        >
+        {
+            { "vector_dist", vectorDist },
+            { "highlight", highlight },
+            { "highlight_with_config", highlightWithConfig },
+            { "score", score },
+        };
+
+        Assert.Equal(
+            "{"
+                + "\"vector_dist\":[\"vec\",\"VectorDist\",[0.5]],"
+                + "\"highlight\":[\"Highlight\",\"body\"],"
+                + "\"highlight_with_config\":[\"Highlight\",\"body\",{}],"
+                + "\"score\":[\"vec\",\"ANN\",[0.5]]"
+                + "}",
+            JsonSerializer.Serialize(computeAttributes, ModelBase.SerializerOptions)
+        );
     }
 
     [Fact]
@@ -212,9 +273,9 @@ public class NamespaceQueryParamsTest : TestBase
             {
                 { "foo", new AggregateByRaw(JsonSerializer.SerializeToElement("bar")) },
             },
-            ComputeAttributes = new Dictionary<string, JsonElement>()
+            ComputeAttributes = new Dictionary<string, ComputeAttributes>()
             {
-                { "foo", JsonSerializer.SerializeToElement("bar") },
+                { "foo", new ComputeAttributesRaw(JsonSerializer.SerializeToElement("bar")) },
             },
             Consistency = new() { Level = NamespaceQueryParamsConsistencyLevel.Strong },
             DistanceMetric = DistanceMetric.CosineDistance,
