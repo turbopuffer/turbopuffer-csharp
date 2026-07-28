@@ -19,9 +19,9 @@ public class NamespaceQueryParamsTest : TestBase
             {
                 { "foo", new AggregateByRaw(JsonSerializer.SerializeToElement("bar")) },
             },
-            ComputeAttributes = new Dictionary<string, NamespaceQueryParamsComputeAttribute>()
+            ComputeAttributes = new Dictionary<string, JsonElement>()
             {
-                { "foo", new([JsonSerializer.Deserialize<JsonElement>("{}")]) },
+                { "foo", JsonSerializer.SerializeToElement("bar") },
             },
             Consistency = new() { Level = NamespaceQueryParamsConsistencyLevel.Strong },
             DistanceMetric = DistanceMetric.CosineDistance,
@@ -40,9 +40,9 @@ public class NamespaceQueryParamsTest : TestBase
         {
             { "foo", new AggregateByRaw(JsonSerializer.SerializeToElement("bar")) },
         };
-        Dictionary<string, NamespaceQueryParamsComputeAttribute> expectedComputeAttributes = new()
+        Dictionary<string, JsonElement> expectedComputeAttributes = new()
         {
-            { "foo", new([JsonSerializer.Deserialize<JsonElement>("{}")]) },
+            { "foo", JsonSerializer.SerializeToElement("bar") },
         };
         NamespaceQueryParamsConsistency expectedConsistency = new()
         {
@@ -77,7 +77,7 @@ public class NamespaceQueryParamsTest : TestBase
         {
             Assert.True(parameters.ComputeAttributes.TryGetValue(item.Key, out var value));
 
-            Assert.Equal(value, parameters.ComputeAttributes[item.Key]);
+            Assert.True(JsonElement.DeepEquals(value, parameters.ComputeAttributes[item.Key]));
         }
         Assert.Equal(expectedConsistency, parameters.Consistency);
         Assert.Equal(expectedDistanceMetric, parameters.DistanceMetric);
@@ -212,9 +212,9 @@ public class NamespaceQueryParamsTest : TestBase
             {
                 { "foo", new AggregateByRaw(JsonSerializer.SerializeToElement("bar")) },
             },
-            ComputeAttributes = new Dictionary<string, NamespaceQueryParamsComputeAttribute>()
+            ComputeAttributes = new Dictionary<string, JsonElement>()
             {
-                { "foo", new([JsonSerializer.Deserialize<JsonElement>("{}")]) },
+                { "foo", JsonSerializer.SerializeToElement("bar") },
             },
             Consistency = new() { Level = NamespaceQueryParamsConsistencyLevel.Strong },
             DistanceMetric = DistanceMetric.CosineDistance,
@@ -231,57 +231,6 @@ public class NamespaceQueryParamsTest : TestBase
         NamespaceQueryParams copied = new(parameters);
 
         Assert.Equal(parameters, copied);
-    }
-}
-
-public class NamespaceQueryParamsComputeAttributeTest : TestBase
-{
-    [Fact]
-    public void RankByValidationWorks()
-    {
-        NamespaceQueryParamsComputeAttribute value = new(
-            [JsonSerializer.Deserialize<JsonElement>("{}")]
-        );
-        value.Validate();
-    }
-
-    [Fact]
-    public void RankByAttributesValidationWorks()
-    {
-        NamespaceQueryParamsComputeAttribute value = new(
-            [new List<JsonElement>() { JsonSerializer.Deserialize<JsonElement>("{}") }]
-        );
-        value.Validate();
-    }
-
-    [Fact]
-    public void RankBySerializationRoundtripWorks()
-    {
-        NamespaceQueryParamsComputeAttribute value = new(
-            [JsonSerializer.Deserialize<JsonElement>("{}")]
-        );
-        string element = JsonSerializer.Serialize(value, ModelBase.SerializerOptions);
-        var deserialized = JsonSerializer.Deserialize<NamespaceQueryParamsComputeAttribute>(
-            element,
-            ModelBase.SerializerOptions
-        );
-
-        Assert.Equal(value, deserialized);
-    }
-
-    [Fact]
-    public void RankByAttributesSerializationRoundtripWorks()
-    {
-        NamespaceQueryParamsComputeAttribute value = new(
-            [new List<JsonElement>() { JsonSerializer.Deserialize<JsonElement>("{}") }]
-        );
-        string element = JsonSerializer.Serialize(value, ModelBase.SerializerOptions);
-        var deserialized = JsonSerializer.Deserialize<NamespaceQueryParamsComputeAttribute>(
-            element,
-            ModelBase.SerializerOptions
-        );
-
-        Assert.Equal(value, deserialized);
     }
 }
 
