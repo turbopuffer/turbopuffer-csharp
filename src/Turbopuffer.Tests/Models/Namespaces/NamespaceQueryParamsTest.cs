@@ -114,6 +114,62 @@ public class NamespaceQueryParamsTest : TestBase
     }
 
     [Fact]
+    public void ComputeAttributes_Variants_Serialize()
+    {
+        // Exercise every real (non-Raw) variant of the ComputeAttributes union and
+        // assert each serializes to the expected turbolisp wire form.
+        ComputeAttributes vectorDist = ComputeAttributes.VectorDist("vec", [0.5f]);
+        ComputeAttributes highlight = ComputeAttributes.Highlight("body");
+        ComputeAttributes highlightWithConfig = ComputeAttributes.Highlight(
+            "body",
+            new HighlightConfigParams()
+        );
+
+        // The Score branch of the union is a RankBy value; RankBy : ComputeAttributes.
+        ComputeAttributes score = RankBy.Ann("vec", [0.5f]);
+
+        Assert.Equal(
+            "[\"vec\",\"VectorDist\",[0.5]]",
+            JsonSerializer.Serialize(vectorDist, ModelBase.SerializerOptions)
+        );
+        Assert.Equal(
+            "[\"Highlight\",\"body\"]",
+            JsonSerializer.Serialize(highlight, ModelBase.SerializerOptions)
+        );
+        Assert.Equal(
+            "[\"Highlight\",\"body\",{}]",
+            JsonSerializer.Serialize(highlightWithConfig, ModelBase.SerializerOptions)
+        );
+        Assert.Equal(
+            "[\"vec\",\"ANN\",[0.5]]",
+            JsonSerializer.Serialize(score, ModelBase.SerializerOptions)
+        );
+
+        // Prove the typed wire form survives end-to-end through the actual property
+        // type: IReadOnlyDictionary<string, ComputeAttributes>.
+        IReadOnlyDictionary<string, ComputeAttributes> computeAttributes = new Dictionary<
+            string,
+            ComputeAttributes
+        >
+        {
+            { "vector_dist", vectorDist },
+            { "highlight", highlight },
+            { "highlight_with_config", highlightWithConfig },
+            { "score", score },
+        };
+
+        Assert.Equal(
+            "{"
+                + "\"vector_dist\":[\"vec\",\"VectorDist\",[0.5]],"
+                + "\"highlight\":[\"Highlight\",\"body\"],"
+                + "\"highlight_with_config\":[\"Highlight\",\"body\",{}],"
+                + "\"score\":[\"vec\",\"ANN\",[0.5]]"
+                + "}",
+            JsonSerializer.Serialize(computeAttributes, ModelBase.SerializerOptions)
+        );
+    }
+
+    [Fact]
     public void OptionalNonNullableParamsUnsetAreNotSet_Works()
     {
         var parameters = new NamespaceQueryParams { Namespace = "namespace" };
