@@ -273,12 +273,12 @@ public sealed record class Query : JsonModel
     /// the name of the computed attribute; each value is an expression describing
     /// how to compute it.
     /// </summary>
-    public IReadOnlyDictionary<string, JsonElement>? ComputeAttributes
+    public IReadOnlyDictionary<string, ComputeAttributes>? ComputeAttributes
     {
         get
         {
             this._rawData.Freeze();
-            return this._rawData.GetNullableClass<FrozenDictionary<string, JsonElement>>(
+            return this._rawData.GetNullableClass<FrozenDictionary<string, ComputeAttributes>>(
                 "compute_attributes"
             );
         }
@@ -289,7 +289,7 @@ public sealed record class Query : JsonModel
                 return;
             }
 
-            this._rawData.Set<FrozenDictionary<string, JsonElement>?>(
+            this._rawData.Set<FrozenDictionary<string, ComputeAttributes>?>(
                 "compute_attributes",
                 value == null ? null : FrozenDictionary.ToFrozenDictionary(value)
             );
