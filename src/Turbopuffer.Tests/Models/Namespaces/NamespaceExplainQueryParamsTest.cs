@@ -19,9 +19,9 @@ public class NamespaceExplainQueryParamsTest : TestBase
             {
                 { "foo", new AggregateByRaw(JsonSerializer.SerializeToElement("bar")) },
             },
-            ComputeAttributes = new Dictionary<string, JsonElement>()
+            ComputeAttributes = new Dictionary<string, ComputeAttributes>()
             {
-                { "foo", JsonSerializer.SerializeToElement("bar") },
+                { "foo", new ComputeAttributesRaw(JsonSerializer.SerializeToElement("bar")) },
             },
             Consistency = new() { Level = Level.Strong },
             DistanceMetric = DistanceMetric.CosineDistance,
@@ -40,9 +40,9 @@ public class NamespaceExplainQueryParamsTest : TestBase
         {
             { "foo", new AggregateByRaw(JsonSerializer.SerializeToElement("bar")) },
         };
-        Dictionary<string, JsonElement> expectedComputeAttributes = new()
+        Dictionary<string, ComputeAttributes> expectedComputeAttributes = new()
         {
-            { "foo", JsonSerializer.SerializeToElement("bar") },
+            { "foo", new ComputeAttributesRaw(JsonSerializer.SerializeToElement("bar")) },
         };
         Consistency expectedConsistency = new() { Level = Level.Strong };
         ApiEnum<string, DistanceMetric> expectedDistanceMetric = DistanceMetric.CosineDistance;
@@ -75,7 +75,12 @@ public class NamespaceExplainQueryParamsTest : TestBase
         {
             Assert.True(parameters.ComputeAttributes.TryGetValue(item.Key, out var value));
 
-            Assert.True(JsonElement.DeepEquals(value, parameters.ComputeAttributes[item.Key]));
+            Assert.True(
+                JsonElement.DeepEquals(
+                    ((ComputeAttributesRaw)item.Value).Value,
+                    ((ComputeAttributesRaw)parameters.ComputeAttributes[item.Key]).Value
+                )
+            );
         }
         Assert.Equal(expectedConsistency, parameters.Consistency);
         Assert.Equal(expectedDistanceMetric, parameters.DistanceMetric);
@@ -212,9 +217,9 @@ public class NamespaceExplainQueryParamsTest : TestBase
             {
                 { "foo", new AggregateByRaw(JsonSerializer.SerializeToElement("bar")) },
             },
-            ComputeAttributes = new Dictionary<string, JsonElement>()
+            ComputeAttributes = new Dictionary<string, ComputeAttributes>()
             {
-                { "foo", JsonSerializer.SerializeToElement("bar") },
+                { "foo", new ComputeAttributesRaw(JsonSerializer.SerializeToElement("bar")) },
             },
             Consistency = new() { Level = Level.Strong },
             DistanceMetric = DistanceMetric.CosineDistance,
