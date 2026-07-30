@@ -85,99 +85,6 @@ public sealed class AggregateBySum(string attr) : AggregateBy
     }
 }
 
-[JsonConverter(typeof(ComputeAttributesJsonConverter))]
-public abstract class ComputeAttributes
-{
-    internal abstract void WriteJson(Utf8JsonWriter writer, JsonSerializerOptions options);
-
-    public static ComputeAttributesVectorDist VectorDist(
-        string attr,
-        System.Collections.Generic.IEnumerable<float> value
-    ) => new ComputeAttributesVectorDist(attr, System.Linq.Enumerable.ToArray(value));
-
-    public static ComputeAttributesHighlight Highlight(string attr) =>
-        new ComputeAttributesHighlight(attr);
-
-    public static ComputeAttributesHighlightWithConfig Highlight(
-        string attr,
-        HighlightConfigParams config
-    ) => new ComputeAttributesHighlightWithConfig(attr, config);
-}
-
-[JsonConverter(typeof(ComputeAttributesJsonConverter))]
-public sealed class ComputeAttributesRaw(JsonElement value) : ComputeAttributes
-{
-    public JsonElement Value { get; } = value;
-
-    internal override void WriteJson(Utf8JsonWriter writer, JsonSerializerOptions options) =>
-        this.Value.WriteTo(writer);
-}
-
-internal sealed class ComputeAttributesJsonConverter : JsonConverter<ComputeAttributes>
-{
-    public override bool CanConvert(Type typeToConvert) =>
-        typeof(ComputeAttributes).IsAssignableFrom(typeToConvert);
-
-    public override ComputeAttributes Read(
-        ref Utf8JsonReader reader,
-        Type typeToConvert,
-        JsonSerializerOptions options
-    ) => new ComputeAttributesRaw(JsonElement.ParseValue(ref reader));
-
-    public override void Write(
-        Utf8JsonWriter writer,
-        ComputeAttributes value,
-        JsonSerializerOptions options
-    ) => value.WriteJson(writer, options);
-}
-
-[JsonConverter(typeof(ComputeAttributesJsonConverter))]
-public sealed class ComputeAttributesHighlight(string attr) : ComputeAttributes
-{
-    public string Attr { get; } = attr;
-
-    internal override void WriteJson(Utf8JsonWriter writer, JsonSerializerOptions options)
-    {
-        writer.WriteStartArray();
-        writer.WriteStringValue("Highlight");
-        JsonSerializer.Serialize(writer, this.Attr, options);
-        writer.WriteEndArray();
-    }
-}
-
-[JsonConverter(typeof(ComputeAttributesJsonConverter))]
-public sealed class ComputeAttributesHighlightWithConfig(string attr, HighlightConfigParams config)
-    : ComputeAttributes
-{
-    public string Attr { get; } = attr;
-    public HighlightConfigParams Config { get; } = config;
-
-    internal override void WriteJson(Utf8JsonWriter writer, JsonSerializerOptions options)
-    {
-        writer.WriteStartArray();
-        writer.WriteStringValue("Highlight");
-        JsonSerializer.Serialize(writer, this.Attr, options);
-        JsonSerializer.Serialize(writer, this.Config, options);
-        writer.WriteEndArray();
-    }
-}
-
-[JsonConverter(typeof(ComputeAttributesJsonConverter))]
-public sealed class ComputeAttributesVectorDist(string attr, float[] value) : ComputeAttributes
-{
-    public string Attr { get; } = attr;
-    public float[] Value { get; } = value;
-
-    internal override void WriteJson(Utf8JsonWriter writer, JsonSerializerOptions options)
-    {
-        writer.WriteStartArray();
-        JsonSerializer.Serialize(writer, this.Attr, options);
-        writer.WriteStringValue("VectorDist");
-        JsonSerializer.Serialize(writer, this.Value, options);
-        writer.WriteEndArray();
-    }
-}
-
 [JsonConverter(typeof(ExprJsonConverter))]
 public abstract class Expr
 {
@@ -189,6 +96,16 @@ public abstract class Expr
 
     public static ExprEmbedWithParams Embed(string value, EmbedParams @params) =>
         new ExprEmbedWithParams(value, @params);
+
+    public static ExprVectorDist VectorDist(
+        string attr,
+        System.Collections.Generic.IEnumerable<float> value
+    ) => new ExprVectorDist(attr, System.Linq.Enumerable.ToArray(value));
+
+    public static ExprHighlight Highlight(string attr) => new ExprHighlight(attr);
+
+    public static ExprHighlightWithConfig Highlight(string attr, HighlightConfigParams config) =>
+        new ExprHighlightWithConfig(attr, config);
 }
 
 [JsonConverter(typeof(ExprJsonConverter))]
@@ -246,6 +163,36 @@ public sealed class ExprEmbedWithParams(string value, EmbedParams @params) : Exp
 }
 
 [JsonConverter(typeof(ExprJsonConverter))]
+public sealed class ExprHighlight(string attr) : Expr
+{
+    public string Attr { get; } = attr;
+
+    internal override void WriteJson(Utf8JsonWriter writer, JsonSerializerOptions options)
+    {
+        writer.WriteStartArray();
+        writer.WriteStringValue("Highlight");
+        JsonSerializer.Serialize(writer, this.Attr, options);
+        writer.WriteEndArray();
+    }
+}
+
+[JsonConverter(typeof(ExprJsonConverter))]
+public sealed class ExprHighlightWithConfig(string attr, HighlightConfigParams config) : Expr
+{
+    public string Attr { get; } = attr;
+    public HighlightConfigParams Config { get; } = config;
+
+    internal override void WriteJson(Utf8JsonWriter writer, JsonSerializerOptions options)
+    {
+        writer.WriteStartArray();
+        writer.WriteStringValue("Highlight");
+        JsonSerializer.Serialize(writer, this.Attr, options);
+        JsonSerializer.Serialize(writer, this.Config, options);
+        writer.WriteEndArray();
+    }
+}
+
+[JsonConverter(typeof(ExprJsonConverter))]
 public sealed class ExprRefNew(string refNew) : Expr
 {
     public new string RefNew { get; } = refNew;
@@ -256,6 +203,22 @@ public sealed class ExprRefNew(string refNew) : Expr
         writer.WritePropertyName("$ref_new");
         JsonSerializer.Serialize(writer, this.RefNew, options);
         writer.WriteEndObject();
+    }
+}
+
+[JsonConverter(typeof(ExprJsonConverter))]
+public sealed class ExprVectorDist(string attr, float[] value) : Expr
+{
+    public string Attr { get; } = attr;
+    public float[] Value { get; } = value;
+
+    internal override void WriteJson(Utf8JsonWriter writer, JsonSerializerOptions options)
+    {
+        writer.WriteStartArray();
+        JsonSerializer.Serialize(writer, this.Attr, options);
+        writer.WriteStringValue("VectorDist");
+        JsonSerializer.Serialize(writer, this.Value, options);
+        writer.WriteEndArray();
     }
 }
 
@@ -1108,7 +1071,7 @@ public sealed class GroupByFunctionForEachUnique(string attr) : GroupByFunction
 }
 
 [JsonConverter(typeof(RankByJsonConverter))]
-public abstract class RankBy : ComputeAttributes
+public abstract class RankBy : Expr
 {
     public static RankByAnn Ann(string attr, System.Collections.Generic.IEnumerable<float> value) =>
         new RankByAnn(attr, System.Linq.Enumerable.ToArray(value));

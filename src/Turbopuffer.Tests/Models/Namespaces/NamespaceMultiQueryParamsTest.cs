@@ -23,12 +23,9 @@ public class NamespaceMultiQueryParamsTest : TestBase
                     {
                         { "foo", new AggregateByRaw(JsonSerializer.SerializeToElement("bar")) },
                     },
-                    ComputeAttributes = new Dictionary<string, ComputeAttributes>()
+                    ComputeAttributes = new Dictionary<string, Expr>()
                     {
-                        {
-                            "foo",
-                            new ComputeAttributesRaw(JsonSerializer.SerializeToElement("bar"))
-                        },
+                        { "foo", new ExprRaw(JsonSerializer.SerializeToElement("bar")) },
                     },
                     DistanceMetric = DistanceMetric.CosineDistance,
                     ExcludeAttributes = ["string"],
@@ -54,9 +51,9 @@ public class NamespaceMultiQueryParamsTest : TestBase
                 {
                     { "foo", new AggregateByRaw(JsonSerializer.SerializeToElement("bar")) },
                 },
-                ComputeAttributes = new Dictionary<string, ComputeAttributes>()
+                ComputeAttributes = new Dictionary<string, Expr>()
                 {
-                    { "foo", new ComputeAttributesRaw(JsonSerializer.SerializeToElement("bar")) },
+                    { "foo", new ExprRaw(JsonSerializer.SerializeToElement("bar")) },
                 },
                 DistanceMetric = DistanceMetric.CosineDistance,
                 ExcludeAttributes = ["string"],
@@ -104,12 +101,9 @@ public class NamespaceMultiQueryParamsTest : TestBase
                     {
                         { "foo", new AggregateByRaw(JsonSerializer.SerializeToElement("bar")) },
                     },
-                    ComputeAttributes = new Dictionary<string, ComputeAttributes>()
+                    ComputeAttributes = new Dictionary<string, Expr>()
                     {
-                        {
-                            "foo",
-                            new ComputeAttributesRaw(JsonSerializer.SerializeToElement("bar"))
-                        },
+                        { "foo", new ExprRaw(JsonSerializer.SerializeToElement("bar")) },
                     },
                     DistanceMetric = DistanceMetric.CosineDistance,
                     ExcludeAttributes = ["string"],
@@ -145,12 +139,9 @@ public class NamespaceMultiQueryParamsTest : TestBase
                     {
                         { "foo", new AggregateByRaw(JsonSerializer.SerializeToElement("bar")) },
                     },
-                    ComputeAttributes = new Dictionary<string, ComputeAttributes>()
+                    ComputeAttributes = new Dictionary<string, Expr>()
                     {
-                        {
-                            "foo",
-                            new ComputeAttributesRaw(JsonSerializer.SerializeToElement("bar"))
-                        },
+                        { "foo", new ExprRaw(JsonSerializer.SerializeToElement("bar")) },
                     },
                     DistanceMetric = DistanceMetric.CosineDistance,
                     ExcludeAttributes = ["string"],
@@ -191,12 +182,9 @@ public class NamespaceMultiQueryParamsTest : TestBase
                     {
                         { "foo", new AggregateByRaw(JsonSerializer.SerializeToElement("bar")) },
                     },
-                    ComputeAttributes = new Dictionary<string, ComputeAttributes>()
+                    ComputeAttributes = new Dictionary<string, Expr>()
                     {
-                        {
-                            "foo",
-                            new ComputeAttributesRaw(JsonSerializer.SerializeToElement("bar"))
-                        },
+                        { "foo", new ExprRaw(JsonSerializer.SerializeToElement("bar")) },
                     },
                     DistanceMetric = DistanceMetric.CosineDistance,
                     ExcludeAttributes = ["string"],
@@ -236,12 +224,9 @@ public class NamespaceMultiQueryParamsTest : TestBase
                     {
                         { "foo", new AggregateByRaw(JsonSerializer.SerializeToElement("bar")) },
                     },
-                    ComputeAttributes = new Dictionary<string, ComputeAttributes>()
+                    ComputeAttributes = new Dictionary<string, Expr>()
                     {
-                        {
-                            "foo",
-                            new ComputeAttributesRaw(JsonSerializer.SerializeToElement("bar"))
-                        },
+                        { "foo", new ExprRaw(JsonSerializer.SerializeToElement("bar")) },
                     },
                     DistanceMetric = DistanceMetric.CosineDistance,
                     ExcludeAttributes = ["string"],
@@ -275,9 +260,9 @@ public class QueryTest : TestBase
             {
                 { "foo", new AggregateByRaw(JsonSerializer.SerializeToElement("bar")) },
             },
-            ComputeAttributes = new Dictionary<string, ComputeAttributes>()
+            ComputeAttributes = new Dictionary<string, Expr>()
             {
-                { "foo", new ComputeAttributesRaw(JsonSerializer.SerializeToElement("bar")) },
+                { "foo", new ExprRaw(JsonSerializer.SerializeToElement("bar")) },
             },
             DistanceMetric = DistanceMetric.CosineDistance,
             ExcludeAttributes = ["string"],
@@ -293,9 +278,9 @@ public class QueryTest : TestBase
         {
             { "foo", new AggregateByRaw(JsonSerializer.SerializeToElement("bar")) },
         };
-        Dictionary<string, ComputeAttributes> expectedComputeAttributes = new()
+        Dictionary<string, Expr> expectedComputeAttributes = new()
         {
-            { "foo", new ComputeAttributesRaw(JsonSerializer.SerializeToElement("bar")) },
+            { "foo", new ExprRaw(JsonSerializer.SerializeToElement("bar")) },
         };
         ApiEnum<string, DistanceMetric> expectedDistanceMetric = DistanceMetric.CosineDistance;
         List<string> expectedExcludeAttributes = ["string"];
@@ -327,8 +312,8 @@ public class QueryTest : TestBase
 
             Assert.True(
                 JsonElement.DeepEquals(
-                    ((ComputeAttributesRaw)item.Value).Value,
-                    ((ComputeAttributesRaw)model.ComputeAttributes[item.Key]).Value
+                    ((ExprRaw)item.Value).Value,
+                    ((ExprRaw)model.ComputeAttributes[item.Key]).Value
                 )
             );
         }
@@ -365,9 +350,9 @@ public class QueryTest : TestBase
             {
                 { "foo", new AggregateByRaw(JsonSerializer.SerializeToElement("bar")) },
             },
-            ComputeAttributes = new Dictionary<string, ComputeAttributes>()
+            ComputeAttributes = new Dictionary<string, Expr>()
             {
-                { "foo", new ComputeAttributesRaw(JsonSerializer.SerializeToElement("bar")) },
+                { "foo", new ExprRaw(JsonSerializer.SerializeToElement("bar")) },
             },
             DistanceMetric = DistanceMetric.CosineDistance,
             ExcludeAttributes = ["string"],
@@ -394,9 +379,9 @@ public class QueryTest : TestBase
             {
                 { "foo", new AggregateByRaw(JsonSerializer.SerializeToElement("bar")) },
             },
-            ComputeAttributes = new Dictionary<string, ComputeAttributes>()
+            ComputeAttributes = new Dictionary<string, Expr>()
             {
-                { "foo", new ComputeAttributesRaw(JsonSerializer.SerializeToElement("bar")) },
+                { "foo", new ExprRaw(JsonSerializer.SerializeToElement("bar")) },
             },
             DistanceMetric = DistanceMetric.CosineDistance,
             ExcludeAttributes = ["string"],
@@ -416,9 +401,9 @@ public class QueryTest : TestBase
         {
             { "foo", new AggregateByRaw(JsonSerializer.SerializeToElement("bar")) },
         };
-        Dictionary<string, ComputeAttributes> expectedComputeAttributes = new()
+        Dictionary<string, Expr> expectedComputeAttributes = new()
         {
-            { "foo", new ComputeAttributesRaw(JsonSerializer.SerializeToElement("bar")) },
+            { "foo", new ExprRaw(JsonSerializer.SerializeToElement("bar")) },
         };
         ApiEnum<string, DistanceMetric> expectedDistanceMetric = DistanceMetric.CosineDistance;
         List<string> expectedExcludeAttributes = ["string"];
@@ -450,8 +435,8 @@ public class QueryTest : TestBase
 
             Assert.True(
                 JsonElement.DeepEquals(
-                    ((ComputeAttributesRaw)item.Value).Value,
-                    ((ComputeAttributesRaw)deserialized.ComputeAttributes[item.Key]).Value
+                    ((ExprRaw)item.Value).Value,
+                    ((ExprRaw)deserialized.ComputeAttributes[item.Key]).Value
                 )
             );
         }
@@ -493,9 +478,9 @@ public class QueryTest : TestBase
             {
                 { "foo", new AggregateByRaw(JsonSerializer.SerializeToElement("bar")) },
             },
-            ComputeAttributes = new Dictionary<string, ComputeAttributes>()
+            ComputeAttributes = new Dictionary<string, Expr>()
             {
-                { "foo", new ComputeAttributesRaw(JsonSerializer.SerializeToElement("bar")) },
+                { "foo", new ExprRaw(JsonSerializer.SerializeToElement("bar")) },
             },
             DistanceMetric = DistanceMetric.CosineDistance,
             ExcludeAttributes = ["string"],
@@ -615,9 +600,9 @@ public class QueryTest : TestBase
             {
                 { "foo", new AggregateByRaw(JsonSerializer.SerializeToElement("bar")) },
             },
-            ComputeAttributes = new Dictionary<string, ComputeAttributes>()
+            ComputeAttributes = new Dictionary<string, Expr>()
             {
-                { "foo", new ComputeAttributesRaw(JsonSerializer.SerializeToElement("bar")) },
+                { "foo", new ExprRaw(JsonSerializer.SerializeToElement("bar")) },
             },
             DistanceMetric = DistanceMetric.CosineDistance,
             ExcludeAttributes = ["string"],
