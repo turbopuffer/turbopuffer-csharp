@@ -1,5 +1,6 @@
 using System.Collections.Frozen;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Diagnostics.CodeAnalysis;
 using System.Text.Json;
 using System.Text.Json.Serialization;
@@ -34,10 +35,37 @@ public sealed record class RrfParams : JsonModel
         }
     }
 
+    /// <summary>
+    /// A positive weight for each subquery, in the same order as `queries`. The number
+    /// of weights must match the number of subqueries. When omitted, every subquery
+    /// has a weight of `1`.
+    /// </summary>
+    public IReadOnlyList<float>? Weights
+    {
+        get
+        {
+            this._rawData.Freeze();
+            return this._rawData.GetNullableStruct<ImmutableArray<float>>("weights");
+        }
+        init
+        {
+            if (value == null)
+            {
+                return;
+            }
+
+            this._rawData.Set<ImmutableArray<float>?>(
+                "weights",
+                value == null ? null : ImmutableArray.ToImmutableArray(value)
+            );
+        }
+    }
+
     /// <inheritdoc/>
     public override void Validate()
     {
         _ = this.RankConstant;
+        _ = this.Weights;
     }
 
     public RrfParams() { }
