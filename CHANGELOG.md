@@ -1,5 +1,29 @@
 # Changelog
 
+## 0.7.0 (2026-07-30)
+
+Full Changelog: [v0.6.0...v0.7.0](https://github.com/turbopuffer/turbopuffer-csharp/compare/v0.6.0...v0.7.0)
+
+### Features
+
+* openapi: add RRF `weights` parameter ([0650240](https://github.com/turbopuffer/turbopuffer-csharp/commit/065024073abc6d63adc28e7770ddfbba28690d8e))
+* spec: expose computed attributes ([4b5252b](https://github.com/turbopuffer/turbopuffer-csharp/commit/4b5252b0a57ccfd7a0fd5c168fc8fb1850e54677))
+* spec: hide HighlightConfig.rank_fragments_by's RankBy ref from Stainless ([382bc6b](https://github.com/turbopuffer/turbopuffer-csharp/commit/382bc6be4c9830dc747cca8e63e47e8dcb9c3b16))
+* spec: make compute_attributes value x-stainless-any ([fb5e36d](https://github.com/turbopuffer/turbopuffer-csharp/commit/fb5e36d16c6791bae4158419428e0c4ba3cd8bd0))
+* spec: rename HighlightConfig -&gt; HighlightConfigParams ([aac0a41](https://github.com/turbopuffer/turbopuffer-csharp/commit/aac0a413ea019cae295ad347ec6d8ca9c8955378))
+* **stlc:** configurable CI runner and private-production-repo support in workflow templates ([3dfbd1b](https://github.com/turbopuffer/turbopuffer-csharp/commit/3dfbd1b4406067521942d1e6748b96fd0930fa96))
+* type compute_attributes as the Expr union (turbopuffer[#10694](https://github.com/turbopuffer/turbopuffer-csharp/issues/10694)) ([#45](https://github.com/turbopuffer/turbopuffer-csharp/issues/45)) ([4cdc504](https://github.com/turbopuffer/turbopuffer-csharp/commit/4cdc504a3e5fad126de77fff195ace9fe1ccb752))
+
+
+### Bug Fixes
+
+* **client:** tolerate JSON null in required untyped fields and prefer more specific union variants ([a019f05](https://github.com/turbopuffer/turbopuffer-csharp/commit/a019f052b3c85dc626cdbff3f0c92477c5251930))
+
+
+### Chores
+
+* regenerate custom types for compute attributes ([#42](https://github.com/turbopuffer/turbopuffer-csharp/issues/42)) ([5f082d4](https://github.com/turbopuffer/turbopuffer-csharp/commit/5f082d4ced556446a1c8f55dd83f7532e1432b7f))
+
 ## 0.6.0 (2026-07-03)
 
 Full Changelog: [v0.5.0...v0.6.0](https://github.com/turbopuffer/turbopuffer-csharp/compare/v0.5.0...v0.6.0)
