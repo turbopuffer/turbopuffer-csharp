@@ -60,12 +60,12 @@ public record class NamespaceExplainQueryParams : ParamsBase
     /// the name of the computed attribute; each value is an expression describing
     /// how to compute it.
     /// </summary>
-    public IReadOnlyDictionary<string, ComputeAttributes>? ComputeAttributes
+    public IReadOnlyDictionary<string, Expr>? ComputeAttributes
     {
         get
         {
             this._rawBodyData.Freeze();
-            return this._rawBodyData.GetNullableClass<FrozenDictionary<string, ComputeAttributes>>(
+            return this._rawBodyData.GetNullableClass<FrozenDictionary<string, Expr>>(
                 "compute_attributes"
             );
         }
@@ -76,7 +76,7 @@ public record class NamespaceExplainQueryParams : ParamsBase
                 return;
             }
 
-            this._rawBodyData.Set<FrozenDictionary<string, ComputeAttributes>?>(
+            this._rawBodyData.Set<FrozenDictionary<string, Expr>?>(
                 "compute_attributes",
                 value == null ? null : FrozenDictionary.ToFrozenDictionary(value)
             );

@@ -19,9 +19,9 @@ public class NamespaceQueryParamsTest : TestBase
             {
                 { "foo", new AggregateByRaw(JsonSerializer.SerializeToElement("bar")) },
             },
-            ComputeAttributes = new Dictionary<string, ComputeAttributes>()
+            ComputeAttributes = new Dictionary<string, Expr>()
             {
-                { "foo", new ComputeAttributesRaw(JsonSerializer.SerializeToElement("bar")) },
+                { "foo", new ExprRaw(JsonSerializer.SerializeToElement("bar")) },
             },
             Consistency = new() { Level = NamespaceQueryParamsConsistencyLevel.Strong },
             DistanceMetric = DistanceMetric.CosineDistance,
@@ -40,9 +40,9 @@ public class NamespaceQueryParamsTest : TestBase
         {
             { "foo", new AggregateByRaw(JsonSerializer.SerializeToElement("bar")) },
         };
-        Dictionary<string, ComputeAttributes> expectedComputeAttributes = new()
+        Dictionary<string, Expr> expectedComputeAttributes = new()
         {
-            { "foo", new ComputeAttributesRaw(JsonSerializer.SerializeToElement("bar")) },
+            { "foo", new ExprRaw(JsonSerializer.SerializeToElement("bar")) },
         };
         NamespaceQueryParamsConsistency expectedConsistency = new()
         {
@@ -79,8 +79,8 @@ public class NamespaceQueryParamsTest : TestBase
 
             Assert.True(
                 JsonElement.DeepEquals(
-                    ((ComputeAttributesRaw)item.Value).Value,
-                    ((ComputeAttributesRaw)parameters.ComputeAttributes[item.Key]).Value
+                    ((ExprRaw)item.Value).Value,
+                    ((ExprRaw)parameters.ComputeAttributes[item.Key]).Value
                 )
             );
         }
@@ -217,9 +217,9 @@ public class NamespaceQueryParamsTest : TestBase
             {
                 { "foo", new AggregateByRaw(JsonSerializer.SerializeToElement("bar")) },
             },
-            ComputeAttributes = new Dictionary<string, ComputeAttributes>()
+            ComputeAttributes = new Dictionary<string, Expr>()
             {
-                { "foo", new ComputeAttributesRaw(JsonSerializer.SerializeToElement("bar")) },
+                { "foo", new ExprRaw(JsonSerializer.SerializeToElement("bar")) },
             },
             Consistency = new() { Level = NamespaceQueryParamsConsistencyLevel.Strong },
             DistanceMetric = DistanceMetric.CosineDistance,
