@@ -109,7 +109,7 @@ public record struct ClientOptions()
     public TimeSpan? Timeout { get; set; } = null;
 
     /// <summary>
-    /// API key used for authentication
+    /// API key used for authentication.
     /// </summary>
     Lazy<string> _apiKey = new(() =>
         Environment.GetEnvironmentVariable("TURBOPUFFER_API_KEY")
@@ -120,7 +120,7 @@ public record struct ClientOptions()
     );
 
     /// <summary>
-    /// API key used for authentication
+    /// API key used for authentication.
     /// </summary>
     public string ApiKey
     {

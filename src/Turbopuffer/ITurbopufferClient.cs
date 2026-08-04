@@ -38,7 +38,7 @@ public interface ITurbopufferClient : IDisposable
     TimeSpan? Timeout { get; init; }
 
     /// <summary>
-    /// API key used for authentication
+    /// API key used for authentication.
     /// </summary>
     string ApiKey { get; init; }
 
@@ -94,7 +94,7 @@ public interface ITurbopufferClientWithRawResponse : IDisposable
     TimeSpan? Timeout { get; init; }
 
     /// <summary>
-    /// API key used for authentication
+    /// API key used for authentication.
     /// </summary>
     string ApiKey { get; init; }
 
