@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.8.0 (2026-08-04)
+
+Full Changelog: [v0.7.0...v0.8.0](https://github.com/turbopuffer/turbopuffer-csharp/compare/v0.7.0...v0.8.0)
+
+### Features
+
+* spec: no-op change to Stainless spec ([418b76a](https://github.com/turbopuffer/turbopuffer-csharp/commit/418b76ab3f6071840653f25ef8bc0d0033fd6f5f))
+
 ## 0.7.0 (2026-07-30)
 
 Full Changelog: [v0.6.0...v0.7.0](https://github.com/turbopuffer/turbopuffer-csharp/compare/v0.6.0...v0.7.0)
