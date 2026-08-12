@@ -69,6 +69,27 @@ public record class NamespaceMultiQueryParams : ParamsBase
     }
 
     /// <summary>
+    /// Limits the total number of reranked documents returned.
+    /// </summary>
+    public NamespaceMultiQueryParamsLimit? Limit
+    {
+        get
+        {
+            this._rawBodyData.Freeze();
+            return this._rawBodyData.GetNullableClass<NamespaceMultiQueryParamsLimit>("limit");
+        }
+        init
+        {
+            if (value == null)
+            {
+                return;
+            }
+
+            this._rawBodyData.Set("limit", value);
+        }
+    }
+
+    /// <summary>
     /// How to combine the rows returned by each sub-query into a single ranked list.
     /// </summary>
     public JsonElement? RerankBy
@@ -907,4 +928,312 @@ sealed class NamespaceMultiQueryParamsConsistencyLevelConverter
             options
         );
     }
+}
+
+/// <summary>
+/// Limits the total number of reranked documents returned.
+/// </summary>
+[JsonConverter(typeof(NamespaceMultiQueryParamsLimitConverter))]
+public record class NamespaceMultiQueryParamsLimit : ModelBase
+{
+    public object? Value { get; } = null;
+
+    JsonElement? _element = null;
+
+    public JsonElement Json
+    {
+        get
+        {
+            return this._element ??= JsonSerializer.SerializeToElement(
+                this.Value,
+                ModelBase.SerializerOptions
+            );
+        }
+    }
+
+    public NamespaceMultiQueryParamsLimit(long value, JsonElement? element = null)
+    {
+        this.Value = value;
+        this._element = element;
+    }
+
+    public NamespaceMultiQueryParamsLimit(Total value, JsonElement? element = null)
+    {
+        this.Value = value;
+        this._element = element;
+    }
+
+    public NamespaceMultiQueryParamsLimit(JsonElement element)
+    {
+        this._element = element;
+    }
+
+    /// <summary>
+    /// Returns true and sets the <c>out</c> parameter if the instance was constructed with a variant of
+    /// type <see cref="long"/>.
+    ///
+    /// <para>Consider using <see cref="Switch"/> or <see cref="Match"/> if you need to handle every variant.</para>
+    ///
+    /// <example>
+    /// <code>
+    /// if (instance.TryPickLong(out var value)) {
+    ///     // `value` is of type `long`
+    ///     Console.WriteLine(value);
+    /// }
+    /// </code>
+    /// </example>
+    /// </summary>
+    public bool TryPickLong([NotNullWhen(true)] out long? value)
+    {
+        value = this.Value as long?;
+        return value != null;
+    }
+
+    /// <summary>
+    /// Returns true and sets the <c>out</c> parameter if the instance was constructed with a variant of
+    /// type <see cref="Total"/>.
+    ///
+    /// <para>Consider using <see cref="Switch"/> or <see cref="Match"/> if you need to handle every variant.</para>
+    ///
+    /// <example>
+    /// <code>
+    /// if (instance.TryPickTotal(out var value)) {
+    ///     // `value` is of type `Total`
+    ///     Console.WriteLine(value);
+    /// }
+    /// </code>
+    /// </example>
+    /// </summary>
+    public bool TryPickTotal([NotNullWhen(true)] out Total? value)
+    {
+        value = this.Value as Total;
+        return value != null;
+    }
+
+    /// <summary>
+    /// Calls the function parameter corresponding to the variant the instance was constructed with.
+    ///
+    /// <para>Use the <c>TryPick</c> method(s) if you don't need to handle every variant, or <see cref="Match"/>
+    /// if you need your function parameters to return something.</para>
+    ///
+    /// <exception cref="TurbopufferInvalidDataException">
+    /// Thrown when the instance was constructed with an unknown variant (e.g. deserialized from raw data
+    /// that doesn't match any variant's expected shape).
+    /// </exception>
+    ///
+    /// <example>
+    /// <code>
+    /// instance.Switch(
+    ///     (long value) =&gt; {...},
+    ///     (Total value) =&gt; {...}
+    /// );
+    /// </code>
+    /// </example>
+    /// </summary>
+    public void Switch(Action<long> @long, Action<Total> total)
+    {
+        switch (this.Value)
+        {
+            case long value:
+                @long(value);
+                break;
+            case Total value:
+                total(value);
+                break;
+            default:
+                throw new TurbopufferInvalidDataException(
+                    "Data did not match any variant of NamespaceMultiQueryParamsLimit"
+                );
+        }
+    }
+
+    /// <summary>
+    /// Calls the function parameter corresponding to the variant the instance was constructed with and
+    /// returns its result.
+    ///
+    /// <para>Use the <c>TryPick</c> method(s) if you don't need to handle every variant, or <see cref="Switch"/>
+    /// if you don't need your function parameters to return a value.</para>
+    ///
+    /// <exception cref="TurbopufferInvalidDataException">
+    /// Thrown when the instance was constructed with an unknown variant (e.g. deserialized from raw data
+    /// that doesn't match any variant's expected shape).
+    /// </exception>
+    ///
+    /// <example>
+    /// <code>
+    /// var result = instance.Match(
+    ///     (long value) =&gt; {...},
+    ///     (Total value) =&gt; {...}
+    /// );
+    /// </code>
+    /// </example>
+    /// </summary>
+    public T Match<T>(Func<long, T> @long, Func<Total, T> total)
+    {
+        return this.Value switch
+        {
+            long value => @long(value),
+            Total value => total(value),
+            _ => throw new TurbopufferInvalidDataException(
+                "Data did not match any variant of NamespaceMultiQueryParamsLimit"
+            ),
+        };
+    }
+
+    public static implicit operator NamespaceMultiQueryParamsLimit(long value) => new(value);
+
+    public static implicit operator NamespaceMultiQueryParamsLimit(Total value) => new(value);
+
+    /// <summary>
+    /// Validates that the instance was constructed with a known variant and that this variant is valid
+    /// (based on its own <c>Validate</c> method).
+    ///
+    /// <para>This is useful for instances constructed from raw JSON data (e.g. deserialized from an API response).</para>
+    ///
+    /// <exception cref="TurbopufferInvalidDataException">
+    /// Thrown when the instance does not pass validation.
+    /// </exception>
+    /// </summary>
+    public override void Validate()
+    {
+        if (this.Value == null)
+        {
+            throw new TurbopufferInvalidDataException(
+                "Data did not match any variant of NamespaceMultiQueryParamsLimit"
+            );
+        }
+        this.Switch((_) => { }, (total) => total.Validate());
+    }
+
+    public virtual bool Equals(NamespaceMultiQueryParamsLimit? other) =>
+        other != null
+        && this.VariantIndex() == other.VariantIndex()
+        && JsonElement.DeepEquals(this.Json, other.Json);
+
+    public override int GetHashCode()
+    {
+        return 0;
+    }
+
+    public override string ToString() =>
+        JsonSerializer.Serialize(
+            FriendlyJsonPrinter.PrintValue(this.Json),
+            ModelBase.ToStringSerializerOptions
+        );
+
+    int VariantIndex()
+    {
+        return this.Value switch
+        {
+            long _ => 0,
+            Total _ => 1,
+            _ => -1,
+        };
+    }
+}
+
+sealed class NamespaceMultiQueryParamsLimitConverter : JsonConverter<NamespaceMultiQueryParamsLimit>
+{
+    public override NamespaceMultiQueryParamsLimit? Read(
+        ref Utf8JsonReader reader,
+        Type typeToConvert,
+        JsonSerializerOptions options
+    )
+    {
+        var element = JsonSerializer.Deserialize<JsonElement>(ref reader, options);
+        try
+        {
+            var deserialized = JsonSerializer.Deserialize<Total>(element, options);
+            if (deserialized != null)
+            {
+                deserialized.Validate();
+                return new(deserialized, element);
+            }
+        }
+        catch (Exception e) when (e is JsonException || e is TurbopufferInvalidDataException)
+        {
+            // ignore
+        }
+
+        try
+        {
+            return new(JsonSerializer.Deserialize<long>(element, options), element);
+        }
+        catch (Exception e) when (e is JsonException || e is TurbopufferInvalidDataException)
+        {
+            // ignore
+        }
+
+        return new(element);
+    }
+
+    public override void Write(
+        Utf8JsonWriter writer,
+        NamespaceMultiQueryParamsLimit value,
+        JsonSerializerOptions options
+    )
+    {
+        JsonSerializer.Serialize(writer, value.Json, options);
+    }
+}
+
+[JsonConverter(typeof(JsonModelConverter<Total, TotalFromRaw>))]
+public sealed record class Total : JsonModel
+{
+    public required long TotalValue
+    {
+        get
+        {
+            this._rawData.Freeze();
+            return this._rawData.GetNotNullStruct<long>("total");
+        }
+        init { this._rawData.Set("total", value); }
+    }
+
+    /// <inheritdoc/>
+    public override void Validate()
+    {
+        _ = this.TotalValue;
+    }
+
+    public Total() { }
+
+#pragma warning disable CS8618
+    [SetsRequiredMembers]
+    public Total(Total total)
+        : base(total) { }
+#pragma warning restore CS8618
+
+    public Total(IReadOnlyDictionary<string, JsonElement> rawData)
+    {
+        this._rawData = new(rawData);
+    }
+
+#pragma warning disable CS8618
+    [SetsRequiredMembers]
+    Total(FrozenDictionary<string, JsonElement> rawData)
+    {
+        this._rawData = new(rawData);
+    }
+#pragma warning restore CS8618
+
+    /// <inheritdoc cref="TotalFromRaw.FromRawUnchecked"/>
+    public static Total FromRawUnchecked(IReadOnlyDictionary<string, JsonElement> rawData)
+    {
+        return new(FrozenDictionary.ToFrozenDictionary(rawData));
+    }
+
+    [SetsRequiredMembers]
+    public Total(long totalValue)
+        : this()
+    {
+        this.TotalValue = totalValue;
+    }
+}
+
+class TotalFromRaw : IFromRawJson<Total>
+{
+    /// <inheritdoc/>
+    public Total FromRawUnchecked(IReadOnlyDictionary<string, JsonElement> rawData) =>
+        Total.FromRawUnchecked(rawData);
 }

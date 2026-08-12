@@ -38,6 +38,7 @@ public class NamespaceMultiQueryParamsTest : TestBase
                 },
             ],
             Consistency = new() { Level = NamespaceMultiQueryParamsConsistencyLevel.Strong },
+            Limit = 0,
             RerankBy = JsonSerializer.Deserialize<JsonElement>("{}"),
             VectorEncoding = VectorEncoding.Float,
         };
@@ -69,6 +70,7 @@ public class NamespaceMultiQueryParamsTest : TestBase
         {
             Level = NamespaceMultiQueryParamsConsistencyLevel.Strong,
         };
+        NamespaceMultiQueryParamsLimit expectedLimit = 0;
         JsonElement expectedRerankBy = JsonSerializer.Deserialize<JsonElement>("{}");
         ApiEnum<string, VectorEncoding> expectedVectorEncoding = VectorEncoding.Float;
 
@@ -79,6 +81,7 @@ public class NamespaceMultiQueryParamsTest : TestBase
             Assert.Equal(expectedQueries[i], parameters.Queries[i]);
         }
         Assert.Equal(expectedConsistency, parameters.Consistency);
+        Assert.Equal(expectedLimit, parameters.Limit);
         Assert.NotNull(parameters.RerankBy);
         Assert.True(JsonElement.DeepEquals(expectedRerankBy, parameters.RerankBy.Value));
         Assert.Equal(expectedVectorEncoding, parameters.VectorEncoding);
@@ -116,6 +119,8 @@ public class NamespaceMultiQueryParamsTest : TestBase
 
         Assert.Null(parameters.Consistency);
         Assert.False(parameters.RawBodyData.ContainsKey("consistency"));
+        Assert.Null(parameters.Limit);
+        Assert.False(parameters.RawBodyData.ContainsKey("limit"));
         Assert.Null(parameters.RerankBy);
         Assert.False(parameters.RawBodyData.ContainsKey("rerank_by"));
         Assert.Null(parameters.VectorEncoding);
@@ -153,12 +158,15 @@ public class NamespaceMultiQueryParamsTest : TestBase
 
             // Null should be interpreted as omitted for these properties
             Consistency = null,
+            Limit = null,
             RerankBy = null,
             VectorEncoding = null,
         };
 
         Assert.Null(parameters.Consistency);
         Assert.False(parameters.RawBodyData.ContainsKey("consistency"));
+        Assert.Null(parameters.Limit);
+        Assert.False(parameters.RawBodyData.ContainsKey("limit"));
         Assert.Null(parameters.RerankBy);
         Assert.False(parameters.RawBodyData.ContainsKey("rerank_by"));
         Assert.Null(parameters.VectorEncoding);
@@ -236,6 +244,7 @@ public class NamespaceMultiQueryParamsTest : TestBase
                 },
             ],
             Consistency = new() { Level = NamespaceMultiQueryParamsConsistencyLevel.Strong },
+            Limit = 0,
             RerankBy = JsonSerializer.Deserialize<JsonElement>("{}"),
             VectorEncoding = VectorEncoding.Float,
         };
@@ -811,5 +820,104 @@ public class NamespaceMultiQueryParamsConsistencyLevelTest : TestBase
         >(json, ModelBase.SerializerOptions);
 
         Assert.Equal(value, deserialized);
+    }
+}
+
+public class NamespaceMultiQueryParamsLimitTest : TestBase
+{
+    [Fact]
+    public void LongValidationWorks()
+    {
+        NamespaceMultiQueryParamsLimit value = 0;
+        value.Validate();
+    }
+
+    [Fact]
+    public void TotalValidationWorks()
+    {
+        NamespaceMultiQueryParamsLimit value = new Total(0);
+        value.Validate();
+    }
+
+    [Fact]
+    public void LongSerializationRoundtripWorks()
+    {
+        NamespaceMultiQueryParamsLimit value = 0;
+        string element = JsonSerializer.Serialize(value, ModelBase.SerializerOptions);
+        var deserialized = JsonSerializer.Deserialize<NamespaceMultiQueryParamsLimit>(
+            element,
+            ModelBase.SerializerOptions
+        );
+
+        Assert.Equal(value, deserialized);
+    }
+
+    [Fact]
+    public void TotalSerializationRoundtripWorks()
+    {
+        NamespaceMultiQueryParamsLimit value = new Total(0);
+        string element = JsonSerializer.Serialize(value, ModelBase.SerializerOptions);
+        var deserialized = JsonSerializer.Deserialize<NamespaceMultiQueryParamsLimit>(
+            element,
+            ModelBase.SerializerOptions
+        );
+
+        Assert.Equal(value, deserialized);
+    }
+}
+
+public class TotalTest : TestBase
+{
+    [Fact]
+    public void FieldRoundtrip_Works()
+    {
+        var model = new Total { TotalValue = 0 };
+
+        long expectedTotalValue = 0;
+
+        Assert.Equal(expectedTotalValue, model.TotalValue);
+    }
+
+    [Fact]
+    public void SerializationRoundtrip_Works()
+    {
+        var model = new Total { TotalValue = 0 };
+
+        string json = JsonSerializer.Serialize(model, ModelBase.SerializerOptions);
+        var deserialized = JsonSerializer.Deserialize<Total>(json, ModelBase.SerializerOptions);
+
+        Assert.Equal(model, deserialized);
+    }
+
+    [Fact]
+    public void FieldRoundtripThroughSerialization_Works()
+    {
+        var model = new Total { TotalValue = 0 };
+
+        string element = JsonSerializer.Serialize(model, ModelBase.SerializerOptions);
+        var deserialized = JsonSerializer.Deserialize<Total>(element, ModelBase.SerializerOptions);
+        Assert.NotNull(deserialized);
+
+        long expectedTotalValue = 0;
+
+        Assert.Equal(expectedTotalValue, deserialized.TotalValue);
+    }
+
+    [Fact]
+    public void Validation_Works()
+    {
+        var model = new Total { TotalValue = 0 };
+
+        model.Validate();
+    }
+
+    [Fact]
+    public void CopyConstructor_Works()
+    {
+        var model = new Total { TotalValue = 0 };
+
+        Total copied = new(model);
+
+        Assert.Equal(model, copied);
     }
 }
