@@ -809,6 +809,22 @@ public sealed record class Status : JsonModel
     }
 
     /// <summary>
+    /// The number of running replicas for the namespace. Replicas are billed once
+    /// running, even before they finish warming their caches and become ready to
+    /// serve traffic. This count is updated independently and may briefly disagree
+    /// with the other status fields.
+    /// </summary>
+    public required long Replicas
+    {
+        get
+        {
+            this._rawData.Freeze();
+            return this._rawData.GetNotNullStruct<long>("replicas");
+        }
+        init { this._rawData.Set("replicas", value); }
+    }
+
+    /// <summary>
     /// The timestamp of the latest pinning status snapshot.
     /// </summary>
     public required DateTimeOffset UpdatedAt
@@ -839,6 +855,7 @@ public sealed record class Status : JsonModel
     public override void Validate()
     {
         _ = this.ReadyReplicas;
+        _ = this.Replicas;
         _ = this.UpdatedAt;
         _ = this.Utilization;
     }

@@ -44,6 +44,7 @@ public class NamespaceMetadataTest : TestBase
                 Status = new()
                 {
                     ReadyReplicas = 0,
+                    Replicas = 0,
                     UpdatedAt = DateTimeOffset.Parse("2019-12-27T18:11:19.117Z"),
                     Utilization = 0,
                 },
@@ -81,6 +82,7 @@ public class NamespaceMetadataTest : TestBase
             Status = new()
             {
                 ReadyReplicas = 0,
+                Replicas = 0,
                 UpdatedAt = DateTimeOffset.Parse("2019-12-27T18:11:19.117Z"),
                 Utilization = 0,
             },
@@ -139,6 +141,7 @@ public class NamespaceMetadataTest : TestBase
                 Status = new()
                 {
                     ReadyReplicas = 0,
+                    Replicas = 0,
                     UpdatedAt = DateTimeOffset.Parse("2019-12-27T18:11:19.117Z"),
                     Utilization = 0,
                 },
@@ -190,6 +193,7 @@ public class NamespaceMetadataTest : TestBase
                 Status = new()
                 {
                     ReadyReplicas = 0,
+                    Replicas = 0,
                     UpdatedAt = DateTimeOffset.Parse("2019-12-27T18:11:19.117Z"),
                     Utilization = 0,
                 },
@@ -234,6 +238,7 @@ public class NamespaceMetadataTest : TestBase
             Status = new()
             {
                 ReadyReplicas = 0,
+                Replicas = 0,
                 UpdatedAt = DateTimeOffset.Parse("2019-12-27T18:11:19.117Z"),
                 Utilization = 0,
             },
@@ -292,6 +297,7 @@ public class NamespaceMetadataTest : TestBase
                 Status = new()
                 {
                     ReadyReplicas = 0,
+                    Replicas = 0,
                     UpdatedAt = DateTimeOffset.Parse("2019-12-27T18:11:19.117Z"),
                     Utilization = 0,
                 },
@@ -487,6 +493,7 @@ public class NamespaceMetadataTest : TestBase
                 Status = new()
                 {
                     ReadyReplicas = 0,
+                    Replicas = 0,
                     UpdatedAt = DateTimeOffset.Parse("2019-12-27T18:11:19.117Z"),
                     Utilization = 0,
                 },
@@ -711,6 +718,7 @@ public class NamespaceMetadataPinningTest : TestBase
             Status = new()
             {
                 ReadyReplicas = 0,
+                Replicas = 0,
                 UpdatedAt = DateTimeOffset.Parse("2019-12-27T18:11:19.117Z"),
                 Utilization = 0,
             },
@@ -720,6 +728,7 @@ public class NamespaceMetadataPinningTest : TestBase
         Namespaces::Status expectedStatus = new()
         {
             ReadyReplicas = 0,
+            Replicas = 0,
             UpdatedAt = DateTimeOffset.Parse("2019-12-27T18:11:19.117Z"),
             Utilization = 0,
         };
@@ -737,6 +746,7 @@ public class NamespaceMetadataPinningTest : TestBase
             Status = new()
             {
                 ReadyReplicas = 0,
+                Replicas = 0,
                 UpdatedAt = DateTimeOffset.Parse("2019-12-27T18:11:19.117Z"),
                 Utilization = 0,
             },
@@ -760,6 +770,7 @@ public class NamespaceMetadataPinningTest : TestBase
             Status = new()
             {
                 ReadyReplicas = 0,
+                Replicas = 0,
                 UpdatedAt = DateTimeOffset.Parse("2019-12-27T18:11:19.117Z"),
                 Utilization = 0,
             },
@@ -776,6 +787,7 @@ public class NamespaceMetadataPinningTest : TestBase
         Namespaces::Status expectedStatus = new()
         {
             ReadyReplicas = 0,
+            Replicas = 0,
             UpdatedAt = DateTimeOffset.Parse("2019-12-27T18:11:19.117Z"),
             Utilization = 0,
         };
@@ -793,6 +805,7 @@ public class NamespaceMetadataPinningTest : TestBase
             Status = new()
             {
                 ReadyReplicas = 0,
+                Replicas = 0,
                 UpdatedAt = DateTimeOffset.Parse("2019-12-27T18:11:19.117Z"),
                 Utilization = 0,
             },
@@ -858,6 +871,7 @@ public class NamespaceMetadataPinningTest : TestBase
             Status = new()
             {
                 ReadyReplicas = 0,
+                Replicas = 0,
                 UpdatedAt = DateTimeOffset.Parse("2019-12-27T18:11:19.117Z"),
                 Utilization = 0,
             },
@@ -879,6 +893,7 @@ public class IntersectionMember1Test : TestBase
             Status = new()
             {
                 ReadyReplicas = 0,
+                Replicas = 0,
                 UpdatedAt = DateTimeOffset.Parse("2019-12-27T18:11:19.117Z"),
                 Utilization = 0,
             },
@@ -887,6 +902,7 @@ public class IntersectionMember1Test : TestBase
         Namespaces::Status expectedStatus = new()
         {
             ReadyReplicas = 0,
+            Replicas = 0,
             UpdatedAt = DateTimeOffset.Parse("2019-12-27T18:11:19.117Z"),
             Utilization = 0,
         };
@@ -902,6 +918,7 @@ public class IntersectionMember1Test : TestBase
             Status = new()
             {
                 ReadyReplicas = 0,
+                Replicas = 0,
                 UpdatedAt = DateTimeOffset.Parse("2019-12-27T18:11:19.117Z"),
                 Utilization = 0,
             },
@@ -924,6 +941,7 @@ public class IntersectionMember1Test : TestBase
             Status = new()
             {
                 ReadyReplicas = 0,
+                Replicas = 0,
                 UpdatedAt = DateTimeOffset.Parse("2019-12-27T18:11:19.117Z"),
                 Utilization = 0,
             },
@@ -939,6 +957,7 @@ public class IntersectionMember1Test : TestBase
         Namespaces::Status expectedStatus = new()
         {
             ReadyReplicas = 0,
+            Replicas = 0,
             UpdatedAt = DateTimeOffset.Parse("2019-12-27T18:11:19.117Z"),
             Utilization = 0,
         };
@@ -954,6 +973,7 @@ public class IntersectionMember1Test : TestBase
             Status = new()
             {
                 ReadyReplicas = 0,
+                Replicas = 0,
                 UpdatedAt = DateTimeOffset.Parse("2019-12-27T18:11:19.117Z"),
                 Utilization = 0,
             },
@@ -1012,6 +1032,7 @@ public class IntersectionMember1Test : TestBase
             Status = new()
             {
                 ReadyReplicas = 0,
+                Replicas = 0,
                 UpdatedAt = DateTimeOffset.Parse("2019-12-27T18:11:19.117Z"),
                 Utilization = 0,
             },
@@ -1031,15 +1052,18 @@ public class StatusTest : TestBase
         var model = new Namespaces::Status
         {
             ReadyReplicas = 0,
+            Replicas = 0,
             UpdatedAt = DateTimeOffset.Parse("2019-12-27T18:11:19.117Z"),
             Utilization = 0,
         };
 
         long expectedReadyReplicas = 0;
+        long expectedReplicas = 0;
         DateTimeOffset expectedUpdatedAt = DateTimeOffset.Parse("2019-12-27T18:11:19.117Z");
         double expectedUtilization = 0;
 
         Assert.Equal(expectedReadyReplicas, model.ReadyReplicas);
+        Assert.Equal(expectedReplicas, model.Replicas);
         Assert.Equal(expectedUpdatedAt, model.UpdatedAt);
         Assert.Equal(expectedUtilization, model.Utilization);
     }
@@ -1050,6 +1074,7 @@ public class StatusTest : TestBase
         var model = new Namespaces::Status
         {
             ReadyReplicas = 0,
+            Replicas = 0,
             UpdatedAt = DateTimeOffset.Parse("2019-12-27T18:11:19.117Z"),
             Utilization = 0,
         };
@@ -1069,6 +1094,7 @@ public class StatusTest : TestBase
         var model = new Namespaces::Status
         {
             ReadyReplicas = 0,
+            Replicas = 0,
             UpdatedAt = DateTimeOffset.Parse("2019-12-27T18:11:19.117Z"),
             Utilization = 0,
         };
@@ -1081,10 +1107,12 @@ public class StatusTest : TestBase
         Assert.NotNull(deserialized);
 
         long expectedReadyReplicas = 0;
+        long expectedReplicas = 0;
         DateTimeOffset expectedUpdatedAt = DateTimeOffset.Parse("2019-12-27T18:11:19.117Z");
         double expectedUtilization = 0;
 
         Assert.Equal(expectedReadyReplicas, deserialized.ReadyReplicas);
+        Assert.Equal(expectedReplicas, deserialized.Replicas);
         Assert.Equal(expectedUpdatedAt, deserialized.UpdatedAt);
         Assert.Equal(expectedUtilization, deserialized.Utilization);
     }
@@ -1095,6 +1123,7 @@ public class StatusTest : TestBase
         var model = new Namespaces::Status
         {
             ReadyReplicas = 0,
+            Replicas = 0,
             UpdatedAt = DateTimeOffset.Parse("2019-12-27T18:11:19.117Z"),
             Utilization = 0,
         };
@@ -1108,6 +1137,7 @@ public class StatusTest : TestBase
         var model = new Namespaces::Status
         {
             ReadyReplicas = 0,
+            Replicas = 0,
             UpdatedAt = DateTimeOffset.Parse("2019-12-27T18:11:19.117Z"),
             Utilization = 0,
         };
