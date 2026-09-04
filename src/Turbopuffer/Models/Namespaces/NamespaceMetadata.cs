@@ -136,6 +136,27 @@ public sealed record class NamespaceMetadata : JsonModel
     }
 
     /// <summary>
+    /// Whether document and schema writes are rejected. Omitted when `false`.
+    /// </summary>
+    public bool? ReadOnly
+    {
+        get
+        {
+            this._rawData.Freeze();
+            return this._rawData.GetNullableStruct<bool>("read_only");
+        }
+        init
+        {
+            if (value == null)
+            {
+                return;
+            }
+
+            this._rawData.Set("read_only", value);
+        }
+    }
+
+    /// <summary>
     /// Configuration for namespace sharding, which partitions a namespace's documents
     /// across multiple internal shards to scale indexing and query throughput beyond
     /// a single machine. Sharding can only be configured on a namespace's inaugural
@@ -173,6 +194,7 @@ public sealed record class NamespaceMetadata : JsonModel
         }
         _ = this.UpdatedAt;
         this.Pinning?.Validate();
+        _ = this.ReadOnly;
         this.Sharding?.Validate();
     }
 

@@ -49,6 +49,7 @@ public class NamespaceMetadataTest : TestBase
                     Utilization = 0,
                 },
             },
+            ReadOnly = true,
             Sharding = new(1),
         };
 
@@ -87,6 +88,7 @@ public class NamespaceMetadataTest : TestBase
                 Utilization = 0,
             },
         };
+        bool expectedReadOnly = true;
         Namespaces::ShardingConfig expectedSharding = new(1);
 
         Assert.Equal(expectedApproxLogicalBytes, model.ApproxLogicalBytes);
@@ -103,6 +105,7 @@ public class NamespaceMetadataTest : TestBase
         }
         Assert.Equal(expectedUpdatedAt, model.UpdatedAt);
         Assert.Equal(expectedPinning, model.Pinning);
+        Assert.Equal(expectedReadOnly, model.ReadOnly);
         Assert.Equal(expectedSharding, model.Sharding);
     }
 
@@ -146,6 +149,7 @@ public class NamespaceMetadataTest : TestBase
                     Utilization = 0,
                 },
             },
+            ReadOnly = true,
             Sharding = new(1),
         };
 
@@ -198,6 +202,7 @@ public class NamespaceMetadataTest : TestBase
                     Utilization = 0,
                 },
             },
+            ReadOnly = true,
             Sharding = new(1),
         };
 
@@ -243,6 +248,7 @@ public class NamespaceMetadataTest : TestBase
                 Utilization = 0,
             },
         };
+        bool expectedReadOnly = true;
         Namespaces::ShardingConfig expectedSharding = new(1);
 
         Assert.Equal(expectedApproxLogicalBytes, deserialized.ApproxLogicalBytes);
@@ -259,6 +265,7 @@ public class NamespaceMetadataTest : TestBase
         }
         Assert.Equal(expectedUpdatedAt, deserialized.UpdatedAt);
         Assert.Equal(expectedPinning, deserialized.Pinning);
+        Assert.Equal(expectedReadOnly, deserialized.ReadOnly);
         Assert.Equal(expectedSharding, deserialized.Sharding);
     }
 
@@ -302,6 +309,7 @@ public class NamespaceMetadataTest : TestBase
                     Utilization = 0,
                 },
             },
+            ReadOnly = true,
             Sharding = new(1),
         };
 
@@ -341,6 +349,8 @@ public class NamespaceMetadataTest : TestBase
 
         Assert.Null(model.Pinning);
         Assert.False(model.RawData.ContainsKey("pinning"));
+        Assert.Null(model.ReadOnly);
+        Assert.False(model.RawData.ContainsKey("read_only"));
         Assert.Null(model.Sharding);
         Assert.False(model.RawData.ContainsKey("sharding"));
     }
@@ -411,11 +421,14 @@ public class NamespaceMetadataTest : TestBase
 
             // Null should be interpreted as omitted for these properties
             Pinning = null,
+            ReadOnly = null,
             Sharding = null,
         };
 
         Assert.Null(model.Pinning);
         Assert.False(model.RawData.ContainsKey("pinning"));
+        Assert.Null(model.ReadOnly);
+        Assert.False(model.RawData.ContainsKey("read_only"));
         Assert.Null(model.Sharding);
         Assert.False(model.RawData.ContainsKey("sharding"));
     }
@@ -452,6 +465,7 @@ public class NamespaceMetadataTest : TestBase
 
             // Null should be interpreted as omitted for these properties
             Pinning = null,
+            ReadOnly = null,
             Sharding = null,
         };
 
@@ -498,6 +512,7 @@ public class NamespaceMetadataTest : TestBase
                     Utilization = 0,
                 },
             },
+            ReadOnly = true,
             Sharding = new(1),
         };
 

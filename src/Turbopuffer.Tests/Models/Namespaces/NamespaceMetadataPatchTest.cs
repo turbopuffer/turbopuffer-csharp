@@ -9,17 +9,19 @@ public class NamespaceMetadataPatchTest : TestBase
     [Fact]
     public void FieldRoundtrip_Works()
     {
-        var model = new NamespaceMetadataPatch { Pinning = true };
+        var model = new NamespaceMetadataPatch { Pinning = true, ReadOnly = true };
 
         NamespaceMetadataPatchPinning expectedPinning = true;
+        bool expectedReadOnly = true;
 
         Assert.Equal(expectedPinning, model.Pinning);
+        Assert.Equal(expectedReadOnly, model.ReadOnly);
     }
 
     [Fact]
     public void SerializationRoundtrip_Works()
     {
-        var model = new NamespaceMetadataPatch { Pinning = true };
+        var model = new NamespaceMetadataPatch { Pinning = true, ReadOnly = true };
 
         string json = JsonSerializer.Serialize(model, ModelBase.SerializerOptions);
         var deserialized = JsonSerializer.Deserialize<NamespaceMetadataPatch>(
@@ -33,7 +35,7 @@ public class NamespaceMetadataPatchTest : TestBase
     [Fact]
     public void FieldRoundtripThroughSerialization_Works()
     {
-        var model = new NamespaceMetadataPatch { Pinning = true };
+        var model = new NamespaceMetadataPatch { Pinning = true, ReadOnly = true };
 
         string element = JsonSerializer.Serialize(model, ModelBase.SerializerOptions);
         var deserialized = JsonSerializer.Deserialize<NamespaceMetadataPatch>(
@@ -43,12 +45,31 @@ public class NamespaceMetadataPatchTest : TestBase
         Assert.NotNull(deserialized);
 
         NamespaceMetadataPatchPinning expectedPinning = true;
+        bool expectedReadOnly = true;
 
         Assert.Equal(expectedPinning, deserialized.Pinning);
+        Assert.Equal(expectedReadOnly, deserialized.ReadOnly);
     }
 
     [Fact]
     public void Validation_Works()
+    {
+        var model = new NamespaceMetadataPatch { Pinning = true, ReadOnly = true };
+
+        model.Validate();
+    }
+
+    [Fact]
+    public void OptionalNonNullablePropertiesUnsetAreNotSet_Works()
+    {
+        var model = new NamespaceMetadataPatch { Pinning = true };
+
+        Assert.Null(model.ReadOnly);
+        Assert.False(model.RawData.ContainsKey("read_only"));
+    }
+
+    [Fact]
+    public void OptionalNonNullablePropertiesUnsetValidation_Works()
     {
         var model = new NamespaceMetadataPatch { Pinning = true };
 
@@ -56,9 +77,38 @@ public class NamespaceMetadataPatchTest : TestBase
     }
 
     [Fact]
+    public void OptionalNonNullablePropertiesSetToNullAreNotSet_Works()
+    {
+        var model = new NamespaceMetadataPatch
+        {
+            Pinning = true,
+
+            // Null should be interpreted as omitted for these properties
+            ReadOnly = null,
+        };
+
+        Assert.Null(model.ReadOnly);
+        Assert.False(model.RawData.ContainsKey("read_only"));
+    }
+
+    [Fact]
+    public void OptionalNonNullablePropertiesSetToNullValidation_Works()
+    {
+        var model = new NamespaceMetadataPatch
+        {
+            Pinning = true,
+
+            // Null should be interpreted as omitted for these properties
+            ReadOnly = null,
+        };
+
+        model.Validate();
+    }
+
+    [Fact]
     public void OptionalNullablePropertiesUnsetAreNotSet_Works()
     {
-        var model = new NamespaceMetadataPatch { };
+        var model = new NamespaceMetadataPatch { ReadOnly = true };
 
         Assert.Null(model.Pinning);
         Assert.False(model.RawData.ContainsKey("pinning"));
@@ -67,7 +117,7 @@ public class NamespaceMetadataPatchTest : TestBase
     [Fact]
     public void OptionalNullablePropertiesUnsetValidation_Works()
     {
-        var model = new NamespaceMetadataPatch { };
+        var model = new NamespaceMetadataPatch { ReadOnly = true };
 
         model.Validate();
     }
@@ -75,7 +125,12 @@ public class NamespaceMetadataPatchTest : TestBase
     [Fact]
     public void OptionalNullablePropertiesSetToNullAreSetToNull_Works()
     {
-        var model = new NamespaceMetadataPatch { Pinning = null };
+        var model = new NamespaceMetadataPatch
+        {
+            ReadOnly = true,
+
+            Pinning = null,
+        };
 
         Assert.Null(model.Pinning);
         Assert.True(model.RawData.ContainsKey("pinning"));
@@ -84,7 +139,12 @@ public class NamespaceMetadataPatchTest : TestBase
     [Fact]
     public void OptionalNullablePropertiesSetToNullValidation_Works()
     {
-        var model = new NamespaceMetadataPatch { Pinning = null };
+        var model = new NamespaceMetadataPatch
+        {
+            ReadOnly = true,
+
+            Pinning = null,
+        };
 
         model.Validate();
     }
@@ -92,7 +152,7 @@ public class NamespaceMetadataPatchTest : TestBase
     [Fact]
     public void CopyConstructor_Works()
     {
-        var model = new NamespaceMetadataPatch { Pinning = true };
+        var model = new NamespaceMetadataPatch { Pinning = true, ReadOnly = true };
 
         NamespaceMetadataPatch copied = new(model);
 

@@ -43,6 +43,28 @@ public record class NamespaceUpdateMetadataParams : ParamsBase
         init { this._rawBodyData.Set("pinning", value); }
     }
 
+    /// <summary>
+    /// Set to `true` to reject document and schema writes, or `false` to allow them.
+    /// Writes already in progress may still commit. Metadata updates remain available.
+    /// </summary>
+    public bool? ReadOnly
+    {
+        get
+        {
+            this._rawBodyData.Freeze();
+            return this._rawBodyData.GetNullableStruct<bool>("read_only");
+        }
+        init
+        {
+            if (value == null)
+            {
+                return;
+            }
+
+            this._rawBodyData.Set("read_only", value);
+        }
+    }
+
     public NamespaceUpdateMetadataParams() { }
 
 #pragma warning disable CS8618
