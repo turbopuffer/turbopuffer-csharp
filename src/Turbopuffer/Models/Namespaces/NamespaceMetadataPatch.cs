@@ -30,10 +30,33 @@ public sealed record class NamespaceMetadataPatch : JsonModel
         init { this._rawData.Set("pinning", value); }
     }
 
+    /// <summary>
+    /// Set to `true` to reject document and schema writes, or `false` to allow them.
+    /// Writes already in progress may still commit. Metadata updates remain available.
+    /// </summary>
+    public bool? ReadOnly
+    {
+        get
+        {
+            this._rawData.Freeze();
+            return this._rawData.GetNullableStruct<bool>("read_only");
+        }
+        init
+        {
+            if (value == null)
+            {
+                return;
+            }
+
+            this._rawData.Set("read_only", value);
+        }
+    }
+
     /// <inheritdoc/>
     public override void Validate()
     {
         this.Pinning?.Validate();
+        _ = this.ReadOnly;
     }
 
     public NamespaceMetadataPatch() { }
