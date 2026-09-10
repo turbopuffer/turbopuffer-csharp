@@ -33,12 +33,14 @@ public class NamespaceMultiQueryParamsTest : TestBase
                     GroupBy = [JsonSerializer.Deserialize<JsonElement>("{}")],
                     IncludeAttributes = true,
                     Limit = 0,
+                    Offset = 0,
                     RankBy = JsonSerializer.Deserialize<JsonElement>("{}"),
                     TopK = 0,
                 },
             ],
             Consistency = new() { Level = NamespaceMultiQueryParamsConsistencyLevel.Strong },
             Limit = 0,
+            Offset = 0,
             RerankBy = JsonSerializer.Deserialize<JsonElement>("{}"),
             VectorEncoding = VectorEncoding.Float,
         };
@@ -62,6 +64,7 @@ public class NamespaceMultiQueryParamsTest : TestBase
                 GroupBy = [JsonSerializer.Deserialize<JsonElement>("{}")],
                 IncludeAttributes = true,
                 Limit = 0,
+                Offset = 0,
                 RankBy = JsonSerializer.Deserialize<JsonElement>("{}"),
                 TopK = 0,
             },
@@ -71,6 +74,7 @@ public class NamespaceMultiQueryParamsTest : TestBase
             Level = NamespaceMultiQueryParamsConsistencyLevel.Strong,
         };
         NamespaceMultiQueryParamsLimit expectedLimit = 0;
+        long expectedOffset = 0;
         JsonElement expectedRerankBy = JsonSerializer.Deserialize<JsonElement>("{}");
         ApiEnum<string, VectorEncoding> expectedVectorEncoding = VectorEncoding.Float;
 
@@ -82,6 +86,7 @@ public class NamespaceMultiQueryParamsTest : TestBase
         }
         Assert.Equal(expectedConsistency, parameters.Consistency);
         Assert.Equal(expectedLimit, parameters.Limit);
+        Assert.Equal(expectedOffset, parameters.Offset);
         Assert.NotNull(parameters.RerankBy);
         Assert.True(JsonElement.DeepEquals(expectedRerankBy, parameters.RerankBy.Value));
         Assert.Equal(expectedVectorEncoding, parameters.VectorEncoding);
@@ -111,6 +116,7 @@ public class NamespaceMultiQueryParamsTest : TestBase
                     GroupBy = [JsonSerializer.Deserialize<JsonElement>("{}")],
                     IncludeAttributes = true,
                     Limit = 0,
+                    Offset = 0,
                     RankBy = JsonSerializer.Deserialize<JsonElement>("{}"),
                     TopK = 0,
                 },
@@ -121,6 +127,8 @@ public class NamespaceMultiQueryParamsTest : TestBase
         Assert.False(parameters.RawBodyData.ContainsKey("consistency"));
         Assert.Null(parameters.Limit);
         Assert.False(parameters.RawBodyData.ContainsKey("limit"));
+        Assert.Null(parameters.Offset);
+        Assert.False(parameters.RawBodyData.ContainsKey("offset"));
         Assert.Null(parameters.RerankBy);
         Assert.False(parameters.RawBodyData.ContainsKey("rerank_by"));
         Assert.Null(parameters.VectorEncoding);
@@ -151,6 +159,7 @@ public class NamespaceMultiQueryParamsTest : TestBase
                     GroupBy = [JsonSerializer.Deserialize<JsonElement>("{}")],
                     IncludeAttributes = true,
                     Limit = 0,
+                    Offset = 0,
                     RankBy = JsonSerializer.Deserialize<JsonElement>("{}"),
                     TopK = 0,
                 },
@@ -159,6 +168,7 @@ public class NamespaceMultiQueryParamsTest : TestBase
             // Null should be interpreted as omitted for these properties
             Consistency = null,
             Limit = null,
+            Offset = null,
             RerankBy = null,
             VectorEncoding = null,
         };
@@ -167,6 +177,8 @@ public class NamespaceMultiQueryParamsTest : TestBase
         Assert.False(parameters.RawBodyData.ContainsKey("consistency"));
         Assert.Null(parameters.Limit);
         Assert.False(parameters.RawBodyData.ContainsKey("limit"));
+        Assert.Null(parameters.Offset);
+        Assert.False(parameters.RawBodyData.ContainsKey("offset"));
         Assert.Null(parameters.RerankBy);
         Assert.False(parameters.RawBodyData.ContainsKey("rerank_by"));
         Assert.Null(parameters.VectorEncoding);
@@ -197,6 +209,7 @@ public class NamespaceMultiQueryParamsTest : TestBase
                     GroupBy = [JsonSerializer.Deserialize<JsonElement>("{}")],
                     IncludeAttributes = true,
                     Limit = 0,
+                    Offset = 0,
                     RankBy = JsonSerializer.Deserialize<JsonElement>("{}"),
                     TopK = 0,
                 },
@@ -239,12 +252,14 @@ public class NamespaceMultiQueryParamsTest : TestBase
                     GroupBy = [JsonSerializer.Deserialize<JsonElement>("{}")],
                     IncludeAttributes = true,
                     Limit = 0,
+                    Offset = 0,
                     RankBy = JsonSerializer.Deserialize<JsonElement>("{}"),
                     TopK = 0,
                 },
             ],
             Consistency = new() { Level = NamespaceMultiQueryParamsConsistencyLevel.Strong },
             Limit = 0,
+            Offset = 0,
             RerankBy = JsonSerializer.Deserialize<JsonElement>("{}"),
             VectorEncoding = VectorEncoding.Float,
         };
@@ -276,6 +291,7 @@ public class QueryTest : TestBase
             GroupBy = [JsonSerializer.Deserialize<JsonElement>("{}")],
             IncludeAttributes = true,
             Limit = 0,
+            Offset = 0,
             RankBy = JsonSerializer.Deserialize<JsonElement>("{}"),
             TopK = 0,
         };
@@ -294,6 +310,7 @@ public class QueryTest : TestBase
         List<JsonElement> expectedGroupBy = [JsonSerializer.Deserialize<JsonElement>("{}")];
         IncludeAttributes expectedIncludeAttributes = true;
         QueryLimit expectedLimit = 0;
+        long expectedOffset = 0;
         JsonElement expectedRankBy = JsonSerializer.Deserialize<JsonElement>("{}");
         long expectedTopK = 0;
 
@@ -330,6 +347,7 @@ public class QueryTest : TestBase
         }
         Assert.Equal(expectedIncludeAttributes, model.IncludeAttributes);
         Assert.Equal(expectedLimit, model.Limit);
+        Assert.Equal(expectedOffset, model.Offset);
         Assert.NotNull(model.RankBy);
         Assert.True(JsonElement.DeepEquals(expectedRankBy, model.RankBy.Value));
         Assert.Equal(expectedTopK, model.TopK);
@@ -354,6 +372,7 @@ public class QueryTest : TestBase
             GroupBy = [JsonSerializer.Deserialize<JsonElement>("{}")],
             IncludeAttributes = true,
             Limit = 0,
+            Offset = 0,
             RankBy = JsonSerializer.Deserialize<JsonElement>("{}"),
             TopK = 0,
         };
@@ -383,6 +402,7 @@ public class QueryTest : TestBase
             GroupBy = [JsonSerializer.Deserialize<JsonElement>("{}")],
             IncludeAttributes = true,
             Limit = 0,
+            Offset = 0,
             RankBy = JsonSerializer.Deserialize<JsonElement>("{}"),
             TopK = 0,
         };
@@ -405,6 +425,7 @@ public class QueryTest : TestBase
         List<JsonElement> expectedGroupBy = [JsonSerializer.Deserialize<JsonElement>("{}")];
         IncludeAttributes expectedIncludeAttributes = true;
         QueryLimit expectedLimit = 0;
+        long expectedOffset = 0;
         JsonElement expectedRankBy = JsonSerializer.Deserialize<JsonElement>("{}");
         long expectedTopK = 0;
 
@@ -441,6 +462,7 @@ public class QueryTest : TestBase
         }
         Assert.Equal(expectedIncludeAttributes, deserialized.IncludeAttributes);
         Assert.Equal(expectedLimit, deserialized.Limit);
+        Assert.Equal(expectedOffset, deserialized.Offset);
         Assert.NotNull(deserialized.RankBy);
         Assert.True(JsonElement.DeepEquals(expectedRankBy, deserialized.RankBy.Value));
         Assert.Equal(expectedTopK, deserialized.TopK);
@@ -465,6 +487,7 @@ public class QueryTest : TestBase
             GroupBy = [JsonSerializer.Deserialize<JsonElement>("{}")],
             IncludeAttributes = true,
             Limit = 0,
+            Offset = 0,
             RankBy = JsonSerializer.Deserialize<JsonElement>("{}"),
             TopK = 0,
         };
@@ -493,6 +516,8 @@ public class QueryTest : TestBase
         Assert.False(model.RawData.ContainsKey("include_attributes"));
         Assert.Null(model.Limit);
         Assert.False(model.RawData.ContainsKey("limit"));
+        Assert.Null(model.Offset);
+        Assert.False(model.RawData.ContainsKey("offset"));
         Assert.Null(model.RankBy);
         Assert.False(model.RawData.ContainsKey("rank_by"));
         Assert.Null(model.TopK);
@@ -521,6 +546,7 @@ public class QueryTest : TestBase
             GroupBy = null,
             IncludeAttributes = null,
             Limit = null,
+            Offset = null,
             RankBy = null,
             TopK = null,
         };
@@ -541,6 +567,8 @@ public class QueryTest : TestBase
         Assert.False(model.RawData.ContainsKey("include_attributes"));
         Assert.Null(model.Limit);
         Assert.False(model.RawData.ContainsKey("limit"));
+        Assert.Null(model.Offset);
+        Assert.False(model.RawData.ContainsKey("offset"));
         Assert.Null(model.RankBy);
         Assert.False(model.RawData.ContainsKey("rank_by"));
         Assert.Null(model.TopK);
@@ -561,6 +589,7 @@ public class QueryTest : TestBase
             GroupBy = null,
             IncludeAttributes = null,
             Limit = null,
+            Offset = null,
             RankBy = null,
             TopK = null,
         };
@@ -587,6 +616,7 @@ public class QueryTest : TestBase
             GroupBy = [JsonSerializer.Deserialize<JsonElement>("{}")],
             IncludeAttributes = true,
             Limit = 0,
+            Offset = 0,
             RankBy = JsonSerializer.Deserialize<JsonElement>("{}"),
             TopK = 0,
         };

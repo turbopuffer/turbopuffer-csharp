@@ -92,6 +92,7 @@ public class NamespaceServiceTest : TestBase
                         GroupBy = [JsonSerializer.Deserialize<JsonElement>("{}")],
                         IncludeAttributes = true,
                         Limit = 0,
+                        Offset = 0,
                         RankBy = JsonSerializer.Deserialize<JsonElement>("{}"),
                         TopK = 0,
                     },

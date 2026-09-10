@@ -30,6 +30,7 @@ public class NamespaceQueryParamsTest : TestBase
             GroupBy = [JsonSerializer.Deserialize<JsonElement>("{}")],
             IncludeAttributes = true,
             Limit = 0,
+            Offset = 0,
             RankBy = JsonSerializer.Deserialize<JsonElement>("{}"),
             TopK = 0,
             VectorEncoding = VectorEncoding.Float,
@@ -54,6 +55,7 @@ public class NamespaceQueryParamsTest : TestBase
         List<JsonElement> expectedGroupBy = [JsonSerializer.Deserialize<JsonElement>("{}")];
         IncludeAttributes expectedIncludeAttributes = true;
         NamespaceQueryParamsLimit expectedLimit = 0;
+        long expectedOffset = 0;
         JsonElement expectedRankBy = JsonSerializer.Deserialize<JsonElement>("{}");
         long expectedTopK = 0;
         ApiEnum<string, VectorEncoding> expectedVectorEncoding = VectorEncoding.Float;
@@ -93,6 +95,7 @@ public class NamespaceQueryParamsTest : TestBase
         }
         Assert.Equal(expectedIncludeAttributes, parameters.IncludeAttributes);
         Assert.Equal(expectedLimit, parameters.Limit);
+        Assert.Equal(expectedOffset, parameters.Offset);
         Assert.NotNull(parameters.RankBy);
         Assert.True(JsonElement.DeepEquals(expectedRankBy, parameters.RankBy.Value));
         Assert.Equal(expectedTopK, parameters.TopK);
@@ -122,6 +125,8 @@ public class NamespaceQueryParamsTest : TestBase
         Assert.False(parameters.RawBodyData.ContainsKey("include_attributes"));
         Assert.Null(parameters.Limit);
         Assert.False(parameters.RawBodyData.ContainsKey("limit"));
+        Assert.Null(parameters.Offset);
+        Assert.False(parameters.RawBodyData.ContainsKey("offset"));
         Assert.Null(parameters.RankBy);
         Assert.False(parameters.RawBodyData.ContainsKey("rank_by"));
         Assert.Null(parameters.TopK);
@@ -147,6 +152,7 @@ public class NamespaceQueryParamsTest : TestBase
             GroupBy = null,
             IncludeAttributes = null,
             Limit = null,
+            Offset = null,
             RankBy = null,
             TopK = null,
             VectorEncoding = null,
@@ -170,6 +176,8 @@ public class NamespaceQueryParamsTest : TestBase
         Assert.False(parameters.RawBodyData.ContainsKey("include_attributes"));
         Assert.Null(parameters.Limit);
         Assert.False(parameters.RawBodyData.ContainsKey("limit"));
+        Assert.Null(parameters.Offset);
+        Assert.False(parameters.RawBodyData.ContainsKey("offset"));
         Assert.Null(parameters.RankBy);
         Assert.False(parameters.RawBodyData.ContainsKey("rank_by"));
         Assert.Null(parameters.TopK);
@@ -214,6 +222,7 @@ public class NamespaceQueryParamsTest : TestBase
             GroupBy = [JsonSerializer.Deserialize<JsonElement>("{}")],
             IncludeAttributes = true,
             Limit = 0,
+            Offset = 0,
             RankBy = JsonSerializer.Deserialize<JsonElement>("{}"),
             TopK = 0,
             VectorEncoding = VectorEncoding.Float,
