@@ -244,6 +244,28 @@ public record class NamespaceExplainQueryParams : ParamsBase
     }
 
     /// <summary>
+    /// Number of documents to skip before returning results. Supported only in v2
+    /// queries with an explicit `rank_by` and `top_k` or `limit`.
+    /// </summary>
+    public long? Offset
+    {
+        get
+        {
+            this._rawBodyData.Freeze();
+            return this._rawBodyData.GetNullableStruct<long>("offset");
+        }
+        init
+        {
+            if (value == null)
+            {
+                return;
+            }
+
+            this._rawBodyData.Set("offset", value);
+        }
+    }
+
+    /// <summary>
     /// How to rank the documents in the namespace.
     /// </summary>
     public RankBy? RankBy
