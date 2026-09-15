@@ -95,6 +95,7 @@ public class NamespaceServiceTest : TestBase
                             ],
                             IncludeAttributes = true,
                             Limit = 0,
+                            Offset = 0,
                             RankBy = new RankByRaw(JsonSerializer.Deserialize<JsonElement>("{}")),
                             TopK = 0,
                         },
