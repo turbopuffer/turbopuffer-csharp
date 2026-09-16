@@ -863,9 +863,9 @@ public class NamespaceMultiQueryParamsLimitTest : TestBase
     }
 
     [Fact]
-    public void TotalValidationWorks()
+    public void RerankValidationWorks()
     {
-        NamespaceMultiQueryParamsLimit value = new Total(0);
+        NamespaceMultiQueryParamsLimit value = new RerankLimit(0);
         value.Validate();
     }
 
@@ -883,9 +883,9 @@ public class NamespaceMultiQueryParamsLimitTest : TestBase
     }
 
     [Fact]
-    public void TotalSerializationRoundtripWorks()
+    public void RerankSerializationRoundtripWorks()
     {
-        NamespaceMultiQueryParamsLimit value = new Total(0);
+        NamespaceMultiQueryParamsLimit value = new RerankLimit(0);
         string element = JsonSerializer.Serialize(value, ModelBase.SerializerOptions);
         var deserialized = JsonSerializer.Deserialize<NamespaceMultiQueryParamsLimit>(
             element,
@@ -893,61 +893,5 @@ public class NamespaceMultiQueryParamsLimitTest : TestBase
         );
 
         Assert.Equal(value, deserialized);
-    }
-}
-
-public class TotalTest : TestBase
-{
-    [Fact]
-    public void FieldRoundtrip_Works()
-    {
-        var model = new Total { TotalValue = 0 };
-
-        long expectedTotalValue = 0;
-
-        Assert.Equal(expectedTotalValue, model.TotalValue);
-    }
-
-    [Fact]
-    public void SerializationRoundtrip_Works()
-    {
-        var model = new Total { TotalValue = 0 };
-
-        string json = JsonSerializer.Serialize(model, ModelBase.SerializerOptions);
-        var deserialized = JsonSerializer.Deserialize<Total>(json, ModelBase.SerializerOptions);
-
-        Assert.Equal(model, deserialized);
-    }
-
-    [Fact]
-    public void FieldRoundtripThroughSerialization_Works()
-    {
-        var model = new Total { TotalValue = 0 };
-
-        string element = JsonSerializer.Serialize(model, ModelBase.SerializerOptions);
-        var deserialized = JsonSerializer.Deserialize<Total>(element, ModelBase.SerializerOptions);
-        Assert.NotNull(deserialized);
-
-        long expectedTotalValue = 0;
-
-        Assert.Equal(expectedTotalValue, deserialized.TotalValue);
-    }
-
-    [Fact]
-    public void Validation_Works()
-    {
-        var model = new Total { TotalValue = 0 };
-
-        model.Validate();
-    }
-
-    [Fact]
-    public void CopyConstructor_Works()
-    {
-        var model = new Total { TotalValue = 0 };
-
-        Total copied = new(model);
-
-        Assert.Equal(model, copied);
     }
 }
