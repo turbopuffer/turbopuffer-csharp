@@ -1002,7 +1002,7 @@ public record class NamespaceMultiQueryParamsLimit : ModelBase
         this._element = element;
     }
 
-    public NamespaceMultiQueryParamsLimit(Total value, JsonElement? element = null)
+    public NamespaceMultiQueryParamsLimit(RerankLimit value, JsonElement? element = null)
     {
         this.Value = value;
         this._element = element;
@@ -1036,22 +1036,22 @@ public record class NamespaceMultiQueryParamsLimit : ModelBase
 
     /// <summary>
     /// Returns true and sets the <c>out</c> parameter if the instance was constructed with a variant of
-    /// type <see cref="Total"/>.
+    /// type <see cref="RerankLimit"/>.
     ///
     /// <para>Consider using <see cref="Switch"/> or <see cref="Match"/> if you need to handle every variant.</para>
     ///
     /// <example>
     /// <code>
-    /// if (instance.TryPickTotal(out var value)) {
-    ///     // `value` is of type `Total`
+    /// if (instance.TryPickRerank(out var value)) {
+    ///     // `value` is of type `RerankLimit`
     ///     Console.WriteLine(value);
     /// }
     /// </code>
     /// </example>
     /// </summary>
-    public bool TryPickTotal([NotNullWhen(true)] out Total? value)
+    public bool TryPickRerank([NotNullWhen(true)] out RerankLimit? value)
     {
-        value = this.Value as Total;
+        value = this.Value as RerankLimit;
         return value != null;
     }
 
@@ -1070,20 +1070,20 @@ public record class NamespaceMultiQueryParamsLimit : ModelBase
     /// <code>
     /// instance.Switch(
     ///     (long value) =&gt; {...},
-    ///     (Total value) =&gt; {...}
+    ///     (RerankLimit value) =&gt; {...}
     /// );
     /// </code>
     /// </example>
     /// </summary>
-    public void Switch(Action<long> @long, Action<Total> total)
+    public void Switch(Action<long> @long, Action<RerankLimit> rerank)
     {
         switch (this.Value)
         {
             case long value:
                 @long(value);
                 break;
-            case Total value:
-                total(value);
+            case RerankLimit value:
+                rerank(value);
                 break;
             default:
                 throw new TurbopufferInvalidDataException(
@@ -1108,17 +1108,17 @@ public record class NamespaceMultiQueryParamsLimit : ModelBase
     /// <code>
     /// var result = instance.Match(
     ///     (long value) =&gt; {...},
-    ///     (Total value) =&gt; {...}
+    ///     (RerankLimit value) =&gt; {...}
     /// );
     /// </code>
     /// </example>
     /// </summary>
-    public T Match<T>(Func<long, T> @long, Func<Total, T> total)
+    public T Match<T>(Func<long, T> @long, Func<RerankLimit, T> rerank)
     {
         return this.Value switch
         {
             long value => @long(value),
-            Total value => total(value),
+            RerankLimit value => rerank(value),
             _ => throw new TurbopufferInvalidDataException(
                 "Data did not match any variant of NamespaceMultiQueryParamsLimit"
             ),
@@ -1127,7 +1127,7 @@ public record class NamespaceMultiQueryParamsLimit : ModelBase
 
     public static implicit operator NamespaceMultiQueryParamsLimit(long value) => new(value);
 
-    public static implicit operator NamespaceMultiQueryParamsLimit(Total value) => new(value);
+    public static implicit operator NamespaceMultiQueryParamsLimit(RerankLimit value) => new(value);
 
     /// <summary>
     /// Validates that the instance was constructed with a known variant and that this variant is valid
@@ -1147,7 +1147,7 @@ public record class NamespaceMultiQueryParamsLimit : ModelBase
                 "Data did not match any variant of NamespaceMultiQueryParamsLimit"
             );
         }
-        this.Switch((_) => { }, (total) => total.Validate());
+        this.Switch((_) => { }, (rerank) => rerank.Validate());
     }
 
     public virtual bool Equals(NamespaceMultiQueryParamsLimit? other) =>
@@ -1171,7 +1171,7 @@ public record class NamespaceMultiQueryParamsLimit : ModelBase
         return this.Value switch
         {
             long _ => 0,
-            Total _ => 1,
+            RerankLimit _ => 1,
             _ => -1,
         };
     }
@@ -1188,7 +1188,7 @@ sealed class NamespaceMultiQueryParamsLimitConverter : JsonConverter<NamespaceMu
         var element = JsonSerializer.Deserialize<JsonElement>(ref reader, options);
         try
         {
-            var deserialized = JsonSerializer.Deserialize<Total>(element, options);
+            var deserialized = JsonSerializer.Deserialize<RerankLimit>(element, options);
             if (deserialized != null)
             {
                 deserialized.Validate();
@@ -1220,65 +1220,4 @@ sealed class NamespaceMultiQueryParamsLimitConverter : JsonConverter<NamespaceMu
     {
         JsonSerializer.Serialize(writer, value.Json, options);
     }
-}
-
-[JsonConverter(typeof(JsonModelConverter<Total, TotalFromRaw>))]
-public sealed record class Total : JsonModel
-{
-    public required long TotalValue
-    {
-        get
-        {
-            this._rawData.Freeze();
-            return this._rawData.GetNotNullStruct<long>("total");
-        }
-        init { this._rawData.Set("total", value); }
-    }
-
-    /// <inheritdoc/>
-    public override void Validate()
-    {
-        _ = this.TotalValue;
-    }
-
-    public Total() { }
-
-#pragma warning disable CS8618
-    [SetsRequiredMembers]
-    public Total(Total total)
-        : base(total) { }
-#pragma warning restore CS8618
-
-    public Total(IReadOnlyDictionary<string, JsonElement> rawData)
-    {
-        this._rawData = new(rawData);
-    }
-
-#pragma warning disable CS8618
-    [SetsRequiredMembers]
-    Total(FrozenDictionary<string, JsonElement> rawData)
-    {
-        this._rawData = new(rawData);
-    }
-#pragma warning restore CS8618
-
-    /// <inheritdoc cref="TotalFromRaw.FromRawUnchecked"/>
-    public static Total FromRawUnchecked(IReadOnlyDictionary<string, JsonElement> rawData)
-    {
-        return new(FrozenDictionary.ToFrozenDictionary(rawData));
-    }
-
-    [SetsRequiredMembers]
-    public Total(long totalValue)
-        : this()
-    {
-        this.TotalValue = totalValue;
-    }
-}
-
-class TotalFromRaw : IFromRawJson<Total>
-{
-    /// <inheritdoc/>
-    public Total FromRawUnchecked(IReadOnlyDictionary<string, JsonElement> rawData) =>
-        Total.FromRawUnchecked(rawData);
 }
