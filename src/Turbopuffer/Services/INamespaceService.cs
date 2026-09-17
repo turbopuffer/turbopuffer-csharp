@@ -84,6 +84,21 @@ public interface INamespaceService
     );
 
     /// <summary>
+    /// Retrieve the current status of a copy operation.
+    /// </summary>
+    Task<CopyFromNamespaceOperation> PollCopyFrom(
+        NamespacePollCopyFromParams parameters,
+        CancellationToken cancellationToken = default
+    );
+
+    /// <inheritdoc cref="PollCopyFrom(NamespacePollCopyFromParams, CancellationToken)"/>
+    Task<CopyFromNamespaceOperation> PollCopyFrom(
+        string token,
+        NamespacePollCopyFromParams? parameters = null,
+        CancellationToken cancellationToken = default
+    );
+
+    /// <summary>
     /// Query, filter, full-text search and vector search documents.
     /// </summary>
     Task<NamespaceQueryResponse> Query(
@@ -104,6 +119,16 @@ public interface INamespaceService
     /// </summary>
     Task<Dictionary<string, AttributeSchemaConfig>> Schema(
         NamespaceSchemaParams parameters,
+        CancellationToken cancellationToken = default
+    );
+
+    /// <summary>
+    /// Start copying all documents from another namespace into this one. Returns an
+    /// operation token without waiting for the copy to finish. Use the token to poll
+    /// for progress and the result.
+    /// </summary>
+    Task<NamespaceStartCopyFromResponse> StartCopyFrom(
+        NamespaceStartCopyFromParams parameters,
         CancellationToken cancellationToken = default
     );
 
@@ -209,6 +234,22 @@ public interface INamespaceServiceWithRawResponse
     );
 
     /// <summary>
+    /// Returns a raw HTTP response for <c>get /v1/namespaces/{namespace}/operations/{token}?stainless_overload=pollCopyFrom</c>, but is otherwise the
+    /// same as <see cref="INamespaceService.PollCopyFrom(NamespacePollCopyFromParams, CancellationToken)"/>.
+    /// </summary>
+    Task<HttpResponse<CopyFromNamespaceOperation>> PollCopyFrom(
+        NamespacePollCopyFromParams parameters,
+        CancellationToken cancellationToken = default
+    );
+
+    /// <inheritdoc cref="PollCopyFrom(NamespacePollCopyFromParams, CancellationToken)"/>
+    Task<HttpResponse<CopyFromNamespaceOperation>> PollCopyFrom(
+        string token,
+        NamespacePollCopyFromParams? parameters = null,
+        CancellationToken cancellationToken = default
+    );
+
+    /// <summary>
     /// Returns a raw HTTP response for <c>post /v2/namespaces/{namespace}/query</c>, but is otherwise the
     /// same as <see cref="INamespaceService.Query(NamespaceQueryParams, CancellationToken)"/>.
     /// </summary>
@@ -232,6 +273,15 @@ public interface INamespaceServiceWithRawResponse
     /// </summary>
     Task<HttpResponse<Dictionary<string, AttributeSchemaConfig>>> Schema(
         NamespaceSchemaParams parameters,
+        CancellationToken cancellationToken = default
+    );
+
+    /// <summary>
+    /// Returns a raw HTTP response for <c>post /v2/namespaces/{namespace}/async?stainless_overload=startCopyFrom</c>, but is otherwise the
+    /// same as <see cref="INamespaceService.StartCopyFrom(NamespaceStartCopyFromParams, CancellationToken)"/>.
+    /// </summary>
+    Task<HttpResponse<NamespaceStartCopyFromResponse>> StartCopyFrom(
+        NamespaceStartCopyFromParams parameters,
         CancellationToken cancellationToken = default
     );
 
