@@ -206,8 +206,13 @@ public record class NamespaceStartCopyFromParams : ParamsBase
 
     internal override HttpContent? BodyContent()
     {
+        // The API expects the body wrapped in a `copy_from_namespace` key.
+        var wrapped = new Dictionary<string, IReadOnlyDictionary<string, JsonElement>>
+        {
+            ["copy_from_namespace"] = this.RawBodyData,
+        };
         return new StringContent(
-            JsonSerializer.Serialize(this.RawBodyData, ModelBase.SerializerOptions),
+            JsonSerializer.Serialize(wrapped, ModelBase.SerializerOptions),
             Encoding.UTF8,
             "application/json"
         );
