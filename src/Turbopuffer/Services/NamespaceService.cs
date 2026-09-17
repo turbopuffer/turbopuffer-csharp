@@ -120,6 +120,30 @@ public sealed class NamespaceService : INamespaceService
     }
 
     /// <inheritdoc/>
+    public async Task<CopyFromNamespaceOperation> PollCopyFrom(
+        NamespacePollCopyFromParams parameters,
+        CancellationToken cancellationToken = default
+    )
+    {
+        using var response = await this
+            .WithRawResponse.PollCopyFrom(parameters, cancellationToken)
+            .ConfigureAwait(false);
+        return await response.Deserialize(cancellationToken).ConfigureAwait(false);
+    }
+
+    /// <inheritdoc/>
+    public Task<CopyFromNamespaceOperation> PollCopyFrom(
+        string token,
+        NamespacePollCopyFromParams? parameters = null,
+        CancellationToken cancellationToken = default
+    )
+    {
+        parameters ??= new();
+
+        return this.PollCopyFrom(parameters with { Token = token }, cancellationToken);
+    }
+
+    /// <inheritdoc/>
     public async Task<NamespaceQueryResponse> Query(
         NamespaceQueryParams parameters,
         CancellationToken cancellationToken = default
@@ -151,6 +175,18 @@ public sealed class NamespaceService : INamespaceService
     {
         using var response = await this
             .WithRawResponse.Schema(parameters, cancellationToken)
+            .ConfigureAwait(false);
+        return await response.Deserialize(cancellationToken).ConfigureAwait(false);
+    }
+
+    /// <inheritdoc/>
+    public async Task<NamespaceStartCopyFromResponse> StartCopyFrom(
+        NamespaceStartCopyFromParams parameters,
+        CancellationToken cancellationToken = default
+    )
+    {
+        using var response = await this
+            .WithRawResponse.StartCopyFrom(parameters, cancellationToken)
             .ConfigureAwait(false);
         return await response.Deserialize(cancellationToken).ConfigureAwait(false);
     }
@@ -475,6 +511,60 @@ public sealed class NamespaceServiceWithRawResponse : INamespaceServiceWithRawRe
     }
 
     /// <inheritdoc/>
+    public async Task<HttpResponse<CopyFromNamespaceOperation>> PollCopyFrom(
+        NamespacePollCopyFromParams parameters,
+        CancellationToken cancellationToken = default
+    )
+    {
+        parameters = parameters with
+        {
+            Namespace = parameters.Namespace ?? this._client.DefaultNamespace,
+        };
+
+        if (parameters.Namespace == null)
+        {
+            throw new TurbopufferInvalidDataException("'parameters.Namespace' cannot be null");
+        }
+        if (parameters.Token == null)
+        {
+            throw new TurbopufferInvalidDataException("'parameters.Token' cannot be null");
+        }
+
+        HttpRequest<NamespacePollCopyFromParams> request = new()
+        {
+            Method = HttpMethod.Get,
+            Params = parameters,
+        };
+        var response = await this._client.Execute(request, cancellationToken).ConfigureAwait(false);
+        return new(
+            response,
+            async (token) =>
+            {
+                var copyFromNamespaceOperation = await response
+                    .Deserialize<CopyFromNamespaceOperation>(token)
+                    .ConfigureAwait(false);
+                if (this._client.ResponseValidation)
+                {
+                    copyFromNamespaceOperation.Validate();
+                }
+                return copyFromNamespaceOperation;
+            }
+        );
+    }
+
+    /// <inheritdoc/>
+    public Task<HttpResponse<CopyFromNamespaceOperation>> PollCopyFrom(
+        string token,
+        NamespacePollCopyFromParams? parameters = null,
+        CancellationToken cancellationToken = default
+    )
+    {
+        parameters ??= new();
+
+        return this.PollCopyFrom(parameters with { Token = token }, cancellationToken);
+    }
+
+    /// <inheritdoc/>
     public async Task<HttpResponse<NamespaceQueryResponse>> Query(
         NamespaceQueryParams parameters,
         CancellationToken cancellationToken = default
@@ -585,6 +675,44 @@ public sealed class NamespaceServiceWithRawResponse : INamespaceServiceWithRawRe
                     {
                         item.Validate();
                     }
+                }
+                return deserializedResponse;
+            }
+        );
+    }
+
+    /// <inheritdoc/>
+    public async Task<HttpResponse<NamespaceStartCopyFromResponse>> StartCopyFrom(
+        NamespaceStartCopyFromParams parameters,
+        CancellationToken cancellationToken = default
+    )
+    {
+        parameters = parameters with
+        {
+            Namespace = parameters.Namespace ?? this._client.DefaultNamespace,
+        };
+
+        if (parameters.Namespace == null)
+        {
+            throw new TurbopufferInvalidDataException("'parameters.Namespace' cannot be null");
+        }
+
+        HttpRequest<NamespaceStartCopyFromParams> request = new()
+        {
+            Method = HttpMethod.Post,
+            Params = parameters,
+        };
+        var response = await this._client.Execute(request, cancellationToken).ConfigureAwait(false);
+        return new(
+            response,
+            async (token) =>
+            {
+                var deserializedResponse = await response
+                    .Deserialize<NamespaceStartCopyFromResponse>(token)
+                    .ConfigureAwait(false);
+                if (this._client.ResponseValidation)
+                {
+                    deserializedResponse.Validate();
                 }
                 return deserializedResponse;
             }
