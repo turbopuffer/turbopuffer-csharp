@@ -1,5 +1,24 @@
 # Changelog
 
+## 0.8.0 (2026-09-18)
+
+Full Changelog: [v0.7.0...v0.8.0](https://github.com/turbopuffer/turbopuffer-csharp/compare/v0.7.0...v0.8.0)
+
+### Features
+
+* Add `read_only` namespace field ([535b36b](https://github.com/turbopuffer/turbopuffer-csharp/commit/535b36b1a390a39355efb9b98f269ca3773035d9))
+* **api:** Merge remote-tracking branch 'origin/preview/benesch/named-rerank-limit-schema' ([d2cc2b9](https://github.com/turbopuffer/turbopuffer-csharp/commit/d2cc2b9dd5c8066973fb848c49958123a2a2c221))
+* Apply limit on rerank_by when provided ([a4fb11d](https://github.com/turbopuffer/turbopuffer-csharp/commit/a4fb11d2cb0f37026bbae91332ea9b1eb6baddda))
+* engine,openapi: async copy_from_namespace endpoints ([c191894](https://github.com/turbopuffer/turbopuffer-csharp/commit/c191894cbc41ac85c544e75babae14fde1ecec4f))
+* spec: no-op change to Stainless spec ([418b76a](https://github.com/turbopuffer/turbopuffer-csharp/commit/418b76ab3f6071840653f25ef8bc0d0033fd6f5f))
+* tpuf-engine: Adding pagination through `offset` ([9750dbe](https://github.com/turbopuffer/turbopuffer-csharp/commit/9750dbef15900c838d8c884390157c71df8d6436))
+* tpuf-engine: expose billed_replicas in pinning metadata ([412be87](https://github.com/turbopuffer/turbopuffer-csharp/commit/412be87d19e92abbe225ee4b068ec54b471947f4))
+
+
+### Bug Fixes
+
+* correct namespace tests and async copy requests ([#47](https://github.com/turbopuffer/turbopuffer-csharp/issues/47)) ([46c1ab9](https://github.com/turbopuffer/turbopuffer-csharp/commit/46c1ab9687d94dda2f9e26791e7cc733436822ff))
+
 ## 0.7.0 (2026-07-30)
 
 Full Changelog: [v0.6.0...v0.7.0](https://github.com/turbopuffer/turbopuffer-csharp/compare/v0.6.0...v0.7.0)
