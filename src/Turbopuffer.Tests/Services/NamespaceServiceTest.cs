@@ -109,11 +109,13 @@ public class NamespaceServiceTest : TestBase
     [Fact(Skip = "Mock server tests are disabled")]
     public async Task PollCopyFrom_Works()
     {
-        var copyFromNamespaceOperation = await this.client.Namespaces1.PollCopyFrom(
-            "token",
-            new() { Namespace = "namespace" },
-            TestContext.Current.CancellationToken
-        );
+        var copyFromNamespaceOperation = await this
+            .client.Namespace("namespace")
+            .PollCopyFrom(
+                "token",
+                new() { Namespace = "namespace" },
+                TestContext.Current.CancellationToken
+            );
         copyFromNamespaceOperation.Validate();
     }
 
@@ -150,10 +152,12 @@ public class NamespaceServiceTest : TestBase
     [Fact(Skip = "Mock server tests are disabled")]
     public async Task StartCopyFrom_Works()
     {
-        var response = await this.client.Namespaces1.StartCopyFrom(
-            new() { Namespace = "namespace", SourceNamespace = "source_namespace" },
-            TestContext.Current.CancellationToken
-        );
+        var response = await this
+            .client.Namespace("namespace")
+            .StartCopyFrom(
+                new() { Namespace = "namespace", SourceNamespace = "source_namespace" },
+                TestContext.Current.CancellationToken
+            );
         response.Validate();
     }
 
