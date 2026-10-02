@@ -40,6 +40,12 @@ public record class AttributeSchema : ModelBase
         this._element = element;
     }
 
+    public AttributeSchema(AttributeSchemaDrop value, JsonElement? element = null)
+    {
+        this.Value = value;
+        this._element = element;
+    }
+
     public AttributeSchema(JsonElement element)
     {
         this._element = element;
@@ -88,6 +94,27 @@ public record class AttributeSchema : ModelBase
     }
 
     /// <summary>
+    /// Returns true and sets the <c>out</c> parameter if the instance was constructed with a variant of
+    /// type <see cref="AttributeSchemaDrop"/>.
+    ///
+    /// <para>Consider using <see cref="Switch"/> or <see cref="Match"/> if you need to handle every variant.</para>
+    ///
+    /// <example>
+    /// <code>
+    /// if (instance.TryPickDrop(out var value)) {
+    ///     // `value` is of type `AttributeSchemaDrop`
+    ///     Console.WriteLine(value);
+    /// }
+    /// </code>
+    /// </example>
+    /// </summary>
+    public bool TryPickDrop([NotNullWhen(true)] out AttributeSchemaDrop? value)
+    {
+        value = this.Value as AttributeSchemaDrop;
+        return value != null;
+    }
+
+    /// <summary>
     /// Calls the function parameter corresponding to the variant the instance was constructed with.
     ///
     /// <para>Use the <c>TryPick</c> method(s) if you don't need to handle every variant, or <see cref="Match"/>
@@ -102,12 +129,17 @@ public record class AttributeSchema : ModelBase
     /// <code>
     /// instance.Switch(
     ///     (string value) =&gt; {...},
-    ///     (AttributeSchemaConfig value) =&gt; {...}
+    ///     (AttributeSchemaConfig value) =&gt; {...},
+    ///     (AttributeSchemaDrop value) =&gt; {...}
     /// );
     /// </code>
     /// </example>
     /// </summary>
-    public void Switch(Action<string> @attributeType, Action<AttributeSchemaConfig> config)
+    public void Switch(
+        Action<string> @attributeType,
+        Action<AttributeSchemaConfig> config,
+        Action<AttributeSchemaDrop> drop
+    )
     {
         switch (this.Value)
         {
@@ -116,6 +148,9 @@ public record class AttributeSchema : ModelBase
                 break;
             case AttributeSchemaConfig value:
                 config(value);
+                break;
+            case AttributeSchemaDrop value:
+                drop(value);
                 break;
             default:
                 throw new TurbopufferInvalidDataException(
@@ -140,17 +175,23 @@ public record class AttributeSchema : ModelBase
     /// <code>
     /// var result = instance.Match(
     ///     (string value) =&gt; {...},
-    ///     (AttributeSchemaConfig value) =&gt; {...}
+    ///     (AttributeSchemaConfig value) =&gt; {...},
+    ///     (AttributeSchemaDrop value) =&gt; {...}
     /// );
     /// </code>
     /// </example>
     /// </summary>
-    public T Match<T>(Func<string, T> @attributeType, Func<AttributeSchemaConfig, T> config)
+    public T Match<T>(
+        Func<string, T> @attributeType,
+        Func<AttributeSchemaConfig, T> config,
+        Func<AttributeSchemaDrop, T> drop
+    )
     {
         return this.Value switch
         {
             string value => @attributeType(value),
             AttributeSchemaConfig value => config(value),
+            AttributeSchemaDrop value => drop(value),
             _ => throw new TurbopufferInvalidDataException(
                 "Data did not match any variant of AttributeSchema"
             ),
@@ -160,6 +201,8 @@ public record class AttributeSchema : ModelBase
     public static implicit operator AttributeSchema(string value) => new(value);
 
     public static implicit operator AttributeSchema(AttributeSchemaConfig value) => new(value);
+
+    public static implicit operator AttributeSchema(AttributeSchemaDrop value) => new(value);
 
     /// <summary>
     /// Validates that the instance was constructed with a known variant and that this variant is valid
@@ -179,7 +222,7 @@ public record class AttributeSchema : ModelBase
                 "Data did not match any variant of AttributeSchema"
             );
         }
-        this.Switch((_) => { }, (config) => config.Validate());
+        this.Switch((_) => { }, (config) => config.Validate(), (drop) => drop.Validate());
     }
 
     public virtual bool Equals(AttributeSchema? other) =>
@@ -204,6 +247,7 @@ public record class AttributeSchema : ModelBase
         {
             string _ => 0,
             AttributeSchemaConfig _ => 1,
+            AttributeSchemaDrop _ => 2,
             _ => -1,
         };
     }
@@ -221,6 +265,20 @@ sealed class AttributeSchemaConverter : JsonConverter<AttributeSchema>
         try
         {
             var deserialized = JsonSerializer.Deserialize<AttributeSchemaConfig>(element, options);
+            if (deserialized != null)
+            {
+                deserialized.Validate();
+                return new(deserialized, element);
+            }
+        }
+        catch (Exception e) when (e is JsonException || e is TurbopufferInvalidDataException)
+        {
+            // ignore
+        }
+
+        try
+        {
+            var deserialized = JsonSerializer.Deserialize<AttributeSchemaDrop>(element, options);
             if (deserialized != null)
             {
                 deserialized.Validate();
