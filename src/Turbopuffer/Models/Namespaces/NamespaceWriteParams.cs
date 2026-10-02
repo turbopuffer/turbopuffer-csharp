@@ -28,6 +28,9 @@ public record class NamespaceWriteParams : ParamsBase
 
     public string? Namespace { get; init; }
 
+    /// <summary>
+    /// The namespace to create an instant, copy-on-write clone of.
+    /// </summary>
     public BranchFromNamespaceParams? BranchFromNamespace
     {
         get
@@ -48,6 +51,9 @@ public record class NamespaceWriteParams : ParamsBase
         }
     }
 
+    /// <summary>
+    /// The namespace to copy documents from.
+    /// </summary>
     public CopyFromNamespaceParams? CopyFromNamespace
     {
         get
