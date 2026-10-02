@@ -32,6 +32,13 @@ public class AttributeSchemaTest : TestBase
     }
 
     [Fact]
+    public void DropValidationWorks()
+    {
+        AttributeSchema value = new AttributeSchemaDrop(true);
+        value.Validate();
+    }
+
+    [Fact]
     public void TypeSerializationRoundtripWorks()
     {
         AttributeSchema value = "string";
@@ -59,6 +66,19 @@ public class AttributeSchemaTest : TestBase
             Regex = true,
             SparseKnn = new(SparseDistanceMetric.DotProduct),
         };
+        string element = JsonSerializer.Serialize(value, ModelBase.SerializerOptions);
+        var deserialized = JsonSerializer.Deserialize<AttributeSchema>(
+            element,
+            ModelBase.SerializerOptions
+        );
+
+        Assert.Equal(value, deserialized);
+    }
+
+    [Fact]
+    public void DropSerializationRoundtripWorks()
+    {
+        AttributeSchema value = new AttributeSchemaDrop(true);
         string element = JsonSerializer.Serialize(value, ModelBase.SerializerOptions);
         var deserialized = JsonSerializer.Deserialize<AttributeSchema>(
             element,
