@@ -16,6 +16,7 @@ public class NamespaceWriteParamsTest : TestBase
             Namespace = "namespace",
             BranchFromNamespace = "string",
             CopyFromNamespace = "string",
+            CreateNamespace = true,
             DeleteByFilter = JsonSerializer.Deserialize<JsonElement>("{}"),
             DeleteByFilterAllowPartial = true,
             DeleteCondition = JsonSerializer.Deserialize<JsonElement>("{}"),
@@ -54,6 +55,7 @@ public class NamespaceWriteParamsTest : TestBase
         string expectedNamespace = "namespace";
         BranchFromNamespaceParams expectedBranchFromNamespace = "string";
         CopyFromNamespaceParams expectedCopyFromNamespace = "string";
+        bool expectedCreateNamespace = true;
         JsonElement expectedDeleteByFilter = JsonSerializer.Deserialize<JsonElement>("{}");
         bool expectedDeleteByFilterAllowPartial = true;
         JsonElement expectedDeleteCondition = JsonSerializer.Deserialize<JsonElement>("{}");
@@ -97,6 +99,7 @@ public class NamespaceWriteParamsTest : TestBase
         Assert.Equal(expectedNamespace, parameters.Namespace);
         Assert.Equal(expectedBranchFromNamespace, parameters.BranchFromNamespace);
         Assert.Equal(expectedCopyFromNamespace, parameters.CopyFromNamespace);
+        Assert.Equal(expectedCreateNamespace, parameters.CreateNamespace);
         Assert.NotNull(parameters.DeleteByFilter);
         Assert.True(
             JsonElement.DeepEquals(expectedDeleteByFilter, parameters.DeleteByFilter.Value)
@@ -160,6 +163,8 @@ public class NamespaceWriteParamsTest : TestBase
         Assert.False(parameters.RawBodyData.ContainsKey("branch_from_namespace"));
         Assert.Null(parameters.CopyFromNamespace);
         Assert.False(parameters.RawBodyData.ContainsKey("copy_from_namespace"));
+        Assert.Null(parameters.CreateNamespace);
+        Assert.False(parameters.RawBodyData.ContainsKey("create_namespace"));
         Assert.Null(parameters.DeleteByFilter);
         Assert.False(parameters.RawBodyData.ContainsKey("delete_by_filter"));
         Assert.Null(parameters.DeleteByFilterAllowPartial);
@@ -208,6 +213,7 @@ public class NamespaceWriteParamsTest : TestBase
             // Null should be interpreted as omitted for these properties
             BranchFromNamespace = null,
             CopyFromNamespace = null,
+            CreateNamespace = null,
             DeleteByFilter = null,
             DeleteByFilterAllowPartial = null,
             DeleteCondition = null,
@@ -232,6 +238,8 @@ public class NamespaceWriteParamsTest : TestBase
         Assert.False(parameters.RawBodyData.ContainsKey("branch_from_namespace"));
         Assert.Null(parameters.CopyFromNamespace);
         Assert.False(parameters.RawBodyData.ContainsKey("copy_from_namespace"));
+        Assert.Null(parameters.CreateNamespace);
+        Assert.False(parameters.RawBodyData.ContainsKey("create_namespace"));
         Assert.Null(parameters.DeleteByFilter);
         Assert.False(parameters.RawBodyData.ContainsKey("delete_by_filter"));
         Assert.Null(parameters.DeleteByFilterAllowPartial);
@@ -293,6 +301,7 @@ public class NamespaceWriteParamsTest : TestBase
             Namespace = "namespace",
             BranchFromNamespace = "string",
             CopyFromNamespace = "string",
+            CreateNamespace = true,
             DeleteByFilter = JsonSerializer.Deserialize<JsonElement>("{}"),
             DeleteByFilterAllowPartial = true,
             DeleteCondition = JsonSerializer.Deserialize<JsonElement>("{}"),
