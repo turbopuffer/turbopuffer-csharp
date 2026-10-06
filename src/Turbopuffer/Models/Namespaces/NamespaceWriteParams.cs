@@ -75,6 +75,31 @@ public record class NamespaceWriteParams : ParamsBase
     }
 
     /// <summary>
+    /// If `true`, ensures the namespace is created, even if the request writes no
+    /// documents. Creating an empty namespace requires the `id` type to be declared
+    /// in `schema`. If `false`, a namespace is never created, and a 404 is returned
+    /// if it does not exist. If omitted, a namespace is created by the first request
+    /// that writes documents.
+    /// </summary>
+    public bool? CreateNamespace
+    {
+        get
+        {
+            this._rawBodyData.Freeze();
+            return this._rawBodyData.GetNullableStruct<bool>("create_namespace");
+        }
+        init
+        {
+            if (value == null)
+            {
+                return;
+            }
+
+            this._rawBodyData.Set("create_namespace", value);
+        }
+    }
+
+    /// <summary>
     /// The filter specifying which documents to delete.
     /// </summary>
     public Filter? DeleteByFilter
