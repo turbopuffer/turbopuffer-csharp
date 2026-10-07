@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Frozen;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
@@ -93,6 +94,70 @@ public sealed record class QueryPerformance : JsonModel
         init { this._rawData.Set("server_total_ms", value); }
     }
 
+    /// <summary>
+    /// Time spent embedding text, in milliseconds. Only set when using a native
+    /// embedding model.
+    /// </summary>
+    public long? EmbeddingMs
+    {
+        get
+        {
+            this._rawData.Freeze();
+            return this._rawData.GetNullableStruct<long>("embedding_ms");
+        }
+        init
+        {
+            if (value == null)
+            {
+                return;
+            }
+
+            this._rawData.Set("embedding_ms", value);
+        }
+    }
+
+    /// <summary>
+    /// The number of tokens embedded. Only set when using a native embedding model.
+    /// </summary>
+    public long? EmbeddingTokens
+    {
+        get
+        {
+            this._rawData.Freeze();
+            return this._rawData.GetNullableStruct<long>("embedding_tokens");
+        }
+        init
+        {
+            if (value == null)
+            {
+                return;
+            }
+
+            this._rawData.Set("embedding_tokens", value);
+        }
+    }
+
+    /// <summary>
+    /// The timestamp of the last write operation that the query observed.
+    /// </summary>
+    public DateTimeOffset? LastIncludedWriteAt
+    {
+        get
+        {
+            this._rawData.Freeze();
+            return this._rawData.GetNullableStruct<DateTimeOffset>("last_included_write_at");
+        }
+        init
+        {
+            if (value == null)
+            {
+                return;
+            }
+
+            this._rawData.Set("last_included_write_at", value);
+        }
+    }
+
     /// <inheritdoc/>
     public override void Validate()
     {
@@ -102,6 +167,9 @@ public sealed record class QueryPerformance : JsonModel
         _ = this.ExhaustiveSearchCount;
         _ = this.QueryExecutionMs;
         _ = this.ServerTotalMs;
+        _ = this.EmbeddingMs;
+        _ = this.EmbeddingTokens;
+        _ = this.LastIncludedWriteAt;
     }
 
     public QueryPerformance() { }
