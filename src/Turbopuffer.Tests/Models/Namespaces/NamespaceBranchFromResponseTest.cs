@@ -21,7 +21,12 @@ public class NamespaceBranchFromResponseTest : TestBase
             RowsAffected = 0,
             DeletedIds = ["182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"],
             PatchedIds = ["182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"],
-            Performance = new(0),
+            Performance = new()
+            {
+                ServerTotalMs = 0,
+                EmbeddingMs = 0,
+                EmbeddingTokens = 0,
+            },
             RowsDeleted = 0,
             RowsPatched = 0,
             RowsRemaining = true,
@@ -39,7 +44,12 @@ public class NamespaceBranchFromResponseTest : TestBase
         JsonElement expectedStatus = JsonSerializer.SerializeToElement("OK");
         List<ID> expectedDeletedIds = ["182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"];
         List<ID> expectedPatchedIds = ["182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"];
-        WritePerformance expectedPerformance = new(0);
+        WritePerformance expectedPerformance = new()
+        {
+            ServerTotalMs = 0,
+            EmbeddingMs = 0,
+            EmbeddingTokens = 0,
+        };
         long expectedRowsDeleted = 0;
         long expectedRowsPatched = 0;
         bool expectedRowsRemaining = true;
@@ -89,7 +99,12 @@ public class NamespaceBranchFromResponseTest : TestBase
             RowsAffected = 0,
             DeletedIds = ["182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"],
             PatchedIds = ["182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"],
-            Performance = new(0),
+            Performance = new()
+            {
+                ServerTotalMs = 0,
+                EmbeddingMs = 0,
+                EmbeddingTokens = 0,
+            },
             RowsDeleted = 0,
             RowsPatched = 0,
             RowsRemaining = true,
@@ -120,7 +135,12 @@ public class NamespaceBranchFromResponseTest : TestBase
             RowsAffected = 0,
             DeletedIds = ["182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"],
             PatchedIds = ["182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"],
-            Performance = new(0),
+            Performance = new()
+            {
+                ServerTotalMs = 0,
+                EmbeddingMs = 0,
+                EmbeddingTokens = 0,
+            },
             RowsDeleted = 0,
             RowsPatched = 0,
             RowsRemaining = true,
@@ -145,7 +165,12 @@ public class NamespaceBranchFromResponseTest : TestBase
         JsonElement expectedStatus = JsonSerializer.SerializeToElement("OK");
         List<ID> expectedDeletedIds = ["182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"];
         List<ID> expectedPatchedIds = ["182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"];
-        WritePerformance expectedPerformance = new(0);
+        WritePerformance expectedPerformance = new()
+        {
+            ServerTotalMs = 0,
+            EmbeddingMs = 0,
+            EmbeddingTokens = 0,
+        };
         long expectedRowsDeleted = 0;
         long expectedRowsPatched = 0;
         bool expectedRowsRemaining = true;
@@ -195,7 +220,12 @@ public class NamespaceBranchFromResponseTest : TestBase
             RowsAffected = 0,
             DeletedIds = ["182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"],
             PatchedIds = ["182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"],
-            Performance = new(0),
+            Performance = new()
+            {
+                ServerTotalMs = 0,
+                EmbeddingMs = 0,
+                EmbeddingTokens = 0,
+            },
             RowsDeleted = 0,
             RowsPatched = 0,
             RowsRemaining = true,
@@ -338,7 +368,12 @@ public class NamespaceBranchFromResponseTest : TestBase
             RowsAffected = 0,
             DeletedIds = ["182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"],
             PatchedIds = ["182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"],
-            Performance = new(0),
+            Performance = new()
+            {
+                ServerTotalMs = 0,
+                EmbeddingMs = 0,
+                EmbeddingTokens = 0,
+            },
             RowsDeleted = 0,
             RowsPatched = 0,
             RowsRemaining = true,
