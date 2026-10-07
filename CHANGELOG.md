@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.9.0](https://github.com/turbopuffer/turbopuffer-csharp/compare/v0.8.0...v0.9.0) (2026-10-07)
+
+
+### Features
+
+* stainless to stlc migration ([fd5b85a](https://github.com/turbopuffer/turbopuffer-csharp/commit/fd5b85af186c2cee7074e072f622c43dbacfdf2f))
+* stlc: qol fixes ([21174ba](https://github.com/turbopuffer/turbopuffer-csharp/commit/21174ba5ce6facf084bfdd41ffc3521b7c561fae))
+
 ## 0.8.0 (2026-09-18)
 
 Full Changelog: [v0.7.0...v0.8.0](https://github.com/turbopuffer/turbopuffer-csharp/compare/v0.7.0...v0.8.0)
