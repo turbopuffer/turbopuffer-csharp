@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Text.Json;
 using Turbopuffer.Core;
@@ -21,6 +22,9 @@ public class NamespaceQueryResponseTest : TestBase
                 ExhaustiveSearchCount = 0,
                 QueryExecutionMs = 0,
                 ServerTotalMs = 0,
+                EmbeddingMs = 0,
+                EmbeddingTokens = 0,
+                LastIncludedWriteAt = DateTimeOffset.Parse("2019-12-27T18:11:19.117Z"),
             },
             AggregationGroups =
             [
@@ -49,6 +53,9 @@ public class NamespaceQueryResponseTest : TestBase
             ExhaustiveSearchCount = 0,
             QueryExecutionMs = 0,
             ServerTotalMs = 0,
+            EmbeddingMs = 0,
+            EmbeddingTokens = 0,
+            LastIncludedWriteAt = DateTimeOffset.Parse("2019-12-27T18:11:19.117Z"),
         };
         List<Dictionary<string, JsonElement>> expectedAggregationGroups =
         [
@@ -110,6 +117,9 @@ public class NamespaceQueryResponseTest : TestBase
                 ExhaustiveSearchCount = 0,
                 QueryExecutionMs = 0,
                 ServerTotalMs = 0,
+                EmbeddingMs = 0,
+                EmbeddingTokens = 0,
+                LastIncludedWriteAt = DateTimeOffset.Parse("2019-12-27T18:11:19.117Z"),
             },
             AggregationGroups =
             [
@@ -148,6 +158,9 @@ public class NamespaceQueryResponseTest : TestBase
                 ExhaustiveSearchCount = 0,
                 QueryExecutionMs = 0,
                 ServerTotalMs = 0,
+                EmbeddingMs = 0,
+                EmbeddingTokens = 0,
+                LastIncludedWriteAt = DateTimeOffset.Parse("2019-12-27T18:11:19.117Z"),
             },
             AggregationGroups =
             [
@@ -183,6 +196,9 @@ public class NamespaceQueryResponseTest : TestBase
             ExhaustiveSearchCount = 0,
             QueryExecutionMs = 0,
             ServerTotalMs = 0,
+            EmbeddingMs = 0,
+            EmbeddingTokens = 0,
+            LastIncludedWriteAt = DateTimeOffset.Parse("2019-12-27T18:11:19.117Z"),
         };
         List<Dictionary<string, JsonElement>> expectedAggregationGroups =
         [
@@ -249,6 +265,9 @@ public class NamespaceQueryResponseTest : TestBase
                 ExhaustiveSearchCount = 0,
                 QueryExecutionMs = 0,
                 ServerTotalMs = 0,
+                EmbeddingMs = 0,
+                EmbeddingTokens = 0,
+                LastIncludedWriteAt = DateTimeOffset.Parse("2019-12-27T18:11:19.117Z"),
             },
             AggregationGroups =
             [
@@ -281,6 +300,9 @@ public class NamespaceQueryResponseTest : TestBase
                 ExhaustiveSearchCount = 0,
                 QueryExecutionMs = 0,
                 ServerTotalMs = 0,
+                EmbeddingMs = 0,
+                EmbeddingTokens = 0,
+                LastIncludedWriteAt = DateTimeOffset.Parse("2019-12-27T18:11:19.117Z"),
             },
         };
 
@@ -306,6 +328,9 @@ public class NamespaceQueryResponseTest : TestBase
                 ExhaustiveSearchCount = 0,
                 QueryExecutionMs = 0,
                 ServerTotalMs = 0,
+                EmbeddingMs = 0,
+                EmbeddingTokens = 0,
+                LastIncludedWriteAt = DateTimeOffset.Parse("2019-12-27T18:11:19.117Z"),
             },
         };
 
@@ -326,6 +351,9 @@ public class NamespaceQueryResponseTest : TestBase
                 ExhaustiveSearchCount = 0,
                 QueryExecutionMs = 0,
                 ServerTotalMs = 0,
+                EmbeddingMs = 0,
+                EmbeddingTokens = 0,
+                LastIncludedWriteAt = DateTimeOffset.Parse("2019-12-27T18:11:19.117Z"),
             },
 
             // Null should be interpreted as omitted for these properties
@@ -356,6 +384,9 @@ public class NamespaceQueryResponseTest : TestBase
                 ExhaustiveSearchCount = 0,
                 QueryExecutionMs = 0,
                 ServerTotalMs = 0,
+                EmbeddingMs = 0,
+                EmbeddingTokens = 0,
+                LastIncludedWriteAt = DateTimeOffset.Parse("2019-12-27T18:11:19.117Z"),
             },
 
             // Null should be interpreted as omitted for these properties
@@ -381,6 +412,9 @@ public class NamespaceQueryResponseTest : TestBase
                 ExhaustiveSearchCount = 0,
                 QueryExecutionMs = 0,
                 ServerTotalMs = 0,
+                EmbeddingMs = 0,
+                EmbeddingTokens = 0,
+                LastIncludedWriteAt = DateTimeOffset.Parse("2019-12-27T18:11:19.117Z"),
             },
             AggregationGroups =
             [
