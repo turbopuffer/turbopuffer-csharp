@@ -588,6 +588,20 @@ public sealed record class IndexUpdating : JsonModel
         init { this._rawData.Set("unindexed_bytes", value); }
     }
 
+    /// <summary>
+    /// The number of rows in the write-ahead log that have not yet been indexed.
+    /// Write backpressure is applied when this exceeds the unindexed row limit.
+    /// </summary>
+    public required long UnindexedRows
+    {
+        get
+        {
+            this._rawData.Freeze();
+            return this._rawData.GetNotNullStruct<long>("unindexed_rows");
+        }
+        init { this._rawData.Set("unindexed_rows", value); }
+    }
+
     /// <inheritdoc/>
     public override void Validate()
     {
@@ -596,6 +610,7 @@ public sealed record class IndexUpdating : JsonModel
             throw new TurbopufferInvalidDataException("Invalid value given for constant");
         }
         _ = this.UnindexedBytes;
+        _ = this.UnindexedRows;
     }
 
     public IndexUpdating()
@@ -628,13 +643,6 @@ public sealed record class IndexUpdating : JsonModel
     public static IndexUpdating FromRawUnchecked(IReadOnlyDictionary<string, JsonElement> rawData)
     {
         return new(FrozenDictionary.ToFrozenDictionary(rawData));
-    }
-
-    [SetsRequiredMembers]
-    public IndexUpdating(long unindexedBytes)
-        : this()
-    {
-        this.UnindexedBytes = unindexedBytes;
     }
 }
 
