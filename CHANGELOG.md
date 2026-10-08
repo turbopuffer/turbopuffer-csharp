@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.10.0](https://github.com/turbopuffer/turbopuffer-csharp/compare/v0.9.0...v0.10.0) (2026-10-08)
+
+
+### Features
+
+* embedding: openapi embedding stats ([7f56fd7](https://github.com/turbopuffer/turbopuffer-csharp/commit/7f56fd778dfdd6d9cb39b20844609317dc809f3f))
+* metadata: expose unindexed_rows in index status ([08988b9](https://github.com/turbopuffer/turbopuffer-csharp/commit/08988b9d58b81bbe3583b00edf299c21a8069344))
+
 ## [0.9.0](https://github.com/turbopuffer/turbopuffer-csharp/compare/v0.8.0...v0.9.0) (2026-10-07)
 
 
