@@ -21,6 +21,8 @@ public class NamespaceMultiQueryResponseTest : TestBase
                 ExhaustiveSearchCount = 0,
                 QueryExecutionMs = 0,
                 ServerTotalMs = 0,
+                EmbeddingMs = 0,
+                EmbeddingTokens = 0,
             },
             Results =
             [
@@ -58,6 +60,8 @@ public class NamespaceMultiQueryResponseTest : TestBase
             ExhaustiveSearchCount = 0,
             QueryExecutionMs = 0,
             ServerTotalMs = 0,
+            EmbeddingMs = 0,
+            EmbeddingTokens = 0,
         };
         List<Result> expectedResults =
         [
@@ -101,6 +105,8 @@ public class NamespaceMultiQueryResponseTest : TestBase
                 ExhaustiveSearchCount = 0,
                 QueryExecutionMs = 0,
                 ServerTotalMs = 0,
+                EmbeddingMs = 0,
+                EmbeddingTokens = 0,
             },
             Results =
             [
@@ -148,6 +154,8 @@ public class NamespaceMultiQueryResponseTest : TestBase
                 ExhaustiveSearchCount = 0,
                 QueryExecutionMs = 0,
                 ServerTotalMs = 0,
+                EmbeddingMs = 0,
+                EmbeddingTokens = 0,
             },
             Results =
             [
@@ -192,6 +200,8 @@ public class NamespaceMultiQueryResponseTest : TestBase
             ExhaustiveSearchCount = 0,
             QueryExecutionMs = 0,
             ServerTotalMs = 0,
+            EmbeddingMs = 0,
+            EmbeddingTokens = 0,
         };
         List<Result> expectedResults =
         [
@@ -235,6 +245,8 @@ public class NamespaceMultiQueryResponseTest : TestBase
                 ExhaustiveSearchCount = 0,
                 QueryExecutionMs = 0,
                 ServerTotalMs = 0,
+                EmbeddingMs = 0,
+                EmbeddingTokens = 0,
             },
             Results =
             [
@@ -276,6 +288,8 @@ public class NamespaceMultiQueryResponseTest : TestBase
                 ExhaustiveSearchCount = 0,
                 QueryExecutionMs = 0,
                 ServerTotalMs = 0,
+                EmbeddingMs = 0,
+                EmbeddingTokens = 0,
             },
             Results =
             [
