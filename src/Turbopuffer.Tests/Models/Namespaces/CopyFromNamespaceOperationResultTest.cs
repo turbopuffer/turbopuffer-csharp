@@ -25,7 +25,12 @@ public class CopyFromNamespaceOperationResultTest : TestBase
                 RowsAffected = 0,
                 DeletedIds = ["182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"],
                 PatchedIds = ["182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"],
-                Performance = new(0),
+                Performance = new()
+                {
+                    ServerTotalMs = 0,
+                    EmbeddingMs = 0,
+                    EmbeddingTokens = 0,
+                },
                 RowsDeleted = 0,
                 RowsPatched = 0,
                 RowsRemaining = true,
@@ -64,7 +69,12 @@ public class CopyFromNamespaceOperationResultTest : TestBase
                 RowsAffected = 0,
                 DeletedIds = ["182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"],
                 PatchedIds = ["182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"],
-                Performance = new(0),
+                Performance = new()
+                {
+                    ServerTotalMs = 0,
+                    EmbeddingMs = 0,
+                    EmbeddingTokens = 0,
+                },
                 RowsDeleted = 0,
                 RowsPatched = 0,
                 RowsRemaining = true,
@@ -119,7 +129,12 @@ public class SuccessTest : TestBase
                 RowsAffected = 0,
                 DeletedIds = ["182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"],
                 PatchedIds = ["182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"],
-                Performance = new(0),
+                Performance = new()
+                {
+                    ServerTotalMs = 0,
+                    EmbeddingMs = 0,
+                    EmbeddingTokens = 0,
+                },
                 RowsDeleted = 0,
                 RowsPatched = 0,
                 RowsRemaining = true,
@@ -139,7 +154,12 @@ public class SuccessTest : TestBase
             RowsAffected = 0,
             DeletedIds = ["182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"],
             PatchedIds = ["182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"],
-            Performance = new(0),
+            Performance = new()
+            {
+                ServerTotalMs = 0,
+                EmbeddingMs = 0,
+                EmbeddingTokens = 0,
+            },
             RowsDeleted = 0,
             RowsPatched = 0,
             RowsRemaining = true,
@@ -170,7 +190,12 @@ public class SuccessTest : TestBase
                 RowsAffected = 0,
                 DeletedIds = ["182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"],
                 PatchedIds = ["182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"],
-                Performance = new(0),
+                Performance = new()
+                {
+                    ServerTotalMs = 0,
+                    EmbeddingMs = 0,
+                    EmbeddingTokens = 0,
+                },
                 RowsDeleted = 0,
                 RowsPatched = 0,
                 RowsRemaining = true,
@@ -205,7 +230,12 @@ public class SuccessTest : TestBase
                 RowsAffected = 0,
                 DeletedIds = ["182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"],
                 PatchedIds = ["182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"],
-                Performance = new(0),
+                Performance = new()
+                {
+                    ServerTotalMs = 0,
+                    EmbeddingMs = 0,
+                    EmbeddingTokens = 0,
+                },
                 RowsDeleted = 0,
                 RowsPatched = 0,
                 RowsRemaining = true,
@@ -232,7 +262,12 @@ public class SuccessTest : TestBase
             RowsAffected = 0,
             DeletedIds = ["182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"],
             PatchedIds = ["182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"],
-            Performance = new(0),
+            Performance = new()
+            {
+                ServerTotalMs = 0,
+                EmbeddingMs = 0,
+                EmbeddingTokens = 0,
+            },
             RowsDeleted = 0,
             RowsPatched = 0,
             RowsRemaining = true,
@@ -263,7 +298,12 @@ public class SuccessTest : TestBase
                 RowsAffected = 0,
                 DeletedIds = ["182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"],
                 PatchedIds = ["182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"],
-                Performance = new(0),
+                Performance = new()
+                {
+                    ServerTotalMs = 0,
+                    EmbeddingMs = 0,
+                    EmbeddingTokens = 0,
+                },
                 RowsDeleted = 0,
                 RowsPatched = 0,
                 RowsRemaining = true,
@@ -295,7 +335,12 @@ public class SuccessTest : TestBase
                 RowsAffected = 0,
                 DeletedIds = ["182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"],
                 PatchedIds = ["182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"],
-                Performance = new(0),
+                Performance = new()
+                {
+                    ServerTotalMs = 0,
+                    EmbeddingMs = 0,
+                    EmbeddingTokens = 0,
+                },
                 RowsDeleted = 0,
                 RowsPatched = 0,
                 RowsRemaining = true,

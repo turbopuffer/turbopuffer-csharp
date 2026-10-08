@@ -21,6 +21,8 @@ public class NamespaceQueryResponseTest : TestBase
                 ExhaustiveSearchCount = 0,
                 QueryExecutionMs = 0,
                 ServerTotalMs = 0,
+                EmbeddingMs = 0,
+                EmbeddingTokens = 0,
             },
             AggregationGroups =
             [
@@ -49,6 +51,8 @@ public class NamespaceQueryResponseTest : TestBase
             ExhaustiveSearchCount = 0,
             QueryExecutionMs = 0,
             ServerTotalMs = 0,
+            EmbeddingMs = 0,
+            EmbeddingTokens = 0,
         };
         List<Dictionary<string, JsonElement>> expectedAggregationGroups =
         [
@@ -110,6 +114,8 @@ public class NamespaceQueryResponseTest : TestBase
                 ExhaustiveSearchCount = 0,
                 QueryExecutionMs = 0,
                 ServerTotalMs = 0,
+                EmbeddingMs = 0,
+                EmbeddingTokens = 0,
             },
             AggregationGroups =
             [
@@ -148,6 +154,8 @@ public class NamespaceQueryResponseTest : TestBase
                 ExhaustiveSearchCount = 0,
                 QueryExecutionMs = 0,
                 ServerTotalMs = 0,
+                EmbeddingMs = 0,
+                EmbeddingTokens = 0,
             },
             AggregationGroups =
             [
@@ -183,6 +191,8 @@ public class NamespaceQueryResponseTest : TestBase
             ExhaustiveSearchCount = 0,
             QueryExecutionMs = 0,
             ServerTotalMs = 0,
+            EmbeddingMs = 0,
+            EmbeddingTokens = 0,
         };
         List<Dictionary<string, JsonElement>> expectedAggregationGroups =
         [
@@ -249,6 +259,8 @@ public class NamespaceQueryResponseTest : TestBase
                 ExhaustiveSearchCount = 0,
                 QueryExecutionMs = 0,
                 ServerTotalMs = 0,
+                EmbeddingMs = 0,
+                EmbeddingTokens = 0,
             },
             AggregationGroups =
             [
@@ -281,6 +293,8 @@ public class NamespaceQueryResponseTest : TestBase
                 ExhaustiveSearchCount = 0,
                 QueryExecutionMs = 0,
                 ServerTotalMs = 0,
+                EmbeddingMs = 0,
+                EmbeddingTokens = 0,
             },
         };
 
@@ -306,6 +320,8 @@ public class NamespaceQueryResponseTest : TestBase
                 ExhaustiveSearchCount = 0,
                 QueryExecutionMs = 0,
                 ServerTotalMs = 0,
+                EmbeddingMs = 0,
+                EmbeddingTokens = 0,
             },
         };
 
@@ -326,6 +342,8 @@ public class NamespaceQueryResponseTest : TestBase
                 ExhaustiveSearchCount = 0,
                 QueryExecutionMs = 0,
                 ServerTotalMs = 0,
+                EmbeddingMs = 0,
+                EmbeddingTokens = 0,
             },
 
             // Null should be interpreted as omitted for these properties
@@ -356,6 +374,8 @@ public class NamespaceQueryResponseTest : TestBase
                 ExhaustiveSearchCount = 0,
                 QueryExecutionMs = 0,
                 ServerTotalMs = 0,
+                EmbeddingMs = 0,
+                EmbeddingTokens = 0,
             },
 
             // Null should be interpreted as omitted for these properties
@@ -381,6 +401,8 @@ public class NamespaceQueryResponseTest : TestBase
                 ExhaustiveSearchCount = 0,
                 QueryExecutionMs = 0,
                 ServerTotalMs = 0,
+                EmbeddingMs = 0,
+                EmbeddingTokens = 0,
             },
             AggregationGroups =
             [
