@@ -534,7 +534,11 @@ public class IndexTest : TestBase
     [Fact]
     public void UpdatingValidationWorks()
     {
-        Namespaces::Index value = new Namespaces::IndexUpdating(0);
+        Namespaces::Index value = new Namespaces::IndexUpdating()
+        {
+            UnindexedBytes = 0,
+            UnindexedRows = 0,
+        };
         value.Validate();
     }
 
@@ -554,7 +558,11 @@ public class IndexTest : TestBase
     [Fact]
     public void UpdatingSerializationRoundtripWorks()
     {
-        Namespaces::Index value = new Namespaces::IndexUpdating(0);
+        Namespaces::Index value = new Namespaces::IndexUpdating()
+        {
+            UnindexedBytes = 0,
+            UnindexedRows = 0,
+        };
         string element = JsonSerializer.Serialize(value, ModelBase.SerializerOptions);
         var deserialized = JsonSerializer.Deserialize<Namespaces::Index>(
             element,
@@ -661,19 +669,21 @@ public class IndexUpdatingTest : TestBase
     [Fact]
     public void FieldRoundtrip_Works()
     {
-        var model = new Namespaces::IndexUpdating { UnindexedBytes = 0 };
+        var model = new Namespaces::IndexUpdating { UnindexedBytes = 0, UnindexedRows = 0 };
 
         JsonElement expectedStatus = JsonSerializer.SerializeToElement("updating");
         long expectedUnindexedBytes = 0;
+        long expectedUnindexedRows = 0;
 
         Assert.True(JsonElement.DeepEquals(expectedStatus, model.Status));
         Assert.Equal(expectedUnindexedBytes, model.UnindexedBytes);
+        Assert.Equal(expectedUnindexedRows, model.UnindexedRows);
     }
 
     [Fact]
     public void SerializationRoundtrip_Works()
     {
-        var model = new Namespaces::IndexUpdating { UnindexedBytes = 0 };
+        var model = new Namespaces::IndexUpdating { UnindexedBytes = 0, UnindexedRows = 0 };
 
         string json = JsonSerializer.Serialize(model, ModelBase.SerializerOptions);
         var deserialized = JsonSerializer.Deserialize<Namespaces::IndexUpdating>(
@@ -687,7 +697,7 @@ public class IndexUpdatingTest : TestBase
     [Fact]
     public void FieldRoundtripThroughSerialization_Works()
     {
-        var model = new Namespaces::IndexUpdating { UnindexedBytes = 0 };
+        var model = new Namespaces::IndexUpdating { UnindexedBytes = 0, UnindexedRows = 0 };
 
         string element = JsonSerializer.Serialize(model, ModelBase.SerializerOptions);
         var deserialized = JsonSerializer.Deserialize<Namespaces::IndexUpdating>(
@@ -698,15 +708,17 @@ public class IndexUpdatingTest : TestBase
 
         JsonElement expectedStatus = JsonSerializer.SerializeToElement("updating");
         long expectedUnindexedBytes = 0;
+        long expectedUnindexedRows = 0;
 
         Assert.True(JsonElement.DeepEquals(expectedStatus, deserialized.Status));
         Assert.Equal(expectedUnindexedBytes, deserialized.UnindexedBytes);
+        Assert.Equal(expectedUnindexedRows, deserialized.UnindexedRows);
     }
 
     [Fact]
     public void Validation_Works()
     {
-        var model = new Namespaces::IndexUpdating { UnindexedBytes = 0 };
+        var model = new Namespaces::IndexUpdating { UnindexedBytes = 0, UnindexedRows = 0 };
 
         model.Validate();
     }
@@ -714,7 +726,7 @@ public class IndexUpdatingTest : TestBase
     [Fact]
     public void CopyConstructor_Works()
     {
-        var model = new Namespaces::IndexUpdating { UnindexedBytes = 0 };
+        var model = new Namespaces::IndexUpdating { UnindexedBytes = 0, UnindexedRows = 0 };
 
         Namespaces::IndexUpdating copied = new(model);
 

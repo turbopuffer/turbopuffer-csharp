@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Text.Json;
 using Turbopuffer.Core;
@@ -24,7 +23,6 @@ public class NamespaceMultiQueryResponseTest : TestBase
                 ServerTotalMs = 0,
                 EmbeddingMs = 0,
                 EmbeddingTokens = 0,
-                LastIncludedWriteAt = DateTimeOffset.Parse("2019-12-27T18:11:19.117Z"),
             },
             Results =
             [
@@ -64,7 +62,6 @@ public class NamespaceMultiQueryResponseTest : TestBase
             ServerTotalMs = 0,
             EmbeddingMs = 0,
             EmbeddingTokens = 0,
-            LastIncludedWriteAt = DateTimeOffset.Parse("2019-12-27T18:11:19.117Z"),
         };
         List<Result> expectedResults =
         [
@@ -110,7 +107,6 @@ public class NamespaceMultiQueryResponseTest : TestBase
                 ServerTotalMs = 0,
                 EmbeddingMs = 0,
                 EmbeddingTokens = 0,
-                LastIncludedWriteAt = DateTimeOffset.Parse("2019-12-27T18:11:19.117Z"),
             },
             Results =
             [
@@ -160,7 +156,6 @@ public class NamespaceMultiQueryResponseTest : TestBase
                 ServerTotalMs = 0,
                 EmbeddingMs = 0,
                 EmbeddingTokens = 0,
-                LastIncludedWriteAt = DateTimeOffset.Parse("2019-12-27T18:11:19.117Z"),
             },
             Results =
             [
@@ -207,7 +202,6 @@ public class NamespaceMultiQueryResponseTest : TestBase
             ServerTotalMs = 0,
             EmbeddingMs = 0,
             EmbeddingTokens = 0,
-            LastIncludedWriteAt = DateTimeOffset.Parse("2019-12-27T18:11:19.117Z"),
         };
         List<Result> expectedResults =
         [
@@ -253,7 +247,6 @@ public class NamespaceMultiQueryResponseTest : TestBase
                 ServerTotalMs = 0,
                 EmbeddingMs = 0,
                 EmbeddingTokens = 0,
-                LastIncludedWriteAt = DateTimeOffset.Parse("2019-12-27T18:11:19.117Z"),
             },
             Results =
             [
@@ -297,7 +290,6 @@ public class NamespaceMultiQueryResponseTest : TestBase
                 ServerTotalMs = 0,
                 EmbeddingMs = 0,
                 EmbeddingTokens = 0,
-                LastIncludedWriteAt = DateTimeOffset.Parse("2019-12-27T18:11:19.117Z"),
             },
             Results =
             [

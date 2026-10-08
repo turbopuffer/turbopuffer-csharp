@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Frozen;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
@@ -137,27 +136,6 @@ public sealed record class QueryPerformance : JsonModel
         }
     }
 
-    /// <summary>
-    /// The timestamp of the last write operation that the query observed.
-    /// </summary>
-    public DateTimeOffset? LastIncludedWriteAt
-    {
-        get
-        {
-            this._rawData.Freeze();
-            return this._rawData.GetNullableStruct<DateTimeOffset>("last_included_write_at");
-        }
-        init
-        {
-            if (value == null)
-            {
-                return;
-            }
-
-            this._rawData.Set("last_included_write_at", value);
-        }
-    }
-
     /// <inheritdoc/>
     public override void Validate()
     {
@@ -169,7 +147,6 @@ public sealed record class QueryPerformance : JsonModel
         _ = this.ServerTotalMs;
         _ = this.EmbeddingMs;
         _ = this.EmbeddingTokens;
-        _ = this.LastIncludedWriteAt;
     }
 
     public QueryPerformance() { }
