@@ -25,6 +25,7 @@ public abstract record class ModelBase
             new ApiEnumConverter<string, HighlightFragmentBy>(),
             new ApiEnumConverter<string, HighlightOffsetUnits>(),
             new ApiEnumConverter<string, Language>(),
+            new ApiEnumConverter<string, ReadOnlyOptimizeResponseStatus>(),
             new ApiEnumConverter<string, SparseDistanceMetric>(),
             new ApiEnumConverter<string, Tokenizer>(),
             new ApiEnumConverter<string, VectorEncoding>(),
