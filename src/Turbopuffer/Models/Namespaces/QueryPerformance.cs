@@ -93,6 +93,49 @@ public sealed record class QueryPerformance : JsonModel
         init { this._rawData.Set("server_total_ms", value); }
     }
 
+    /// <summary>
+    /// Time spent embedding text, in milliseconds. Only set when using a native
+    /// embedding model.
+    /// </summary>
+    public long? EmbeddingMs
+    {
+        get
+        {
+            this._rawData.Freeze();
+            return this._rawData.GetNullableStruct<long>("embedding_ms");
+        }
+        init
+        {
+            if (value == null)
+            {
+                return;
+            }
+
+            this._rawData.Set("embedding_ms", value);
+        }
+    }
+
+    /// <summary>
+    /// The number of tokens embedded. Only set when using a native embedding model.
+    /// </summary>
+    public long? EmbeddingTokens
+    {
+        get
+        {
+            this._rawData.Freeze();
+            return this._rawData.GetNullableStruct<long>("embedding_tokens");
+        }
+        init
+        {
+            if (value == null)
+            {
+                return;
+            }
+
+            this._rawData.Set("embedding_tokens", value);
+        }
+    }
+
     /// <inheritdoc/>
     public override void Validate()
     {
@@ -102,6 +145,8 @@ public sealed record class QueryPerformance : JsonModel
         _ = this.ExhaustiveSearchCount;
         _ = this.QueryExecutionMs;
         _ = this.ServerTotalMs;
+        _ = this.EmbeddingMs;
+        _ = this.EmbeddingTokens;
     }
 
     public QueryPerformance() { }
