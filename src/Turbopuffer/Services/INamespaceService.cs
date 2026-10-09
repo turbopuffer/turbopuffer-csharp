@@ -107,6 +107,14 @@ public interface INamespaceService
     );
 
     /// <summary>
+    /// Optimize a namespace for a read-only workload.
+    /// </summary>
+    Task<ReadOnlyOptimizeResponse> ReadOnlyOptimize(
+        NamespaceReadOnlyOptimizeParams parameters,
+        CancellationToken cancellationToken = default
+    );
+
+    /// <summary>
     /// Evaluate recall.
     /// </summary>
     Task<NamespaceRecallResponse> Recall(
@@ -255,6 +263,15 @@ public interface INamespaceServiceWithRawResponse
     /// </summary>
     Task<HttpResponse<NamespaceQueryResponse>> Query(
         NamespaceQueryParams parameters,
+        CancellationToken cancellationToken = default
+    );
+
+    /// <summary>
+    /// Returns a raw HTTP response for <c>post /v2/namespaces/{namespace}/read_only_optimize</c>, but is otherwise the
+    /// same as <see cref="INamespaceService.ReadOnlyOptimize(NamespaceReadOnlyOptimizeParams, CancellationToken)"/>.
+    /// </summary>
+    Task<HttpResponse<ReadOnlyOptimizeResponse>> ReadOnlyOptimize(
+        NamespaceReadOnlyOptimizeParams parameters,
         CancellationToken cancellationToken = default
     );
 

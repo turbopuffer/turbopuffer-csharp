@@ -156,6 +156,18 @@ public sealed class NamespaceService : INamespaceService
     }
 
     /// <inheritdoc/>
+    public async Task<ReadOnlyOptimizeResponse> ReadOnlyOptimize(
+        NamespaceReadOnlyOptimizeParams parameters,
+        CancellationToken cancellationToken = default
+    )
+    {
+        using var response = await this
+            .WithRawResponse.ReadOnlyOptimize(parameters, cancellationToken)
+            .ConfigureAwait(false);
+        return await response.Deserialize(cancellationToken).ConfigureAwait(false);
+    }
+
+    /// <inheritdoc/>
     public async Task<NamespaceRecallResponse> Recall(
         NamespaceRecallParams parameters,
         CancellationToken cancellationToken = default
@@ -598,6 +610,44 @@ public sealed class NamespaceServiceWithRawResponse : INamespaceServiceWithRawRe
                     deserializedResponse.Validate();
                 }
                 return deserializedResponse;
+            }
+        );
+    }
+
+    /// <inheritdoc/>
+    public async Task<HttpResponse<ReadOnlyOptimizeResponse>> ReadOnlyOptimize(
+        NamespaceReadOnlyOptimizeParams parameters,
+        CancellationToken cancellationToken = default
+    )
+    {
+        parameters = parameters with
+        {
+            Namespace = parameters.Namespace ?? this._client.DefaultNamespace,
+        };
+
+        if (parameters.Namespace == null)
+        {
+            throw new TurbopufferInvalidDataException("'parameters.Namespace' cannot be null");
+        }
+
+        HttpRequest<NamespaceReadOnlyOptimizeParams> request = new()
+        {
+            Method = HttpMethod.Post,
+            Params = parameters,
+        };
+        var response = await this._client.Execute(request, cancellationToken).ConfigureAwait(false);
+        return new(
+            response,
+            async (token) =>
+            {
+                var readOnlyOptimizeResponse = await response
+                    .Deserialize<ReadOnlyOptimizeResponse>(token)
+                    .ConfigureAwait(false);
+                if (this._client.ResponseValidation)
+                {
+                    readOnlyOptimizeResponse.Validate();
+                }
+                return readOnlyOptimizeResponse;
             }
         );
     }

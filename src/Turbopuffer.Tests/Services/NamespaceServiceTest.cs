@@ -125,6 +125,16 @@ public class NamespaceServiceTest : TestBase
     }
 
     [Fact(Skip = "Mock server tests are disabled")]
+    public async Task ReadOnlyOptimize_Works()
+    {
+        var readOnlyOptimizeResponse = await this.client.Namespaces1.ReadOnlyOptimize(
+            new() { Namespace = "namespace" },
+            TestContext.Current.CancellationToken
+        );
+        readOnlyOptimizeResponse.Validate();
+    }
+
+    [Fact(Skip = "Mock server tests are disabled")]
     public async Task Recall_Works()
     {
         var response = await this.client.Namespaces1.Recall(
