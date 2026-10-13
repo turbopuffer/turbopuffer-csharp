@@ -32,6 +32,12 @@ public class NamespaceQueryParamsTest : TestBase
             Limit = 0,
             Offset = 0,
             RankBy = new RankByRaw(JsonSerializer.Deserialize<JsonElement>("{}")),
+            RerankBy = new()
+            {
+                Attribute = "attribute",
+                Model = "model",
+                Query = "query",
+            },
             TopK = 0,
             VectorEncoding = VectorEncoding.Float,
         };
@@ -57,6 +63,12 @@ public class NamespaceQueryParamsTest : TestBase
         NamespaceQueryParamsLimit expectedLimit = 0;
         long expectedOffset = 0;
         JsonElement expectedRankBy = JsonSerializer.Deserialize<JsonElement>("{}");
+        RerankModelParams expectedRerankBy = new()
+        {
+            Attribute = "attribute",
+            Model = "model",
+            Query = "query",
+        };
         long expectedTopK = 0;
         ApiEnum<string, VectorEncoding> expectedVectorEncoding = VectorEncoding.Float;
 
@@ -112,6 +124,7 @@ public class NamespaceQueryParamsTest : TestBase
         Assert.Equal(expectedOffset, parameters.Offset);
         Assert.NotNull(parameters.RankBy);
         Assert.True(JsonElement.DeepEquals(expectedRankBy, ((RankByRaw)parameters.RankBy).Value));
+        Assert.Equal(expectedRerankBy, parameters.RerankBy);
         Assert.Equal(expectedTopK, parameters.TopK);
         Assert.Equal(expectedVectorEncoding, parameters.VectorEncoding);
     }
@@ -143,6 +156,8 @@ public class NamespaceQueryParamsTest : TestBase
         Assert.False(parameters.RawBodyData.ContainsKey("offset"));
         Assert.Null(parameters.RankBy);
         Assert.False(parameters.RawBodyData.ContainsKey("rank_by"));
+        Assert.Null(parameters.RerankBy);
+        Assert.False(parameters.RawBodyData.ContainsKey("rerank_by"));
         Assert.Null(parameters.TopK);
         Assert.False(parameters.RawBodyData.ContainsKey("top_k"));
         Assert.Null(parameters.VectorEncoding);
@@ -168,6 +183,7 @@ public class NamespaceQueryParamsTest : TestBase
             Limit = null,
             Offset = null,
             RankBy = null,
+            RerankBy = null,
             TopK = null,
             VectorEncoding = null,
         };
@@ -194,6 +210,8 @@ public class NamespaceQueryParamsTest : TestBase
         Assert.False(parameters.RawBodyData.ContainsKey("offset"));
         Assert.Null(parameters.RankBy);
         Assert.False(parameters.RawBodyData.ContainsKey("rank_by"));
+        Assert.Null(parameters.RerankBy);
+        Assert.False(parameters.RawBodyData.ContainsKey("rerank_by"));
         Assert.Null(parameters.TopK);
         Assert.False(parameters.RawBodyData.ContainsKey("top_k"));
         Assert.Null(parameters.VectorEncoding);
@@ -238,6 +256,12 @@ public class NamespaceQueryParamsTest : TestBase
             Limit = 0,
             Offset = 0,
             RankBy = new RankByRaw(JsonSerializer.Deserialize<JsonElement>("{}")),
+            RerankBy = new()
+            {
+                Attribute = "attribute",
+                Model = "model",
+                Query = "query",
+            },
             TopK = 0,
             VectorEncoding = VectorEncoding.Float,
         };

@@ -1590,6 +1590,8 @@ public abstract class RerankBy
     public static RerankByRrf Rrf() => new RerankByRrf();
 
     public static RerankByRrfWithParams Rrf(RrfParams f1) => new RerankByRrfWithParams(f1);
+
+    public static RerankByModel Model(RerankModelParams value) => new RerankByModel(value);
 }
 
 [JsonConverter(typeof(RerankByJsonConverter))]
@@ -1617,6 +1619,17 @@ internal sealed class RerankByJsonConverter : JsonConverter<RerankBy>
         RerankBy value,
         JsonSerializerOptions options
     ) => value.WriteJson(writer, options);
+}
+
+[JsonConverter(typeof(RerankByJsonConverter))]
+public sealed class RerankByModel(RerankModelParams value) : RerankBy
+{
+    public RerankModelParams Value { get; } = value;
+
+    internal override void WriteJson(Utf8JsonWriter writer, JsonSerializerOptions options)
+    {
+        JsonSerializer.Serialize(writer, this.Value, options);
+    }
 }
 
 [JsonConverter(typeof(RerankByJsonConverter))]
