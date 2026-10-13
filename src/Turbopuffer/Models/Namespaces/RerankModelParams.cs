@@ -28,7 +28,8 @@ public sealed record class RerankModelParams : JsonModel
     }
 
     /// <summary>
-    /// The reranking model to use.
+    /// The reranking model to use, e.g. `voyage/rerank-3`. See https://turbopuffer.com/docs/reranking#models
+    /// for the available models.
     /// </summary>
     public required string Model
     {
