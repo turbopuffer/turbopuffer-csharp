@@ -14,7 +14,7 @@ namespace Turbopuffer.Models.Namespaces;
 public sealed record class RerankModelParams : JsonModel
 {
     /// <summary>
-    /// The string attribute to score. Must be included in `include_attributes` in
+    /// Which string attribute to score. It must also be in `include_attributes` in
     /// every query.
     /// </summary>
     public required string Attribute
@@ -28,7 +28,7 @@ public sealed record class RerankModelParams : JsonModel
     }
 
     /// <summary>
-    /// The reranking model to use.
+    /// Which reranking model to use.
     /// </summary>
     public required string Model
     {
