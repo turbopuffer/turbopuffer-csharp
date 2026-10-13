@@ -28,7 +28,7 @@ public sealed record class RerankModelParams : JsonModel
     }
 
     /// <summary>
-    /// The reranking model to use.
+    /// Which reranking model to use.
     /// </summary>
     public required string Model
     {
