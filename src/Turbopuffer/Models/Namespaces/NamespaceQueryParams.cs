@@ -289,6 +289,27 @@ public record class NamespaceQueryParams : ParamsBase
     }
 
     /// <summary>
+    /// Rerank retrieved candidates with a model.
+    /// </summary>
+    public RerankModelParams? RerankBy
+    {
+        get
+        {
+            this._rawBodyData.Freeze();
+            return this._rawBodyData.GetNullableClass<RerankModelParams>("rerank_by");
+        }
+        init
+        {
+            if (value == null)
+            {
+                return;
+            }
+
+            this._rawBodyData.Set("rerank_by", value);
+        }
+    }
+
+    /// <summary>
     /// The number of results to return.
     /// </summary>
     public long? TopK
