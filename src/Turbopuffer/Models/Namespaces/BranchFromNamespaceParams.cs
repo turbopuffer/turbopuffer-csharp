@@ -264,6 +264,9 @@ sealed class BranchFromNamespaceParamsConverter : JsonConverter<BranchFromNamesp
     }
 }
 
+/// <summary>
+/// Configuration for branching from another namespace.
+/// </summary>
 [JsonConverter(
     typeof(JsonModelConverter<BranchFromNamespaceConfig, BranchFromNamespaceConfigFromRaw>)
 )]

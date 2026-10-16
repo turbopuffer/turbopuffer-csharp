@@ -10,7 +10,9 @@ using Turbopuffer.Core;
 namespace Turbopuffer.Models.Namespaces;
 
 /// <summary>
-/// The result of a query.
+/// The result of a query. With `aggregate_by`, `aggregations` maps each aggregation's
+/// label to its value. With `group_by` as well, `aggregation_groups` holds one object
+/// per group instead, with its group key and the value of each aggregation.
 /// </summary>
 [JsonConverter(typeof(JsonModelConverter<NamespaceQueryResponse, NamespaceQueryResponseFromRaw>))]
 public sealed record class NamespaceQueryResponse : JsonModel
@@ -85,6 +87,10 @@ public sealed record class NamespaceQueryResponse : JsonModel
         }
     }
 
+    /// <summary>
+    /// The documents that matched the query, ordered by `rank_by`. Only present when
+    /// `rank_by` is set.
+    /// </summary>
     public IReadOnlyList<Row>? Rows
     {
         get

@@ -10,7 +10,7 @@ using Turbopuffer.Exceptions;
 namespace Turbopuffer.Models.Namespaces;
 
 /// <summary>
-/// The response to a successful write request.
+/// The copy succeeded, with the result of its write.
 /// </summary>
 [JsonConverter(typeof(JsonModelConverter<WriteResult, WriteResultFromRaw>))]
 public sealed record class WriteResult : JsonModel
