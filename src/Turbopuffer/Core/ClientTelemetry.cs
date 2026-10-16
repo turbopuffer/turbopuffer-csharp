@@ -509,10 +509,15 @@ internal sealed class TelemetryObserver(TelemetryBuffer buffer) : RequestObserve
     sealed class Scope(TelemetryBuffer buffer, RequestInfo info) : RequestScope
     {
         // Kept for later attempts until one of them may have reached the server.
-        TelemetryBatch? _batch = buffer.Take();
+        TelemetryBatch? _batch;
 
         public override void AttemptBegin(int attempt, HttpRequestMessage request)
         {
+            // Taken only once a request is about to be sent, so one that fails before then can't lose it.
+            if (attempt == 0)
+            {
+                _batch = buffer.Take();
+            }
             if (_batch != null)
             {
                 request.Headers.Remove(ClientTelemetry.Header);

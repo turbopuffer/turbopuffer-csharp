@@ -124,6 +124,26 @@ public class TelemetryTest : IDisposable
     }
 
     [Fact]
+    public void RecordsAreTakenWhenTheFirstAttemptBegins()
+    {
+        var buffer = new TelemetryBuffer();
+        AddRecord(buffer, 200);
+        var scope = new TelemetryObserver(buffer).Start(
+            new RequestInfo(HttpMethod.Post, QueryPath)
+        )!;
+
+        // A request that fails before it's sent never takes them.
+        var held = buffer.Take();
+        Assert.NotNull(held);
+        buffer.Restore(held);
+
+        using var request = new HttpRequestMessage(HttpMethod.Post, "http://localhost" + QueryPath);
+        scope.AttemptBegin(0, request);
+        Assert.True(request.Headers.Contains(ClientTelemetry.Header));
+        Assert.Null(buffer.Take());
+    }
+
+    [Fact]
     public void FullBufferDropsOldestRecords()
     {
         var buffer = new TelemetryBuffer();
