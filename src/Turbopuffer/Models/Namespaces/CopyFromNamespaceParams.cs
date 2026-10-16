@@ -264,6 +264,9 @@ sealed class CopyFromNamespaceParamsConverter : JsonConverter<CopyFromNamespaceP
     }
 }
 
+/// <summary>
+/// Configuration for copying documents from another namespace.
+/// </summary>
 [JsonConverter(typeof(JsonModelConverter<CopyFromNamespaceConfig, CopyFromNamespaceConfigFromRaw>))]
 public sealed record class CopyFromNamespaceConfig : JsonModel
 {

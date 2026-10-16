@@ -43,6 +43,10 @@ public sealed record class NamespaceMultiQueryResponse : JsonModel
         init { this._rawData.Set("performance", value); }
     }
 
+    /// <summary>
+    /// The results of each subquery, in the same order as `queries`. With `rerank_by`,
+    /// a single result combining the subqueries' rows.
+    /// </summary>
     public required IReadOnlyList<Result> Results
     {
         get
@@ -108,6 +112,12 @@ class NamespaceMultiQueryResponseFromRaw : IFromRawJson<NamespaceMultiQueryRespo
     ) => NamespaceMultiQueryResponse.FromRawUnchecked(rawData);
 }
 
+/// <summary>
+/// The result of a query, or of one subquery of a multi-query. With `aggregate_by`,
+/// `aggregations` maps each aggregation's label to its value. With `group_by` as
+/// well, `aggregation_groups` holds one object per group instead, with its group
+/// key and the value of each aggregation.
+/// </summary>
 [JsonConverter(typeof(JsonModelConverter<Result, ResultFromRaw>))]
 public sealed record class Result : JsonModel
 {
@@ -164,6 +174,10 @@ public sealed record class Result : JsonModel
         }
     }
 
+    /// <summary>
+    /// The documents that matched the query, ordered by `rank_by`. Only present when
+    /// `rank_by` is set.
+    /// </summary>
     public IReadOnlyList<Row>? Rows
     {
         get

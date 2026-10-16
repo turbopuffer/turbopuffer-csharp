@@ -67,6 +67,9 @@ public sealed record class NamespaceMetadata : JsonModel
         init { this._rawData.Set("encryption", value); }
     }
 
+    /// <summary>
+    /// The state of the namespace's index.
+    /// </summary>
     public required global::Turbopuffer.Models.Namespaces.Index Index
     {
         get
@@ -235,6 +238,9 @@ class NamespaceMetadataFromRaw : IFromRawJson<NamespaceMetadata>
         NamespaceMetadata.FromRawUnchecked(rawData);
 }
 
+/// <summary>
+/// The state of the namespace's index.
+/// </summary>
 [JsonConverter(typeof(IndexConverter))]
 public record class Index : ModelBase
 {
@@ -486,6 +492,9 @@ sealed class IndexConverter : JsonConverter<global::Turbopuffer.Models.Namespace
     }
 }
 
+/// <summary>
+/// Every document in the namespace is indexed.
+/// </summary>
 [JsonConverter(typeof(IndexUpToDateConverter))]
 public record class IndexUpToDate
 {
@@ -561,6 +570,9 @@ class IndexUpToDateConverter : JsonConverter<IndexUpToDate>
     }
 }
 
+/// <summary>
+/// Some documents are in the write-ahead log and haven't been indexed yet.
+/// </summary>
 [JsonConverter(typeof(JsonModelConverter<IndexUpdating, IndexUpdatingFromRaw>))]
 public sealed record class IndexUpdating : JsonModel
 {
