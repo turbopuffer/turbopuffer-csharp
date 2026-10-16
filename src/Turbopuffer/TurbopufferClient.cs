@@ -371,8 +371,8 @@ public sealed class TurbopufferClientWithRawResponse : ITurbopufferClientWithRaw
             requestMessage.Headers.Add("x-stainless-retry-count", retryCount.ToString());
         }
         // Telemetry reports compression between these marks, which are equal without it.
-        var compressStart = Timings.Now();
-        var compressEnd = compressStart;
+        var compressBegin = Timings.Now();
+        var compressEnd = compressBegin;
         if (this._options.Compression)
         {
             // Gzip-compress the request body so it is uploaded compressed.
@@ -392,7 +392,7 @@ public sealed class TurbopufferClientWithRawResponse : ITurbopufferClientWithRaw
         }
         if (observation != null)
         {
-            observation.Timings.Extra["compress_start"] = compressStart;
+            observation.Timings.Extra["compress_begin"] = compressBegin;
             observation.Timings.Extra["compress_end"] = compressEnd;
         }
         using CancellationTokenSource timeoutCts = new(

@@ -208,12 +208,12 @@ sealed class Timings
     /// <summary>
     /// The attempt began, before the request was built.
     /// </summary>
-    public long? AttemptStart { get; set; }
+    public long? AttemptBegin { get; set; }
 
     /// <summary>
     /// Encoding the request body.
     /// </summary>
-    public long? SerializeStart { get; set; }
+    public long? SerializeBegin { get; set; }
 
     public long? SerializeEnd { get; set; }
 
@@ -225,14 +225,14 @@ sealed class Timings
     /// <summary>
     /// Opening a new connection: DNS, TCP and TLS. Null when an existing connection was used.
     /// </summary>
-    public long? ConnectStart { get; set; }
+    public long? ConnectBegin { get; set; }
 
     public long? ConnectEnd { get; set; }
 
     /// <summary>
     /// Writing the request headers and body.
     /// </summary>
-    public long? SendStart { get; set; }
+    public long? SendBegin { get; set; }
 
     public long? SendEnd { get; set; }
 
@@ -246,7 +246,7 @@ sealed class Timings
     /// <summary>
     /// Deserializing the response body, which is read in full first. Only on the final attempt.
     /// </summary>
-    public long? DeserializeStart { get; set; }
+    public long? DeserializeBegin { get; set; }
 
     public long? DeserializeEnd { get; set; }
 

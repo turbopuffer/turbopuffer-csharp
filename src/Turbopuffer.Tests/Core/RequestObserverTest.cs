@@ -54,18 +54,18 @@ public class RequestObserverTest : TestBase
         Assert.Same(parsed, result.Parsed);
         var timings = result.Timings;
         AssertOrdered(
-            timings.AttemptStart,
-            timings.SerializeStart,
+            timings.AttemptBegin,
+            timings.SerializeBegin,
             timings.SerializeEnd,
             timings.RequestReady,
             timings.ResponseHeaders,
             timings.BodyEnd,
-            timings.DeserializeStart,
+            timings.DeserializeBegin,
             timings.DeserializeEnd
         );
         // A custom HTTP client's connections aren't observed.
-        Assert.Null(timings.ConnectStart);
-        Assert.Null(timings.SendStart);
+        Assert.Null(timings.ConnectBegin);
+        Assert.Null(timings.SendBegin);
         Assert.Null(timings.Reused);
     }
 
@@ -388,9 +388,9 @@ public class RequestObserverTest : TestBase
         Assert.False(first.Reused);
         AssertOrdered(
             first.RequestReady,
-            first.ConnectStart,
+            first.ConnectBegin,
             first.ConnectEnd,
-            first.SendStart,
+            first.SendBegin,
             first.SendEnd,
             first.ResponseHeaders,
             first.BodyEnd
@@ -398,11 +398,11 @@ public class RequestObserverTest : TestBase
 
         var second = recorder.Results[1].Timings;
         Assert.True(second.Reused);
-        Assert.Null(second.ConnectStart);
+        Assert.Null(second.ConnectBegin);
         Assert.Null(second.ConnectEnd);
         AssertOrdered(
             second.RequestReady,
-            second.SendStart,
+            second.SendBegin,
             second.SendEnd,
             second.ResponseHeaders
         );

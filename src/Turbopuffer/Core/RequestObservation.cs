@@ -114,7 +114,7 @@ sealed class RequestObservation
         var content = parameters.BodyContent();
         if (content != null)
         {
-            observation.Timings.SerializeStart = start;
+            observation.Timings.SerializeBegin = start;
             observation.Timings.SerializeEnd = Timings.Now();
         }
         return content;
@@ -131,7 +131,7 @@ sealed class RequestObservation
         _attempt = attempt;
         _request = null;
         _response = null;
-        _current.Timings.AttemptStart = Timings.Now();
+        _current.Timings.AttemptBegin = Timings.Now();
     }
 
     internal void BeforeSend(HttpRequestMessage request)
@@ -211,7 +211,7 @@ sealed class RequestObservation
         this.BodyRead();
         if (_finished == 0)
         {
-            this.Timings.DeserializeStart = Timings.Now();
+            this.Timings.DeserializeBegin = Timings.Now();
         }
         return buffer;
     }
@@ -242,7 +242,7 @@ sealed class RequestObservation
                 kind = _attemptErrorKind;
             }
             // Failing after the whole body was read means it couldn't be deserialized.
-            else if (this.Timings.DeserializeStart != null && !canceled)
+            else if (this.Timings.DeserializeBegin != null && !canceled)
             {
                 kind = ErrorKind.Other;
             }
@@ -263,7 +263,7 @@ sealed class RequestObservation
         var attempt = _current;
         attempt.Complete();
         var timings = attempt.Timings;
-        if (timings.DeserializeStart != null)
+        if (timings.DeserializeBegin != null)
         {
             timings.DeserializeEnd = Timings.Now();
         }
@@ -419,7 +419,7 @@ sealed class AttemptState
 
     int _writing;
 
-    long? _pendingConnectStart;
+    long? _pendingConnectBegin;
 #endif
 
     internal Timings Timings { get; } = new();
@@ -447,7 +447,7 @@ sealed class AttemptState
             {
                 return _writing > 0 ? AttemptPhase.Write : AttemptPhase.Read;
             }
-            if (this.Timings.ConnectStart != null && this.Timings.ConnectEnd == null)
+            if (this.Timings.ConnectBegin != null && this.Timings.ConnectEnd == null)
             {
                 return AttemptPhase.Connect;
             }
@@ -477,10 +477,10 @@ sealed class AttemptState
     {
         lock (_lock)
         {
-            _pendingConnectStart = at;
+            _pendingConnectBegin = at;
             if (!_done && _connection == null)
             {
-                this.Timings.ConnectStart = at;
+                this.Timings.ConnectBegin = at;
                 this.Timings.ConnectEnd = null;
             }
         }
@@ -493,11 +493,11 @@ sealed class AttemptState
     {
         lock (_lock)
         {
-            if (!_done && _connection == null && this.Timings.ConnectStart != null)
+            if (!_done && _connection == null && this.Timings.ConnectBegin != null)
             {
                 this.Timings.ConnectEnd = at;
             }
-            return _pendingConnectStart ?? at;
+            return _pendingConnectBegin ?? at;
         }
     }
 
@@ -518,9 +518,9 @@ sealed class AttemptState
             _connection = connection;
             var reused = !connection.Claim();
             this.Timings.Reused = reused;
-            this.Timings.ConnectStart = reused ? null : connection.ConnectStart;
+            this.Timings.ConnectBegin = reused ? null : connection.ConnectBegin;
             this.Timings.ConnectEnd = reused ? null : connection.ConnectEnd;
-            this.Timings.SendStart = at;
+            this.Timings.SendBegin = at;
             this.Timings.SendEnd = null;
         }
     }
@@ -705,14 +705,14 @@ sealed class ObservedConnection : Stream
     readonly Stream _inner;
     int _claimed;
 
-    internal ObservedConnection(Stream inner, long connectStart, long connectEnd)
+    internal ObservedConnection(Stream inner, long connectBegin, long connectEnd)
     {
         _inner = inner;
-        this.ConnectStart = connectStart;
+        this.ConnectBegin = connectBegin;
         this.ConnectEnd = connectEnd;
     }
 
-    internal long ConnectStart { get; }
+    internal long ConnectBegin { get; }
 
     internal long ConnectEnd { get; }
 

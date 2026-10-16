@@ -243,15 +243,15 @@ public class TelemetryTest : IDisposable
     {
         var newConnection = new Timings
         {
-            AttemptStart = 0,
+            AttemptBegin = 0,
             RequestReady = 50,
-            ConnectStart = 150,
+            ConnectBegin = 150,
             ConnectEnd = 400,
-            SendStart = 410,
+            SendBegin = 410,
             SendEnd = 500,
             ResponseHeaders = 900,
         };
-        newConnection.Extra["compress_start"] = 60;
+        newConnection.Extra["compress_begin"] = 60;
         newConnection.Extra["compress_end"] = 100;
         var durations = ClientTelemetry
             .ComputeDurations(newConnection, 1000)
@@ -264,9 +264,9 @@ public class TelemetryTest : IDisposable
 
         var reusedConnection = new Timings
         {
-            AttemptStart = 0,
+            AttemptBegin = 0,
             RequestReady = 100,
-            SendStart = 130,
+            SendBegin = 130,
             SendEnd = 160,
             ResponseHeaders = 300,
         };
@@ -283,7 +283,7 @@ public class TelemetryTest : IDisposable
         // Untraced requests, such as through a custom HTTP client.
         Assert.Equal(
             [("total", 400L)],
-            ClientTelemetry.ComputeDurations(new Timings { AttemptStart = 0 }, 400)
+            ClientTelemetry.ComputeDurations(new Timings { AttemptBegin = 0 }, 400)
         );
     }
 

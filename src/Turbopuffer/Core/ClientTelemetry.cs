@@ -160,45 +160,45 @@ internal static partial class ClientTelemetry
     )
     {
         List<(string, long)> durations = [];
-        if (timings.AttemptStart is not { } attemptStart)
+        if (timings.AttemptBegin is not { } attemptBegin)
         {
             return durations;
         }
-        durations.Add(("total", end - attemptStart));
+        durations.Add(("total", end - attemptBegin));
 
         if (
-            timings.SerializeStart is { } serializeStart
+            timings.SerializeBegin is { } serializeBegin
             && timings.SerializeEnd is { } serializeEnd
         )
         {
-            durations.Add(("serialize", serializeEnd - serializeStart));
+            durations.Add(("serialize", serializeEnd - serializeBegin));
         }
 
-        long? compressStart = timings.Extra.TryGetValue("compress_start", out var start)
+        long? compressBegin = timings.Extra.TryGetValue("compress_begin", out var start)
             ? start
             : null;
         long? compressEnd = timings.Extra.TryGetValue("compress_end", out var stop) ? stop : null;
-        if (compressStart != null && compressEnd != null)
+        if (compressBegin != null && compressEnd != null)
         {
-            durations.Add(("compress", compressEnd.Value - compressStart.Value));
+            durations.Add(("compress", compressEnd.Value - compressBegin.Value));
         }
 
         // Waiting for a free connection, until connecting a new one or sending on a reused one.
-        var poolStart = compressEnd ?? timings.RequestReady;
-        var connectionReady = timings.ConnectStart ?? timings.SendStart;
-        if (poolStart != null && connectionReady != null)
+        var poolBegin = compressEnd ?? timings.RequestReady;
+        var connectionReady = timings.ConnectBegin ?? timings.SendBegin;
+        if (poolBegin != null && connectionReady != null)
         {
-            durations.Add(("pool", Math.Max(connectionReady.Value - poolStart.Value, 0)));
+            durations.Add(("pool", Math.Max(connectionReady.Value - poolBegin.Value, 0)));
         }
 
-        if (timings.ConnectStart is { } connectStart && timings.ConnectEnd is { } connectEnd)
+        if (timings.ConnectBegin is { } connectBegin && timings.ConnectEnd is { } connectEnd)
         {
-            durations.Add(("connect", connectEnd - connectStart));
+            durations.Add(("connect", connectEnd - connectBegin));
         }
 
-        if (timings.SendStart is { } sendStart && timings.SendEnd is { } sendEnd)
+        if (timings.SendBegin is { } sendBegin && timings.SendEnd is { } sendEnd)
         {
-            durations.Add(("send", sendEnd - sendStart));
+            durations.Add(("send", sendEnd - sendBegin));
         }
 
         // Covers the network round trip and the server. Some clients finish sending the body after
@@ -214,11 +214,11 @@ internal static partial class ClientTelemetry
         }
 
         if (
-            timings.DeserializeStart is { } deserializeStart
+            timings.DeserializeBegin is { } deserializeBegin
             && timings.DeserializeEnd is { } deserializeEnd
         )
         {
-            durations.Add(("deserialize", deserializeEnd - deserializeStart));
+            durations.Add(("deserialize", deserializeEnd - deserializeBegin));
         }
 
         return durations;
