@@ -293,6 +293,9 @@ sealed class CopyFromNamespaceOperationConverter : JsonConverter<CopyFromNamespa
     }
 }
 
+/// <summary>
+/// The copy is still in progress.
+/// </summary>
 [JsonConverter(typeof(JsonModelConverter<Running, RunningFromRaw>))]
 public sealed record class Running : JsonModel
 {
@@ -399,6 +402,9 @@ class RunningFromRaw : IFromRawJson<Running>
         Running.FromRawUnchecked(rawData);
 }
 
+/// <summary>
+/// The copy has finished, successfully or not.
+/// </summary>
 [JsonConverter(typeof(JsonModelConverter<Finished, FinishedFromRaw>))]
 public sealed record class Finished : JsonModel
 {
@@ -415,6 +421,9 @@ public sealed record class Finished : JsonModel
         init { this._rawData.Set("finish_time", value); }
     }
 
+    /// <summary>
+    /// The result of the copy.
+    /// </summary>
     public required CopyFromNamespaceOperationResult Result
     {
         get
