@@ -204,6 +204,10 @@ public record class NamespaceStartCopyFromParams : ParamsBase
         }.Uri;
     }
 
+    internal override string RelativeUrl(ClientOptions options) =>
+        string.Format("/v2/namespaces/{0}/async", this.Namespace)
+        + "?stainless_overload=startCopyFrom";
+
     internal override HttpContent? BodyContent()
     {
         // The API expects the body wrapped in a `copy_from_namespace` key.

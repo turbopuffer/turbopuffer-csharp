@@ -591,6 +591,9 @@ public record class NamespaceWriteParams : ParamsBase
         }.Uri;
     }
 
+    internal override string RelativeUrl(ClientOptions options) =>
+        string.Format("/v2/namespaces/{0}", this.Namespace);
+
     internal override HttpContent? BodyContent()
     {
         return new StringContent(

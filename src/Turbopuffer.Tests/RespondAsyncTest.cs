@@ -13,6 +13,7 @@ using Turbopuffer.Exceptions;
 
 namespace Turbopuffer.Tests;
 
+[Collection(nameof(RespondAsync))]
 public class RespondAsyncTest : TestBase, IDisposable
 {
     readonly TimeSpan _savedPollInterval;

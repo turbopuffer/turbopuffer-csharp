@@ -133,6 +133,9 @@ public record class NamespaceUpdateSchemaParams : ParamsBase
         }.Uri;
     }
 
+    internal override string RelativeUrl(ClientOptions options) =>
+        string.Format("/v1/namespaces/{0}/schema", this.Namespace);
+
     internal override HttpContent? BodyContent()
     {
         return new StringContent(
