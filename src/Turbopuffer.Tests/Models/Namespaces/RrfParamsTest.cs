@@ -10,9 +10,9 @@ public class RrfParamsTest : TestBase
     [Fact]
     public void FieldRoundtrip_Works()
     {
-        var model = new RrfParams { RankConstant = 0, Weights = [1] };
+        var model = new RrfParams { RankConstant = 1, Weights = [1] };
 
-        long expectedRankConstant = 0;
+        long expectedRankConstant = 1;
         List<float> expectedWeights = [1];
 
         Assert.Equal(expectedRankConstant, model.RankConstant);
@@ -27,7 +27,7 @@ public class RrfParamsTest : TestBase
     [Fact]
     public void SerializationRoundtrip_Works()
     {
-        var model = new RrfParams { RankConstant = 0, Weights = [1] };
+        var model = new RrfParams { RankConstant = 1, Weights = [1] };
 
         string json = JsonSerializer.Serialize(model, ModelBase.SerializerOptions);
         var deserialized = JsonSerializer.Deserialize<RrfParams>(json, ModelBase.SerializerOptions);
@@ -38,7 +38,7 @@ public class RrfParamsTest : TestBase
     [Fact]
     public void FieldRoundtripThroughSerialization_Works()
     {
-        var model = new RrfParams { RankConstant = 0, Weights = [1] };
+        var model = new RrfParams { RankConstant = 1, Weights = [1] };
 
         string element = JsonSerializer.Serialize(model, ModelBase.SerializerOptions);
         var deserialized = JsonSerializer.Deserialize<RrfParams>(
@@ -47,7 +47,7 @@ public class RrfParamsTest : TestBase
         );
         Assert.NotNull(deserialized);
 
-        long expectedRankConstant = 0;
+        long expectedRankConstant = 1;
         List<float> expectedWeights = [1];
 
         Assert.Equal(expectedRankConstant, deserialized.RankConstant);
@@ -62,7 +62,7 @@ public class RrfParamsTest : TestBase
     [Fact]
     public void Validation_Works()
     {
-        var model = new RrfParams { RankConstant = 0, Weights = [1] };
+        var model = new RrfParams { RankConstant = 1, Weights = [1] };
 
         model.Validate();
     }
@@ -118,7 +118,7 @@ public class RrfParamsTest : TestBase
     [Fact]
     public void CopyConstructor_Works()
     {
-        var model = new RrfParams { RankConstant = 0, Weights = [1] };
+        var model = new RrfParams { RankConstant = 1, Weights = [1] };
 
         RrfParams copied = new(model);
 
