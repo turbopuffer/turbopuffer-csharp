@@ -9,6 +9,9 @@ using Turbopuffer.Exceptions;
 
 namespace Turbopuffer.Models.Namespaces;
 
+/// <summary>
+/// The result of a finished copy operation.
+/// </summary>
 [JsonConverter(typeof(CopyFromNamespaceOperationResultConverter))]
 public record class CopyFromNamespaceOperationResult : ModelBase
 {
@@ -263,7 +266,7 @@ sealed class CopyFromNamespaceOperationResultConverter
 public sealed record class Success : JsonModel
 {
     /// <summary>
-    /// The response to a successful write request.
+    /// The copy succeeded, with the result of its write.
     /// </summary>
     public required WriteResult SuccessValue
     {
@@ -326,6 +329,9 @@ class SuccessFromRaw : IFromRawJson<Success>
 [JsonConverter(typeof(JsonModelConverter<Error, ErrorFromRaw>))]
 public sealed record class Error : JsonModel
 {
+    /// <summary>
+    /// The copy failed, with its error.
+    /// </summary>
     public required OperationError ErrorValue
     {
         get

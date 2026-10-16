@@ -32,6 +32,9 @@ public sealed record class NamespaceHintCacheWarmResponse : JsonModel
         init { this._rawData.Set("status", value); }
     }
 
+    /// <summary>
+    /// A message describing the result of the request.
+    /// </summary>
     public string? Message
     {
         get

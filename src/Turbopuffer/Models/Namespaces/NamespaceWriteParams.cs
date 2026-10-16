@@ -250,7 +250,7 @@ public record class NamespaceWriteParams : ParamsBase
     }
 
     /// <summary>
-    /// The patch and filter specifying which documents to patch.
+    /// Sets the attributes in `patch` on every document that matches `filters`.
     /// </summary>
     public PatchByFilter? PatchByFilter
     {
@@ -616,7 +616,7 @@ public record class NamespaceWriteParams : ParamsBase
 }
 
 /// <summary>
-/// The patch and filter specifying which documents to patch.
+/// Sets the attributes in `patch` on every document that matches `filters`.
 /// </summary>
 [JsonConverter(typeof(JsonModelConverter<PatchByFilter, PatchByFilterFromRaw>))]
 public sealed record class PatchByFilter : JsonModel

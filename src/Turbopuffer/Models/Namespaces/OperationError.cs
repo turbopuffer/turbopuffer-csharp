@@ -8,6 +8,9 @@ using Turbopuffer.Exceptions;
 
 namespace Turbopuffer.Models.Namespaces;
 
+/// <summary>
+/// The error of an asynchronous operation that failed.
+/// </summary>
 [JsonConverter(typeof(JsonModelConverter<OperationError, OperationErrorFromRaw>))]
 public sealed record class OperationError : JsonModel
 {

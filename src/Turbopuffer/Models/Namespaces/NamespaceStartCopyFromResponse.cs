@@ -7,6 +7,9 @@ using Turbopuffer.Core;
 
 namespace Turbopuffer.Models.Namespaces;
 
+/// <summary>
+/// The response to a successful request to start a copy.
+/// </summary>
 [JsonConverter(
     typeof(JsonModelConverter<
         NamespaceStartCopyFromResponse,
