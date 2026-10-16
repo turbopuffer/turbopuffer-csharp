@@ -128,6 +128,12 @@ class NamespaceRecallResponseFromRaw : IFromRawJson<NamespaceRecallResponse>
     ) => NamespaceRecallResponse.FromRawUnchecked(rawData);
 }
 
+/// <summary>
+/// One of the searches the evaluation ran: its query vector, sampled at random from
+/// the namespace's vectors unless `rank_by` is set, and the query's true nearest
+/// neighbors, found by exhaustive search. Recall compares these neighbors to the
+/// results of the approximate nearest neighbor (ANN) search.
+/// </summary>
 [JsonConverter(typeof(JsonModelConverter<GroundTruth, GroundTruthFromRaw>))]
 public sealed record class GroundTruth : JsonModel
 {
