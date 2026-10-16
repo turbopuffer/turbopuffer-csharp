@@ -234,14 +234,22 @@ sealed class RequestObservation
         // An error response is described by the response itself.
         if (error is not TurbopufferApiException)
         {
-            kind = ReferenceEquals(error, _attemptError)
-                ? _attemptErrorKind
-                : Classify(
-                    error,
-                    phase,
-                    cancellationToken.IsCancellationRequested
-                        || _cancellationToken.IsCancellationRequested
-                );
+            var canceled =
+                cancellationToken.IsCancellationRequested
+                || _cancellationToken.IsCancellationRequested;
+            if (ReferenceEquals(error, _attemptError))
+            {
+                kind = _attemptErrorKind;
+            }
+            // Failing after the whole body was read means it couldn't be deserialized.
+            else if (this.Timings.DeserializeStart != null && !canceled)
+            {
+                kind = ErrorKind.Other;
+            }
+            else
+            {
+                kind = Classify(error, phase, canceled);
+            }
         }
         this.End(response, null, error, kind);
     }

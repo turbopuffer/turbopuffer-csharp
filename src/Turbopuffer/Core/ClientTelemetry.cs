@@ -562,6 +562,7 @@ internal sealed class TelemetryObserver(TelemetryBuffer buffer) : RequestObserve
                 {
                     null => null,
                     ErrorKind.Canceled => "canceled",
+                    ErrorKind.Other => "other",
                     ErrorKind.PoolTimeout
                     or ErrorKind.ConnectTimeout
                     or ErrorKind.WriteTimeout

@@ -209,6 +209,33 @@ public class RequestObserverTest : TestBase
     }
 
     [Fact]
+    public async Task ClassifiesDeserializeFailures()
+    {
+        var recorder = new Recorder();
+        var client = this.ObservedClient(
+            recorder,
+            new StubHandler(
+                (_, _) =>
+                    Task.FromResult(
+                        new HttpResponseMessage(HttpStatusCode.OK)
+                        {
+                            Content = new StringContent(
+                                "not json",
+                                Encoding.UTF8,
+                                "application/json"
+                            ),
+                        }
+                    )
+            )
+        );
+
+        var response = await Send(client);
+        await Assert.ThrowsAnyAsync<Exception>(() => Deserialize(response));
+
+        Assert.Equal(ErrorKind.Other, Assert.Single(recorder.Results).ErrorKind);
+    }
+
+    [Fact]
     public async Task FinishesOnce()
     {
         var recorder = new Recorder();

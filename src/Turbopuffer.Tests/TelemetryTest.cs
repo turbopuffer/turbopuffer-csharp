@@ -497,6 +497,25 @@ public class TelemetryTest : IDisposable
     }
 
     [Fact]
+    public async Task ParseFailuresAreRecorded()
+    {
+        var handler = new StubHandler(
+            (_, _) => Task.FromResult(JsonResponse(HttpStatusCode.OK, "not json")),
+            (_, _) => Task.FromResult(QueryResponse())
+        );
+        var ns = TelemetryClient(handler)
+            .WithOptions(o => o with { MaxRetries = 0 })
+            .Namespace("my-ns");
+
+        await Assert.ThrowsAnyAsync<Exception>(() =>
+            ns.Query(new() { TopK = 1 }, TestContext.Current.CancellationToken)
+        );
+        await ns.Query(new() { TopK = 1 }, TestContext.Current.CancellationToken);
+
+        Assert.Equal([(200, "other")], StatusesAndErrors(handler.Requests[1]));
+    }
+
+    [Fact]
     public async Task FailuresAreRecorded()
     {
         var handler = new StubHandler(
