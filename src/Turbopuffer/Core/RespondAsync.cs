@@ -1,4 +1,5 @@
 using System;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -57,6 +58,7 @@ internal static class RespondAsync
         Uri location;
         using (response)
         {
+            await Drain(response, cancellationToken).ConfigureAwait(false);
             location = ExtractLocation(response, requestUrl);
         }
 
@@ -71,7 +73,11 @@ internal static class RespondAsync
         {
             if (timeout.Remaining() == TimeSpan.Zero)
             {
-                throw new TurbopufferIOException("request timed out");
+                // The inner timeout tells request observers why the request failed.
+                throw new TurbopufferIOException(
+                    "request timed out",
+                    new HttpRequestException("request timed out", new TimeoutException())
+                );
             }
 
             var pollClient = client.WithOptions(o => o with { Timeout = timeout.PollTimeout() });
@@ -84,7 +90,8 @@ internal static class RespondAsync
                     .ConfigureAwait(false);
                 if (resolved != null)
                 {
-                    return resolved;
+                    // The request ends with the operation's result rather than the 202.
+                    return response.Replace(resolved);
                 }
             }
 
@@ -161,7 +168,21 @@ internal static class RespondAsync
         && string.Equals(a.Host, b.Host, StringComparison.OrdinalIgnoreCase)
         && a.Port == b.Port;
 
-    static async Task<HttpResponse?> ResolvePollResponse(
+    // Reads the 202's body so that its request is timed like any other.
+    static async Task Drain(HttpResponse response, CancellationToken cancellationToken)
+    {
+        try
+        {
+            await response.ReadAsString(cancellationToken).ConfigureAwait(false);
+        }
+        catch (Exception e)
+            when (e is IOException or HttpRequestException or TurbopufferIOException)
+        {
+            // The body is ignored, so failing to read it doesn't fail the request.
+        }
+    }
+
+    static async Task<HttpResponseMessage?> ResolvePollResponse(
         HttpResponse response,
         CancellationToken cancellationToken
     )
@@ -169,12 +190,15 @@ internal static class RespondAsync
         PollBody? body;
         try
         {
-            using var stream = await response.ReadAsStream(cancellationToken).ConfigureAwait(false);
-            body = await JsonSerializer
-                .DeserializeAsync<PollBody>(stream, PollJsonOptions, cancellationToken)
+            // Deserialized like a typed response so that the poll finishes when observed.
+            body = await new HttpResponse<PollBody>(
+                response,
+                token => response.Deserialize<PollBody>(token)
+            )
+                .Deserialize(cancellationToken)
                 .ConfigureAwait(false);
         }
-        catch (JsonException e)
+        catch (Exception e) when (e is JsonException or TurbopufferInvalidDataException)
         {
             throw new TurbopufferException("malformed poll response", e);
         }
@@ -200,26 +224,33 @@ internal static class RespondAsync
             Content = new ByteArrayContent(Encoding.UTF8.GetBytes(payload)),
         };
         responseMessage.Content.Headers.ContentType = new MediaTypeHeaderValue("application/json");
-        return new HttpResponse { RawMessage = responseMessage };
+        return responseMessage;
     }
-
-    static readonly JsonSerializerOptions PollJsonOptions = new()
-    {
-        PropertyNameCaseInsensitive = true,
-    };
 
     record PollBody
     {
+        [JsonPropertyName("status")]
         public required string Status { get; init; }
+
+        [JsonPropertyName("result")]
         public PollResult? Result { get; init; }
     }
 
-    record PollResult(JsonElement? Success, PollError? Error);
+    record PollResult
+    {
+        [JsonPropertyName("success")]
+        public JsonElement? Success { get; init; }
+
+        [JsonPropertyName("error")]
+        public PollError? Error { get; init; }
+    }
 
     record PollError
     {
         [JsonPropertyName("status_code")]
         public required int StatusCode { get; init; }
+
+        [JsonPropertyName("detail")]
         public required JsonElement Detail { get; init; }
     }
 

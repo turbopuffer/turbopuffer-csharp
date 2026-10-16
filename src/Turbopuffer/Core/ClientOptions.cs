@@ -19,21 +19,46 @@ public record struct ClientOptions()
     /// </summary>
     public static readonly TimeSpan DefaultTimeout = TimeSpan.FromMinutes(1);
 
+    HttpClient? _httpClient;
+
+    /// <summary>
+    /// Shared by copies, so they share the default client.
+    /// </summary>
+    readonly DefaultHttpClient? _defaultHttpClient = new();
+
+    /// <summary>
+    /// Whether the default HTTP client was created for observed requests, or null
+    /// until it's created.
+    /// </summary>
+    internal readonly bool? DefaultHttpClientObserved
+    {
+        get { return _defaultHttpClient?.Observed; }
+    }
+
     /// <summary>
     /// The HTTP client to use for making requests in the SDK.
     ///
     /// <para>Note: The HttpClient has a built-in timeout, which defaults to 100 seconds.
     /// When passing a custom HttpClient, this timeout may conflict with the SDK's
     /// own timeout handler and cause premature cancellation.</para>
+    ///
+    /// <para>Defaults to a client created on first use, which copies of these options share.</para>
     /// </summary>
-    public HttpClient HttpClient { get; set; } =
-        // Automatic decompression is disabled so that the SDK fully controls the
-        // Accept-Encoding header (see <see cref="Compression"/>). Gzip responses
-        // are decompressed manually in HttpResponse.ReadAsStream.
-        new(new HttpClientHandler() { AutomaticDecompression = DecompressionMethods.None })
+    public HttpClient HttpClient
+    {
+        readonly get
         {
-            Timeout = global::System.Threading.Timeout.InfiniteTimeSpan,
-        };
+            // Automatic decompression is disabled so that the SDK fully controls the
+            // Accept-Encoding header (see <see cref="Compression"/>). Gzip responses
+            // are decompressed manually in HttpResponse.ReadAsStream.
+            return _httpClient
+                ?? (_defaultHttpClient ?? DefaultHttpClient.Fallback).Get(
+                    RequestObserver != null,
+                    DecompressionMethods.None
+                );
+        }
+        set { _httpClient = value; }
+    }
 
     Lazy<string> _baseUrl = new(() =>
         Environment.GetEnvironmentVariable("TURBOPUFFER_BASE_URL") ?? EnvironmentUrl.Production
@@ -148,6 +173,11 @@ public record struct ClientOptions()
     public string? DefaultNamespace { get; set; }
 
     /// <summary>
+    /// Observes the client's requests. Custom code installs it.
+    /// </summary>
+    internal RequestObserver? RequestObserver { get; set; }
+
+    /// <summary>
     /// Whether to gzip-compress requests and advertise gzip compression on responses.
     ///
     /// <para>Defaults to false. When set to true, the SDK gzip-compresses request bodies
@@ -157,4 +187,27 @@ public record struct ClientOptions()
     /// responses and leaves request bodies uncompressed.</para>
     /// </summary>
     public bool Compression { get; set; } = false;
+
+    /// <summary>
+    /// Whether to report client telemetry. When enabled, the client sends the timings of
+    /// completed requests to turbopuffer on later requests, to help diagnose performance.
+    ///
+    /// <para>Defaults to the <c>TURBOPUFFER_TELEMETRY</c> environment variable when null, which
+    /// enables it when set to 1, true, yes or on.</para>
+    /// </summary>
+    public bool? Telemetry { get; set; }
+
+    // Copies keep the resolved setting instead of reading the environment again.
+    readonly Lazy<bool> _telemetryFromEnvironment = new(() => ClientTelemetry.ResolveEnabled(null));
+
+    internal readonly bool TelemetryEnabled
+    {
+        get
+        {
+            // Null in default instances, which skip field initializers.
+            return this.Telemetry
+                ?? _telemetryFromEnvironment?.Value
+                ?? ClientTelemetry.ResolveEnabled(null);
+        }
+    }
 }

@@ -155,6 +155,8 @@ public record class ClientNamespacesParams : ParamsBase
         }.Uri;
     }
 
+    internal override string RelativeUrl(ClientOptions options) => "/v1/namespaces";
+
     internal override void AddHeadersToRequest(HttpRequestMessage request, ClientOptions options)
     {
         ParamsBase.AddDefaultHeaders(request, options);

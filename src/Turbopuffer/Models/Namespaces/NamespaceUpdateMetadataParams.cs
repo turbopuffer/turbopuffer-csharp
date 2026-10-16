@@ -164,6 +164,9 @@ public record class NamespaceUpdateMetadataParams : ParamsBase
         }.Uri;
     }
 
+    internal override string RelativeUrl(ClientOptions options) =>
+        string.Format("/v1/namespaces/{0}/metadata", this.Namespace);
+
     internal override HttpContent? BodyContent()
     {
         return new StringContent(

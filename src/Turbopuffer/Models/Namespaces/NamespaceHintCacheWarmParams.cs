@@ -106,6 +106,9 @@ public record class NamespaceHintCacheWarmParams : ParamsBase
         }.Uri;
     }
 
+    internal override string RelativeUrl(ClientOptions options) =>
+        string.Format("/v1/namespaces/{0}/hint_cache_warm", this.Namespace);
+
     internal override void AddHeadersToRequest(HttpRequestMessage request, ClientOptions options)
     {
         ParamsBase.AddDefaultHeaders(request, options);
