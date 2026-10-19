@@ -19,18 +19,43 @@ public record struct ClientOptions()
     /// </summary>
     public static readonly TimeSpan DefaultTimeout = TimeSpan.FromMinutes(1);
 
+    HttpClient? _httpClient;
+
+    /// <summary>
+    /// Shared by copies, so they share the default client.
+    /// </summary>
+    readonly DefaultHttpClient? _defaultHttpClient = new();
+
+    /// <summary>
+    /// Whether the default HTTP client was created for observed requests, or null
+    /// until it's created.
+    /// </summary>
+    internal readonly bool? DefaultHttpClientObserved
+    {
+        get { return _defaultHttpClient?.Observed; }
+    }
+
     /// <summary>
     /// The HTTP client to use for making requests in the SDK.
     ///
     /// <para>Note: The HttpClient has a built-in timeout, which defaults to 100 seconds.
     /// When passing a custom HttpClient, this timeout may conflict with the SDK's
     /// own timeout handler and cause premature cancellation.</para>
+    ///
+    /// <para>Defaults to a client created on first use, which copies of these options share.</para>
     /// </summary>
-    public HttpClient HttpClient { get; set; } =
-        new(new HttpClientHandler() { AutomaticDecompression = DecompressionMethods.Available })
+    public HttpClient HttpClient
+    {
+        readonly get
         {
-            Timeout = global::System.Threading.Timeout.InfiniteTimeSpan,
-        };
+            return _httpClient
+                ?? (_defaultHttpClient ?? DefaultHttpClient.Fallback).Get(
+                    RequestObserver != null,
+                    DecompressionMethods.Available
+                );
+        }
+        set { _httpClient = value; }
+    }
 
     Lazy<string> _baseUrl = new(() =>
         Environment.GetEnvironmentVariable("TURBOPUFFER_BASE_URL") ?? EnvironmentUrl.Production
@@ -143,4 +168,9 @@ public record struct ClientOptions()
     }
 
     public string? DefaultNamespace { get; set; }
+
+    /// <summary>
+    /// Observes the client's requests. Custom code installs it.
+    /// </summary>
+    internal RequestObserver? RequestObserver { get; set; }
 }

@@ -67,6 +67,12 @@ public abstract record class ParamsBase
 
     public abstract Uri Url(ClientOptions options);
 
+    /// <summary>
+    /// The URL of the request relative to the base URL. It keeps any query that's part of the API
+    /// path, but not query params.
+    /// </summary>
+    internal virtual string RelativeUrl(ClientOptions options) => this.Url(options).PathAndQuery;
+
     protected static void AddQueryElementToCollection(
         NameValueCollection collection,
         string key,

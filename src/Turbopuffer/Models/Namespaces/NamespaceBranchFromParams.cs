@@ -139,6 +139,9 @@ public record class NamespaceBranchFromParams : ParamsBase
         }.Uri;
     }
 
+    internal override string RelativeUrl(ClientOptions options) =>
+        string.Format("/v2/namespaces/{0}", this.Namespace) + "?stainless_overload=branchFrom";
+
     internal override HttpContent? BodyContent()
     {
         return new StringContent(

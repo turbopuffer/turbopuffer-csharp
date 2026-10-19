@@ -241,9 +241,26 @@ public sealed class TurbopufferClientWithRawResponse : ITurbopufferClientWithRaw
     }
 
     /// <inheritdoc/>
-    public async Task<HttpResponse> Execute<T>(
+    public Task<HttpResponse> Execute<T>(
         HttpRequest<T> request,
         CancellationToken cancellationToken = default
+    )
+        where T : ParamsBase
+    {
+        var observation = RequestObservation.Start(
+            this._options,
+            request.Method,
+            request.Params,
+            cancellationToken
+        );
+        var response = this.ExecuteWithRetries(request, observation, cancellationToken);
+        return observation == null ? response : observation.Track(response);
+    }
+
+    async Task<HttpResponse> ExecuteWithRetries<T>(
+        HttpRequest<T> request,
+        RequestObservation? observation,
+        CancellationToken cancellationToken
     )
         where T : ParamsBase
     {
@@ -254,11 +271,12 @@ public sealed class TurbopufferClientWithRawResponse : ITurbopufferClientWithRaw
             HttpResponse? response = null;
             try
             {
-                response = await ExecuteOnce(request, retries, cancellationToken)
+                response = await ExecuteOnce(request, retries, observation, cancellationToken)
                     .ConfigureAwait(false);
             }
             catch (Exception e)
             {
+                observation?.AttemptFailed(e);
                 if (++retries > maxRetries || !ShouldRetry(e))
                 {
                     throw;
@@ -298,16 +316,18 @@ public sealed class TurbopufferClientWithRawResponse : ITurbopufferClientWithRaw
     async Task<HttpResponse> ExecuteOnce<T>(
         HttpRequest<T> request,
         int retryCount,
+        RequestObservation? observation,
         CancellationToken cancellationToken = default
     )
         where T : ParamsBase
     {
+        observation?.StartAttempt(retryCount);
         using HttpRequestMessage requestMessage = new(
             request.Method,
             request.Params.Url(this._options)
         )
         {
-            Content = request.Params.BodyContent(),
+            Content = RequestObservation.Serialize(observation, request.Params),
         };
         request.Params.AddHeadersToRequest(requestMessage, this._options);
         if (!requestMessage.Headers.Contains("x-stainless-retry-count"))
@@ -321,6 +341,7 @@ public sealed class TurbopufferClientWithRawResponse : ITurbopufferClientWithRaw
             timeoutCts.Token,
             cancellationToken
         );
+        observation?.BeforeSend(requestMessage);
         HttpResponseMessage responseMessage;
         try
         {
@@ -336,7 +357,13 @@ public sealed class TurbopufferClientWithRawResponse : ITurbopufferClientWithRaw
         {
             throw new TurbopufferIOException("I/O exception", e);
         }
-        return new() { RawMessage = responseMessage, CancellationToken = cts.Token };
+        observation?.Responded(responseMessage);
+        return new()
+        {
+            RawMessage = responseMessage,
+            CancellationToken = cts.Token,
+            Observation = observation,
+        };
     }
 
     static TimeSpan ComputeRetryBackoff(int retries, HttpResponse? response)

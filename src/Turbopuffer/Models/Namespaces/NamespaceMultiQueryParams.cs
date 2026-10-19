@@ -255,6 +255,10 @@ public record class NamespaceMultiQueryParams : ParamsBase
         }.Uri;
     }
 
+    internal override string RelativeUrl(ClientOptions options) =>
+        string.Format("/v2/namespaces/{0}/query", this.Namespace)
+        + "?stainless_overload=multiQuery";
+
     internal override HttpContent? BodyContent()
     {
         return new StringContent(

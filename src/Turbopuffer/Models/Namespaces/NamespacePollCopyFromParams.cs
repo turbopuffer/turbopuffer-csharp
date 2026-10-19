@@ -118,6 +118,10 @@ public record class NamespacePollCopyFromParams : ParamsBase
         }.Uri;
     }
 
+    internal override string RelativeUrl(ClientOptions options) =>
+        string.Format("/v1/namespaces/{0}/operations/{1}", this.Namespace, this.Token)
+        + "?stainless_overload=pollCopyFrom";
+
     internal override void AddHeadersToRequest(HttpRequestMessage request, ClientOptions options)
     {
         ParamsBase.AddDefaultHeaders(request, options);

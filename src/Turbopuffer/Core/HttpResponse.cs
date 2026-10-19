@@ -33,6 +33,11 @@ public class HttpResponse : IDisposable
 
     public Threading::CancellationToken CancellationToken { get; init; } = default;
 
+    /// <summary>
+    /// The observation of the request this response belongs to, if it's observed.
+    /// </summary>
+    internal RequestObservation? Observation { get; init; }
+
     public IEnumerable<string> GetHeaderValues(string name) => RawMessage.Headers.GetValues(name);
 
     public bool TryGetHeaderValues(
@@ -62,12 +67,13 @@ public class HttpResponse : IDisposable
         );
         try
         {
+            var stream = await this.ReadAsStream(cts.Token).ConfigureAwait(false);
+            if (this.Observation != null)
+            {
+                stream = await this.Observation.ReadBody(stream, cts.Token).ConfigureAwait(false);
+            }
             return await JsonSerializer
-                    .DeserializeAsync<T>(
-                        await this.ReadAsStream(cts.Token).ConfigureAwait(false),
-                        ModelBase.SerializerOptions,
-                        cts.Token
-                    )
+                    .DeserializeAsync<T>(stream, ModelBase.SerializerOptions, cts.Token)
                     .ConfigureAwait(false)
                 ?? throw new TurbopufferInvalidDataException("Response cannot be null");
         }
@@ -96,11 +102,44 @@ public class HttpResponse : IDisposable
             this.CancellationToken,
             cancellationToken
         );
-        return await RawMessage.Content.ReadAsStringAsync(
+        var body = await RawMessage.Content.ReadAsStringAsync(
 #if NET
             cts.Token
 #endif
         ).ConfigureAwait(false);
+        this.Observation?.BodyRead();
+        return body;
+    }
+
+    /// <summary>
+    /// Returns a response that replaces this one as the response its request ends with, such as the
+    /// result of polling for an accepted request.
+    /// </summary>
+    internal HttpResponse Replace(HttpResponseMessage message)
+    {
+        this.Observation?.ReplaceResponse(message);
+        return new() { RawMessage = message, Observation = this.Observation };
+    }
+
+    /// <summary>
+    /// Finishes observing a request whose response has no body to deserialize.
+    /// </summary>
+    internal async Task Finish(Threading::CancellationToken cancellationToken = default)
+    {
+        if (this.Observation == null)
+        {
+            return;
+        }
+        try
+        {
+            await this.ReadAsString(cancellationToken).ConfigureAwait(false);
+        }
+        catch (Exception e)
+        {
+            this.Observation.Fail(e, this.RawMessage, AttemptPhase.Read, cancellationToken);
+            throw;
+        }
+        this.Observation.Finish(this.RawMessage, null);
     }
 
     public void Dispose()
@@ -128,15 +167,31 @@ public sealed class HttpResponse<T> : HttpResponse
     {
         this.RawMessage = response.RawMessage;
         this.CancellationToken = response.CancellationToken;
+        this.Observation = response.Observation;
     }
 
-    public Task<T> Deserialize(Threading::CancellationToken cancellationToken = default)
+    public async Task<T> Deserialize(Threading::CancellationToken cancellationToken = default)
     {
         using var cts = Threading::CancellationTokenSource.CreateLinkedTokenSource(
             this.CancellationToken,
             cancellationToken
         );
-        return this._deserialize(cts.Token);
+        if (this.Observation == null)
+        {
+            return await this._deserialize(cts.Token).ConfigureAwait(false);
+        }
+        T parsed;
+        try
+        {
+            parsed = await this._deserialize(cts.Token).ConfigureAwait(false);
+        }
+        catch (Exception e)
+        {
+            this.Observation.Fail(e, this.RawMessage, AttemptPhase.Read, cancellationToken);
+            throw;
+        }
+        this.Observation.Finish(this.RawMessage, parsed);
+        return parsed;
     }
 }
 
@@ -160,6 +215,7 @@ public sealed class StreamingHttpResponse<T> : HttpResponse
     {
         this.RawMessage = response.RawMessage;
         this.CancellationToken = response.CancellationToken;
+        this.Observation = response.Observation;
     }
 
     public async IAsyncEnumerable<T> Enumerate(
