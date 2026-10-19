@@ -102,13 +102,17 @@ public class HttpResponse : IDisposable
 
     public async Task<string> ReadAsString(Threading::CancellationToken cancellationToken = default)
     {
+        using var cts = Threading::CancellationTokenSource.CreateLinkedTokenSource(
+            this.CancellationToken,
+            cancellationToken
+        );
         // Read via ReadAsStream rather than Content.ReadAsStringAsync so that the
         // body is decompressed when the server returns Content-Encoding: gzip.
-        using var stream = await this.ReadAsStream(cancellationToken).ConfigureAwait(false);
+        using var stream = await this.ReadAsStream(cts.Token).ConfigureAwait(false);
         using var reader = new StreamReader(stream, Encoding.UTF8);
         var body = await reader.ReadToEndAsync(
 #if NET
-            cancellationToken
+            cts.Token
 #endif
         ).ConfigureAwait(false);
         this.Observation?.BodyRead();
