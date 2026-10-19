@@ -80,6 +80,13 @@ public sealed class TurbopufferClient : ITurbopufferClient
         init { this._options.Compression = value; }
     }
 
+    /// <inheritdoc/>
+    public bool? Telemetry
+    {
+        get { return this._options.Telemetry; }
+        init { this._options.Telemetry = value; }
+    }
+
     readonly Lazy<ITurbopufferClientWithRawResponse> _withRawResponse;
 
     /// <inheritdoc/>
@@ -212,6 +219,13 @@ public sealed class TurbopufferClientWithRawResponse : ITurbopufferClientWithRaw
     }
 
     /// <inheritdoc/>
+    public bool? Telemetry
+    {
+        get { return this._options.Telemetry; }
+        init { this._options.Telemetry = value; }
+    }
+
+    /// <inheritdoc/>
     public ITurbopufferClientWithRawResponse WithOptions(
         Func<ClientOptions, ClientOptions> modifier
     )
@@ -258,9 +272,26 @@ public sealed class TurbopufferClientWithRawResponse : ITurbopufferClientWithRaw
     }
 
     /// <inheritdoc/>
-    public async Task<HttpResponse> Execute<T>(
+    public Task<HttpResponse> Execute<T>(
         HttpRequest<T> request,
         CancellationToken cancellationToken = default
+    )
+        where T : ParamsBase
+    {
+        var observation = RequestObservation.Start(
+            this._options,
+            request.Method,
+            request.Params,
+            cancellationToken
+        );
+        var response = this.ExecuteWithRetries(request, observation, cancellationToken);
+        return observation == null ? response : observation.Track(response);
+    }
+
+    async Task<HttpResponse> ExecuteWithRetries<T>(
+        HttpRequest<T> request,
+        RequestObservation? observation,
+        CancellationToken cancellationToken
     )
         where T : ParamsBase
     {
@@ -271,11 +302,12 @@ public sealed class TurbopufferClientWithRawResponse : ITurbopufferClientWithRaw
             HttpResponse? response = null;
             try
             {
-                response = await ExecuteOnce(request, retries, cancellationToken)
+                response = await ExecuteOnce(request, retries, observation, cancellationToken)
                     .ConfigureAwait(false);
             }
             catch (Exception e)
             {
+                observation?.AttemptFailed(e);
                 if (++retries > maxRetries || !ShouldRetry(e))
                 {
                     throw;
@@ -319,16 +351,18 @@ public sealed class TurbopufferClientWithRawResponse : ITurbopufferClientWithRaw
     async Task<HttpResponse> ExecuteOnce<T>(
         HttpRequest<T> request,
         int retryCount,
+        RequestObservation? observation,
         CancellationToken cancellationToken = default
     )
         where T : ParamsBase
     {
+        observation?.StartAttempt(retryCount);
         using HttpRequestMessage requestMessage = new(
             request.Method,
             request.Params.Url(this._options)
         )
         {
-            Content = request.Params.BodyContent(),
+            Content = RequestObservation.Serialize(observation, request.Params),
         };
         request.Params.AddHeadersToRequest(requestMessage, this._options);
         RespondAsync.PrepareRequest(requestMessage);
@@ -336,12 +370,18 @@ public sealed class TurbopufferClientWithRawResponse : ITurbopufferClientWithRaw
         {
             requestMessage.Headers.Add("x-stainless-retry-count", retryCount.ToString());
         }
+        // Telemetry reports compression between these marks, which are equal without it.
+        var compressBegin = Timings.Now();
+        var compressEnd = compressBegin;
         if (this._options.Compression)
         {
             // Gzip-compress the request body so it is uploaded compressed.
             if (requestMessage.Content != null)
             {
-                requestMessage.Content = new GzipContent(requestMessage.Content);
+                requestMessage.Content = await GzipContent
+                    .Compress(requestMessage.Content)
+                    .ConfigureAwait(false);
+                compressEnd = Timings.Now();
             }
         }
         else if (!requestMessage.Headers.Contains("Accept-Encoding"))
@@ -350,6 +390,11 @@ public sealed class TurbopufferClientWithRawResponse : ITurbopufferClientWithRaw
             // the server from returning compressed responses.
             requestMessage.Headers.Add("Accept-Encoding", "identity");
         }
+        if (observation != null)
+        {
+            observation.Timings.Extra["compress_begin"] = compressBegin;
+            observation.Timings.Extra["compress_end"] = compressEnd;
+        }
         using CancellationTokenSource timeoutCts = new(
             this.Timeout ?? ClientOptions.DefaultTimeout
         );
@@ -357,6 +402,7 @@ public sealed class TurbopufferClientWithRawResponse : ITurbopufferClientWithRaw
             timeoutCts.Token,
             cancellationToken
         );
+        observation?.BeforeSend(requestMessage);
         HttpResponseMessage responseMessage;
         try
         {
@@ -372,7 +418,13 @@ public sealed class TurbopufferClientWithRawResponse : ITurbopufferClientWithRaw
         {
             throw new TurbopufferIOException("I/O exception", e);
         }
-        return new() { RawMessage = responseMessage, CancellationToken = cts.Token };
+        observation?.Responded(responseMessage);
+        return new()
+        {
+            RawMessage = responseMessage,
+            CancellationToken = cts.Token,
+            Observation = observation,
+        };
     }
 
     static TimeSpan ComputeRetryBackoff(int retries, HttpResponse? response)
@@ -478,6 +530,6 @@ public sealed class TurbopufferClientWithRawResponse : ITurbopufferClientWithRaw
     public TurbopufferClientWithRawResponse(ClientOptions options)
         : this()
     {
-        _options = options;
+        _options = ClientTelemetry.Install(options);
     }
 }

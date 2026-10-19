@@ -1,3 +1,4 @@
+using System;
 using System.IO;
 using System.IO.Compression;
 using System.Net;
@@ -7,44 +8,57 @@ using System.Threading.Tasks;
 namespace Turbopuffer.Core;
 
 /// <summary>
-/// Wraps an <see cref="HttpContent"/> and gzip-compresses it as it is written to
-/// the wire. The inner content's headers are copied through and
+/// An <see cref="HttpContent"/> gzip-compressed up front, so that compressing is timed apart from
+/// sending and the compressed length is known. The inner content's headers are copied through and
 /// <c>Content-Encoding: gzip</c> is added.
 /// </summary>
 sealed class GzipContent : HttpContent
 {
-    readonly HttpContent _inner;
+    readonly MemoryStream _compressed;
 
-    internal GzipContent(HttpContent inner)
+    GzipContent(HttpContent inner, MemoryStream compressed)
     {
-        _inner = inner;
+        _compressed = compressed;
         foreach (var header in inner.Headers)
         {
-            Headers.TryAddWithoutValidation(header.Key, header.Value);
+            // The compressed length replaces the inner one.
+            if (!string.Equals(header.Key, "Content-Length", StringComparison.OrdinalIgnoreCase))
+            {
+                Headers.TryAddWithoutValidation(header.Key, header.Value);
+            }
         }
-        // The compressed length is not known up front, so drop any inherited
-        // Content-Length and let the transport use chunked encoding.
-        Headers.ContentLength = null;
         Headers.ContentEncoding.Add("gzip");
     }
 
-    protected override async Task SerializeToStreamAsync(Stream stream, TransportContext? context)
+    /// <summary>
+    /// Compresses the inner content, which is disposed.
+    /// </summary>
+    internal static async Task<GzipContent> Compress(HttpContent inner)
     {
-        using var gzip = new GZipStream(stream, CompressionMode.Compress, leaveOpen: true);
-        await _inner.CopyToAsync(gzip).ConfigureAwait(false);
+        MemoryStream compressed = new();
+        using (GZipStream gzip = new(compressed, CompressionMode.Compress, leaveOpen: true))
+        {
+            await inner.CopyToAsync(gzip).ConfigureAwait(false);
+        }
+        GzipContent content = new(inner, compressed);
+        inner.Dispose();
+        return content;
     }
+
+    protected override Task SerializeToStreamAsync(Stream stream, TransportContext? context) =>
+        stream.WriteAsync(_compressed.GetBuffer(), 0, (int)_compressed.Length);
 
     protected override bool TryComputeLength(out long length)
     {
-        length = -1;
-        return false;
+        length = _compressed.Length;
+        return true;
     }
 
     protected override void Dispose(bool disposing)
     {
         if (disposing)
         {
-            _inner.Dispose();
+            _compressed.Dispose();
         }
         base.Dispose(disposing);
     }
