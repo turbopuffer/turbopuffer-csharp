@@ -1,5 +1,14 @@
 # Changelog
 
+## [0.12.0](https://github.com/turbopuffer/turbopuffer-csharp/compare/v0.11.0...v0.12.0) (2026-10-20)
+
+
+### Features
+
+* Listen via request observer and send client telemetry ([8a3f0ff](https://github.com/turbopuffer/turbopuffer-csharp/commit/8a3f0ff336882236f66cd44eb580723a6dac9ee8))
+* OpenAPI: Add missing descriptions to prettify docblocks in output SDKs ([748a5e9](https://github.com/turbopuffer/turbopuffer-csharp/commit/748a5e927fba4c542f27202fd06bde5d24414618))
+* OpenAPI: More unsigned ints for Rust to make `u64` ([22b38eb](https://github.com/turbopuffer/turbopuffer-csharp/commit/22b38eb6ce193f5d33ac592538b309d88c6da721))
+
 ## [0.11.0](https://github.com/turbopuffer/turbopuffer-csharp/compare/v0.10.0...v0.11.0) (2026-10-13)
 
 
