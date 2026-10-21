@@ -5,6 +5,7 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
+using System.Security.Cryptography;
 using System.Text;
 using System.Text.Json;
 using System.Text.RegularExpressions;
@@ -19,6 +20,9 @@ namespace Turbopuffer.Core;
 /// buffered records to a later request in the <c>X-turbopuffer-Client-Telemetry</c> header. The
 /// server controls how many requests are recorded by advertising a sample rate in the
 /// <c>X-turbopuffer-Client-Telemetry-Sample-Rate</c> response header.</para>
+///
+/// <para>Each recorded request is sent with an <c>X-Request-Id</c> that its record repeats, so
+/// the server can show the client's timings in the same trace as its own.</para>
 /// </summary>
 internal static partial class ClientTelemetry
 {
@@ -26,10 +30,36 @@ internal static partial class ClientTelemetry
     internal const string Header = "X-turbopuffer-Client-Telemetry";
     internal const string SampleRateHeader = "X-turbopuffer-Client-Telemetry-Sample-Rate";
 
+    /// <summary>
+    /// Sorted by ASCII value, so that encoded IDs sort like their bytes.
+    /// </summary>
+    internal const string RequestIdAlphabet = "234567abcdefghijklmnopqrstuvwxyz";
+
+    /// <summary>
+    /// The bytes in a request ID before it's encoded. The first
+    /// <see cref="RequestIdRandomBytes"/> are random, and the rest hold the time it was generated.
+    /// </summary>
+    internal const int RequestIdBytes = 18;
+
+    /// <summary>
+    /// The request header that carries the IDs of recorded requests.
+    /// </summary>
+    internal const string RequestIdHeader = "X-Request-Id";
+
+    /// <summary>
+    /// The prefix of generated request IDs.
+    /// </summary>
+    internal const string RequestIdPrefix = "tpreq_";
+
+    /// <summary>
+    /// The random bytes at the start of a request ID.
+    /// </summary>
+    internal const int RequestIdRandomBytes = 12;
+
     internal const int Version = 1;
 
     // Keeps the header well under the 8 KB per-line limit of common proxies.
-    internal const int MaxRecordsPerHeader = 20;
+    internal const int MaxRecordsPerHeader = 16;
     internal const int MaxBufferedRecords = 1000;
 
     static readonly HashSet<string> TrueValues = ["1", "true", "yes", "on"];
@@ -58,6 +88,9 @@ internal static partial class ClientTelemetry
         (string, string),
         WeakReference<TelemetryObserver>
     > SharedObservers = [];
+
+    // Thread-safe, so it's shared by every request.
+    static readonly RandomNumberGenerator SecureRandom = RandomNumberGenerator.Create();
 
     /// <summary>
     /// Resolves whether telemetry is enabled, preferring an explicit value over the environment.
@@ -241,6 +274,63 @@ internal static partial class ClientTelemetry
         }
         return null;
     }
+
+    /// <summary>
+    /// Appends base32 of <paramref name="bytes"/> with <see cref="RequestIdAlphabet"/>, in RFC
+    /// 4648's bit order without padding.
+    /// </summary>
+    internal static void AppendBase32(StringBuilder output, byte[] bytes)
+    {
+        int buffer = 0,
+            bits = 0;
+        foreach (var value in bytes)
+        {
+            buffer = (buffer << 8) | value;
+            bits += 8;
+            while (bits >= 5)
+            {
+                bits -= 5;
+                output.Append(RequestIdAlphabet[(buffer >> bits) & 31]);
+            }
+            buffer &= (1 << bits) - 1;
+        }
+        if (bits > 0)
+        {
+            output.Append(RequestIdAlphabet[(buffer << (5 - bits)) & 31]);
+        }
+    }
+
+    /// <summary>
+    /// Generates the ID of a request that will be recorded. Its format is private to turbopuffer,
+    /// which only links IDs in the format it expects: 12 random bytes, then the 48-bit millisecond
+    /// time they were generated XORed with the first 6 random bytes, in base32 after a prefix.
+    /// </summary>
+    internal static string NewRequestId(DateTimeOffset now)
+    {
+        var random = new byte[RequestIdRandomBytes];
+        SecureRandom.GetBytes(random);
+        return RequestId(random, now.ToUnixTimeMilliseconds());
+    }
+
+    /// <summary>
+    /// Returns the request ID of <paramref name="random"/> bytes generated at a Unix time in
+    /// milliseconds.
+    /// </summary>
+    internal static string RequestId(byte[] random, long unixTimeMs)
+    {
+        var bytes = new byte[RequestIdBytes];
+        Array.Copy(random, bytes, RequestIdRandomBytes);
+        // The low bytes of the time, most significant first.
+        var timeBytes = RequestIdBytes - RequestIdRandomBytes;
+        for (var i = 0; i < timeBytes; i++)
+        {
+            var timeByte = (byte)(unixTimeMs >> (8 * (timeBytes - 1 - i)));
+            bytes[RequestIdRandomBytes + i] = (byte)(timeByte ^ random[i]);
+        }
+        StringBuilder id = new(RequestIdPrefix);
+        AppendBase32(id, bytes);
+        return id.ToString();
+    }
 }
 
 /// <summary>
@@ -255,6 +345,11 @@ internal sealed class TelemetryRecord
     public string? Error { get; init; }
 
     public int Retries { get; init; }
+
+    /// <summary>
+    /// The <c>X-Request-Id</c> the request was sent with, when the client generated it.
+    /// </summary>
+    public string? RequestId { get; init; }
 
     public double? SampleRate { get; init; }
 
@@ -317,6 +412,10 @@ internal sealed class TelemetryBatch
         if (record.Retries != 0)
         {
             writer.WriteNumber("retries", record.Retries);
+        }
+        if (record.RequestId != null)
+        {
+            writer.WriteString("request_id", record.RequestId);
         }
         if (record.SampleRate is { } sampleRate)
         {
@@ -394,8 +493,22 @@ internal sealed class TelemetryBuffer
     }
 
     /// <summary>
-    /// Samples and buffers a record for one request. <paramref name="durations"/> are in
-    /// nanoseconds.
+    /// Decides whether to record a request that's starting, returning the sample rate it's
+    /// recorded at.
+    /// </summary>
+    internal double? Sample()
+    {
+        var rate = this.SampleRate;
+        if (rate <= 0.0 || (rate < 1.0 && this.Random() >= rate))
+        {
+            return null;
+        }
+        return rate;
+    }
+
+    /// <summary>
+    /// Buffers the record of a request sampled at <paramref name="sampleRate"/>.
+    /// <paramref name="durations"/> are in nanoseconds.
     /// </summary>
     internal void Record(
         string method,
@@ -403,17 +516,13 @@ internal sealed class TelemetryBuffer
         int status,
         int retries,
         IEnumerable<(string Name, long Nanoseconds)> durations,
+        double sampleRate,
         double? serverTotalMs = null,
         string? error = null,
-        bool? reused = null
+        bool? reused = null,
+        string? requestId = null
     )
     {
-        var rate = this.SampleRate;
-        if (rate <= 0.0 || (rate < 1.0 && this.Random() >= rate))
-        {
-            return;
-        }
-
         List<(string, long)> microseconds = [];
         foreach (var (name, nanoseconds) in durations)
         {
@@ -430,7 +539,8 @@ internal sealed class TelemetryBuffer
             Status = status,
             Error = error,
             Retries = retries,
-            SampleRate = rate < 1.0 ? rate : null,
+            RequestId = requestId,
+            SampleRate = sampleRate < 1.0 ? sampleRate : null,
             Durations = microseconds,
             ServerTotalUs = serverTotalMs is { } ms ? (long)Math.Round(ms * 1000) : null,
             Reused = reused,
@@ -504,12 +614,31 @@ internal sealed class TelemetryObserver(TelemetryBuffer buffer) : RequestObserve
 {
     internal TelemetryBuffer Buffer { get; } = buffer;
 
-    public override RequestScope? Start(RequestInfo info) => new Scope(this.Buffer, info);
+    public override RequestScope? Start(RequestInfo info)
+    {
+        // Sampled up front, so that only requests whose records the server will get are sent with
+        // request IDs.
+        var sampleRate = this.Buffer.Sample();
+        var requestId =
+            sampleRate != null ? ClientTelemetry.NewRequestId(DateTimeOffset.UtcNow) : null;
+        return new Scope(this.Buffer, info, sampleRate, requestId);
+    }
 
-    sealed class Scope(TelemetryBuffer buffer, RequestInfo info) : RequestScope
+    sealed class Scope(
+        TelemetryBuffer buffer,
+        RequestInfo info,
+        double? sampleRate,
+        string? requestId
+    ) : RequestScope
     {
         // Kept for later attempts until one of them may have reached the server.
         TelemetryBatch? _batch;
+
+        // Sent with every attempt, so retries share the request's trace.
+        string? _requestId = requestId;
+
+        // The rate the request was recorded at, or null if it isn't recorded.
+        readonly double? _sampleRate = sampleRate;
 
         public override void AttemptBegin(int attempt, HttpRequestMessage request)
         {
@@ -517,11 +646,24 @@ internal sealed class TelemetryObserver(TelemetryBuffer buffer) : RequestObserve
             if (attempt == 0)
             {
                 _batch = buffer.Take();
+                // An ID set by the caller is theirs to use, so the request keeps it and isn't linked.
+                if (request.Headers.Contains(ClientTelemetry.RequestIdHeader))
+                {
+                    _requestId = null;
+                }
             }
             if (_batch != null)
             {
                 request.Headers.Remove(ClientTelemetry.Header);
                 request.Headers.TryAddWithoutValidation(ClientTelemetry.Header, _batch.Header);
+            }
+            if (_requestId != null)
+            {
+                request.Headers.Remove(ClientTelemetry.RequestIdHeader);
+                request.Headers.TryAddWithoutValidation(
+                    ClientTelemetry.RequestIdHeader,
+                    _requestId
+                );
             }
         }
 
@@ -545,6 +687,15 @@ internal sealed class TelemetryObserver(TelemetryBuffer buffer) : RequestObserve
                 buffer.Restore(_batch);
                 _batch = null;
             }
+            if (_sampleRate is not { } rate)
+            {
+                return;
+            }
+            // A rate of zero asks clients to stop recording, even requests that were already sampled.
+            if (buffer.SampleRate <= 0.0)
+            {
+                return;
+            }
 
             var timings = result.Timings;
             var durations = ClientTelemetry.ComputeDurations(
@@ -557,6 +708,7 @@ internal sealed class TelemetryObserver(TelemetryBuffer buffer) : RequestObserve
                 status: result.Response != null ? (int)result.Response.StatusCode : 0,
                 retries: result.Retries,
                 durations: durations,
+                sampleRate: rate,
                 serverTotalMs: ClientTelemetry.ServerTotalMs(result.Parsed),
                 error: result.ErrorKind switch
                 {
@@ -570,7 +722,8 @@ internal sealed class TelemetryObserver(TelemetryBuffer buffer) : RequestObserve
                     or ErrorKind.Timeout => "timeout",
                     _ => "connect",
                 },
-                reused: timings.Reused
+                reused: timings.Reused,
+                requestId: _requestId
             );
         }
     }
