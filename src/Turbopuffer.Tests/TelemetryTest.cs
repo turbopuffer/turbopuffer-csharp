@@ -97,6 +97,7 @@ public class TelemetryTest : IDisposable
             200,
             2,
             [("total", 1_234_567), ("compress", 0), ("deserialize", 999)],
+            1.0,
             serverTotalMs: 7
         );
 
@@ -113,7 +114,7 @@ public class TelemetryTest : IDisposable
     public void EncodesCompactHeader()
     {
         var buffer = new TelemetryBuffer();
-        buffer.Record("get", "/v1/namespaces", 200, 0, [("total", 5_000_000)], reused: true);
+        buffer.Record("get", "/v1/namespaces", 200, 0, [("total", 5_000_000)], 1.0, reused: true);
 
         var header = buffer.Take()!.Header;
 
@@ -216,17 +217,17 @@ public class TelemetryTest : IDisposable
     }
 
     [Fact]
-    public void SamplesRecords()
+    public void SamplesRequests()
     {
         var buffer = new TelemetryBuffer();
         buffer.ObserveResponse(WithSampleRate(new(HttpStatusCode.OK), "0.25"));
 
         buffer.Random = () => 0.3;
-        AddRecord(buffer, 200);
-        Assert.Null(buffer.Take());
+        Assert.Null(buffer.Sample());
 
         buffer.Random = () => 0.2;
-        AddRecord(buffer, 200);
+        Assert.Equal(0.25, buffer.Sample());
+        buffer.Record("post", QueryPath, 200, 0, [("total", 5_000_000)], 0.25);
         Assert.Equal(
             0.25,
             Assert.Single(Records(Take(buffer))).GetProperty("sample_rate").GetDouble()
@@ -234,8 +235,13 @@ public class TelemetryTest : IDisposable
 
         buffer.ObserveResponse(WithSampleRate(new(HttpStatusCode.OK), "0"));
         buffer.Random = () => 0;
+        Assert.Null(buffer.Sample());
+
+        // A full rate isn't reported.
+        buffer.ObserveResponse(WithSampleRate(new(HttpStatusCode.OK), "1"));
+        Assert.Equal(1.0, buffer.Sample());
         AddRecord(buffer, 200);
-        Assert.Null(buffer.Take());
+        Assert.False(Assert.Single(Records(Take(buffer))).TryGetProperty("sample_rate", out _));
     }
 
     [Fact]
@@ -376,6 +382,7 @@ public class TelemetryTest : IDisposable
         await ns.Query(new() { TopK = 1 }, TestContext.Current.CancellationToken);
 
         Assert.All(handler.Requests, request => Assert.Null(SentRecords(request)));
+        Assert.All(handler.Requests, request => Assert.Null(SentRequestId(request)));
     }
 
     [Fact]
@@ -403,16 +410,21 @@ public class TelemetryTest : IDisposable
         var ns = client.Namespace("my-ns");
 
         buffer.Random = () => 0.2;
+        // Sampled when it starts, before the server advertises a rate.
+        await ns.Query(new() { TopK = 1 }, TestContext.Current.CancellationToken);
         await ns.Query(new() { TopK = 1 }, TestContext.Current.CancellationToken);
         buffer.Random = () => 0.3;
         await ns.Query(new() { TopK = 1 }, TestContext.Current.CancellationToken);
-        await ns.Query(new() { TopK = 1 }, TestContext.Current.CancellationToken);
 
+        Assert.False(
+            Assert.Single(SentRecords(handler.Requests[1])!).TryGetProperty("sample_rate", out _)
+        );
         Assert.Equal(
             0.25,
-            Assert.Single(SentRecords(handler.Requests[1])!).GetProperty("sample_rate").GetDouble()
+            Assert.Single(SentRecords(handler.Requests[2])!).GetProperty("sample_rate").GetDouble()
         );
-        Assert.Null(SentRecords(handler.Requests[2]));
+        Assert.Null(SentRequestId(handler.Requests[2]));
+        Assert.Null(buffer.Take());
     }
 
     [Fact]
@@ -429,6 +441,8 @@ public class TelemetryTest : IDisposable
 
         Assert.All(handler.Requests, request => Assert.Null(SentRecords(request)));
         Assert.Equal(0.0, BufferOf(client)!.SampleRate);
+        // Unrecorded requests have no request IDs to link.
+        Assert.Null(SentRequestId(handler.Requests[1]));
     }
 
     [Fact]
@@ -645,6 +659,15 @@ public class TelemetryTest : IDisposable
         );
         Assert.True(request.TryGetProperty("body_read_us", out _));
         Assert.True(request.TryGetProperty("deserialize_us", out _));
+        // Each poll is its own request, with its own ID.
+        Assert.Equal(
+            SentRequestId(handler.Requests[0]),
+            request.GetProperty("request_id").GetString()
+        );
+        Assert.Equal(
+            records.Count,
+            records.Select(r => r.GetProperty("request_id").GetString()).Distinct().Count()
+        );
     }
 
     [Fact]
@@ -691,6 +714,120 @@ public class TelemetryTest : IDisposable
         Assert.Equal("DELETE /v2/namespaces/{ns}", request.GetProperty("route").GetString());
         Assert.Equal(202, request.GetProperty("status").GetInt32());
         Assert.Equal("timeout", request.GetProperty("error").GetString());
+    }
+
+    [Fact]
+    public void EncodesBase32()
+    {
+        static string Base32(byte[] bytes)
+        {
+            StringBuilder output = new();
+            ClientTelemetry.AppendBase32(output, bytes);
+            return output.ToString();
+        }
+
+        // The vectors of riverpro's uuidbase32, which uses the same encoding.
+        foreach (
+            var (last, encoded) in new (byte, string)[]
+            {
+                (0x00, "22222222222222222222222222"),
+                (0x01, "22222222222222222222222226"),
+                (0x0f, "2222222222222222222222223w"),
+                (0xff, "222222222222222222222222zw"),
+            }
+        )
+        {
+            var bytes = new byte[16];
+            bytes[15] = last;
+            Assert.Equal(encoded, Base32(bytes));
+        }
+        Assert.Equal("zzzzzzzzzzzzzzzzzzzzzzzzzw", Base32([.. Enumerable.Repeat((byte)0xff, 16)]));
+
+        // A request ID, generated by Python's base64 module independently of this implementation.
+        byte[] random = [0x9f, 0x1c, 0x2e, 0x7a, 0x4b, 0x6d, 0x8e, 0x0f, 0x1a, 0x2b, 0x3c, 0x4d];
+        Assert.Equal(
+            "tpreq_nwi4wymfhqb2yalfblatxjfremalg",
+            ClientTelemetry.RequestId(random, 1_792_497_600_123)
+        );
+        var (unixTimeMs, decoded) = DecodeRequestId("tpreq_nwi4wymfhqb2yalfblatxjfremalg");
+        Assert.Equal(1_792_497_600_123, unixTimeMs);
+        Assert.Equal(random, decoded);
+    }
+
+    [Fact]
+    public void GeneratesRequestIds()
+    {
+        var now = DateTimeOffset.FromUnixTimeMilliseconds(1_792_497_600_123);
+        var (unixTimeMs, random) = DecodeRequestId(ClientTelemetry.NewRequestId(now));
+        Assert.Equal(1_792_497_600_123, unixTimeMs);
+        var (_, other) = DecodeRequestId(ClientTelemetry.NewRequestId(now));
+        Assert.NotEqual(random, other);
+    }
+
+    [Fact]
+    public async Task KeepsRequestIdsSetByCallers()
+    {
+        var handler = new StubHandler(_ => QueryResponse());
+        var client = TelemetryClient(handler);
+        // Set on the request, since client options have no default headers.
+        NamespaceQueryParams parameters = new(
+            new Dictionary<string, JsonElement>
+            {
+                ["X-Request-Id"] = JsonSerializer.SerializeToElement("my-request"),
+            },
+            new Dictionary<string, JsonElement>(),
+            new Dictionary<string, JsonElement>()
+        )
+        {
+            TopK = 1,
+        };
+
+        await client.Namespace("my-ns").Query(parameters, TestContext.Current.CancellationToken);
+
+        Assert.Equal("my-request", SentRequestId(Assert.Single(handler.Requests)));
+        var record = Assert.Single(Records(Take(BufferOf(client)!)));
+        Assert.False(record.TryGetProperty("request_id", out _));
+    }
+
+    [Fact]
+    public async Task RetriesKeepTheirRequestIds()
+    {
+        var handler = new StubHandler(_ => RetryableError(), _ => QueryResponse());
+        var client = TelemetryClient(handler);
+
+        await client
+            .Namespace("my-ns")
+            .Query(new() { TopK = 1 }, TestContext.Current.CancellationToken);
+
+        Assert.Equal(2, handler.Requests.Count);
+        var id = SentRequestId(handler.Requests[0]);
+        Assert.NotNull(id);
+        Assert.Equal(id, SentRequestId(handler.Requests[1]));
+        var record = Assert.Single(Records(Take(BufferOf(client)!)));
+        Assert.Equal(id, record.GetProperty("request_id").GetString());
+        Assert.Equal(1, record.GetProperty("retries").GetInt32());
+    }
+
+    [Fact]
+    public async Task SendsRequestIdsThatRecordsRepeat()
+    {
+        var handler = new StubHandler(_ => QueryResponse());
+        var ns = TelemetryClient(handler).Namespace("my-ns");
+
+        await ns.Query(new() { TopK = 1 }, TestContext.Current.CancellationToken);
+        await ns.Query(new() { TopK = 1 }, TestContext.Current.CancellationToken);
+
+        var ids = handler.Requests.Select(SentRequestId).ToList();
+        Assert.NotEqual(ids[0], ids[1]);
+        foreach (var id in ids)
+        {
+            Assert.NotNull(id);
+            DecodeRequestId(id);
+        }
+        Assert.Equal(
+            ids[0],
+            Assert.Single(SentRecords(handler.Requests[1])!).GetProperty("request_id").GetString()
+        );
     }
 
 #if NET
@@ -789,6 +926,41 @@ public class TelemetryTest : IDisposable
             .. Records(Take(BufferOf(client)!)),
         ];
 
+    /// <summary>
+    /// Returns the millisecond time and random bytes of a generated request ID, checking its
+    /// format.
+    /// </summary>
+    static (long UnixTimeMs, byte[] Random) DecodeRequestId(string id)
+    {
+        Assert.StartsWith(ClientTelemetry.RequestIdPrefix, id);
+        var encoded = id.Substring(ClientTelemetry.RequestIdPrefix.Length);
+        Assert.Equal((ClientTelemetry.RequestIdBytes * 8 + 4) / 5, encoded.Length);
+        List<byte> bytes = [];
+        int buffer = 0,
+            bits = 0;
+        foreach (var c in encoded)
+        {
+            var value = ClientTelemetry.RequestIdAlphabet.IndexOf(c);
+            Assert.True(value >= 0, id);
+            buffer = (buffer << 5) | value;
+            bits += 5;
+            if (bits >= 8)
+            {
+                bits -= 8;
+                bytes.Add((byte)(buffer >> bits));
+                buffer &= (1 << bits) - 1;
+            }
+        }
+        Assert.Equal((ClientTelemetry.RequestIdBytes, 0), (bytes.Count, buffer));
+        long unixTimeMs = 0;
+        for (var i = ClientTelemetry.RequestIdRandomBytes; i < ClientTelemetry.RequestIdBytes; i++)
+        {
+            var timeByte = bytes[i] ^ bytes[i - ClientTelemetry.RequestIdRandomBytes];
+            unixTimeMs = (unixTimeMs << 8) | (byte)timeByte;
+        }
+        return (unixTimeMs, [.. bytes.Take(ClientTelemetry.RequestIdRandomBytes)]);
+    }
+
     static string? SentHeader(HttpRequestMessage request) =>
         request.Headers.TryGetValues(ClientTelemetry.Header, out var values)
             ? values.Single()
@@ -796,6 +968,11 @@ public class TelemetryTest : IDisposable
 
     static List<JsonElement>? SentRecords(HttpRequestMessage request) =>
         SentHeader(request) is { } header ? Records(JsonDocument.Parse(header).RootElement) : null;
+
+    static string? SentRequestId(HttpRequestMessage request) =>
+        request.Headers.TryGetValues(ClientTelemetry.RequestIdHeader, out var values)
+            ? values.Single()
+            : null;
 
     static List<(int, string?)> StatusesAndErrors(HttpRequestMessage request) =>
         [
@@ -809,7 +986,7 @@ public class TelemetryTest : IDisposable
         ];
 
     static void AddRecord(TelemetryBuffer buffer, int status) =>
-        buffer.Record("post", QueryPath, status, 0, [("total", 5_000_000)]);
+        buffer.Record("post", QueryPath, status, 0, [("total", 5_000_000)], 1.0);
 
     static HttpResponseMessage JsonResponse(HttpStatusCode status, string body) =>
         new(status) { Content = new StringContent(body, Encoding.UTF8, "application/json") };
