@@ -23,7 +23,7 @@ public class NamespaceExplainQueryParamsTest : TestBase
             {
                 { "foo", JsonSerializer.SerializeToElement("bar") },
             },
-            Consistency = new() { Level = Level.Strong, MaxStalenessSeconds = 1 },
+            Consistency = new Strong(),
             DistanceMetric = DistanceMetric.CosineDistance,
             ExcludeAttributes = ["string"],
             Filters = JsonSerializer.Deserialize<JsonElement>("{}"),
@@ -45,7 +45,7 @@ public class NamespaceExplainQueryParamsTest : TestBase
         {
             { "foo", JsonSerializer.SerializeToElement("bar") },
         };
-        Consistency expectedConsistency = new() { Level = Level.Strong, MaxStalenessSeconds = 1 };
+        Consistency expectedConsistency = new Strong();
         ApiEnum<string, DistanceMetric> expectedDistanceMetric = DistanceMetric.CosineDistance;
         List<string> expectedExcludeAttributes = ["string"];
         JsonElement expectedFilters = JsonSerializer.Deserialize<JsonElement>("{}");
@@ -214,7 +214,7 @@ public class NamespaceExplainQueryParamsTest : TestBase
             {
                 { "foo", JsonSerializer.SerializeToElement("bar") },
             },
-            Consistency = new() { Level = Level.Strong, MaxStalenessSeconds = 1 },
+            Consistency = new Strong(),
             DistanceMetric = DistanceMetric.CosineDistance,
             ExcludeAttributes = ["string"],
             Filters = JsonSerializer.Deserialize<JsonElement>("{}"),
@@ -236,27 +236,149 @@ public class NamespaceExplainQueryParamsTest : TestBase
 public class ConsistencyTest : TestBase
 {
     [Fact]
+    public void StrongValidationWorks()
+    {
+        Consistency value = new Strong();
+        value.Validate();
+    }
+
+    [Fact]
+    public void EventualValidationWorks()
+    {
+        Consistency value = new Eventual() { MaxStalenessSeconds = 1 };
+        value.Validate();
+    }
+
+    [Fact]
+    public void StrongSerializationRoundtripWorks()
+    {
+        Consistency value = new Strong();
+        string element = JsonSerializer.Serialize(value, ModelBase.SerializerOptions);
+        var deserialized = JsonSerializer.Deserialize<Consistency>(
+            element,
+            ModelBase.SerializerOptions
+        );
+
+        Assert.Equal(value, deserialized);
+    }
+
+    [Fact]
+    public void EventualSerializationRoundtripWorks()
+    {
+        Consistency value = new Eventual() { MaxStalenessSeconds = 1 };
+        string element = JsonSerializer.Serialize(value, ModelBase.SerializerOptions);
+        var deserialized = JsonSerializer.Deserialize<Consistency>(
+            element,
+            ModelBase.SerializerOptions
+        );
+
+        Assert.Equal(value, deserialized);
+    }
+}
+
+public class StrongTest : TestBase
+{
+    [Fact]
+    public void DefaultValidation_Works()
+    {
+        var constant = new Strong();
+        constant.Validate();
+    }
+
+    [Fact]
+    public void ValidConstantValidation_Works()
+    {
+        var constant = JsonSerializer.Deserialize<Strong>(
+            JsonSerializer.Deserialize<JsonElement>(
+                """
+                {
+                  "level": "strong"
+                }
+                """
+            ),
+            ModelBase.SerializerOptions
+        );
+
+        Assert.NotNull(constant);
+        constant.Validate();
+    }
+
+    [Fact]
+    public void InvalidConstantValidationThrows_Works()
+    {
+        var constant = JsonSerializer.Deserialize<Strong>(
+            JsonSerializer.SerializeToElement("invalid value"),
+            ModelBase.SerializerOptions
+        );
+
+        Assert.NotNull(constant);
+        Assert.Throws<TurbopufferInvalidDataException>(() => constant.Validate());
+    }
+
+    [Fact]
+    public void DefaultRoundtrip_Works()
+    {
+        var constant = new Strong();
+        string element = JsonSerializer.Serialize(constant, ModelBase.SerializerOptions);
+        var deserialized = JsonSerializer.Deserialize<Strong>(element, ModelBase.SerializerOptions);
+
+        Assert.Equal(constant, deserialized);
+    }
+
+    [Fact]
+    public void ValidConstantRoundtrip_Works()
+    {
+        var constant = JsonSerializer.Deserialize<Strong>(
+            JsonSerializer.Deserialize<JsonElement>(
+                """
+                {
+                  "level": "strong"
+                }
+                """
+            ),
+            ModelBase.SerializerOptions
+        );
+        string element = JsonSerializer.Serialize(constant, ModelBase.SerializerOptions);
+        var deserialized = JsonSerializer.Deserialize<Strong>(element, ModelBase.SerializerOptions);
+
+        Assert.Equal(constant, deserialized);
+    }
+
+    [Fact]
+    public void InvalidConstantRoundtrip_Works()
+    {
+        var constant = JsonSerializer.Deserialize<Strong>(
+            JsonSerializer.SerializeToElement("invalid value"),
+            ModelBase.SerializerOptions
+        );
+        string element = JsonSerializer.Serialize(constant, ModelBase.SerializerOptions);
+        var deserialized = JsonSerializer.Deserialize<Strong>(element, ModelBase.SerializerOptions);
+
+        Assert.Equal(constant, deserialized);
+    }
+}
+
+public class EventualTest : TestBase
+{
+    [Fact]
     public void FieldRoundtrip_Works()
     {
-        var model = new Consistency { Level = Level.Strong, MaxStalenessSeconds = 1 };
+        var model = new Eventual { MaxStalenessSeconds = 1 };
 
-        ApiEnum<string, Level> expectedLevel = Level.Strong;
+        JsonElement expectedLevel = JsonSerializer.SerializeToElement("eventual");
         long expectedMaxStalenessSeconds = 1;
 
-        Assert.Equal(expectedLevel, model.Level);
+        Assert.True(JsonElement.DeepEquals(expectedLevel, model.Level));
         Assert.Equal(expectedMaxStalenessSeconds, model.MaxStalenessSeconds);
     }
 
     [Fact]
     public void SerializationRoundtrip_Works()
     {
-        var model = new Consistency { Level = Level.Strong, MaxStalenessSeconds = 1 };
+        var model = new Eventual { MaxStalenessSeconds = 1 };
 
         string json = JsonSerializer.Serialize(model, ModelBase.SerializerOptions);
-        var deserialized = JsonSerializer.Deserialize<Consistency>(
-            json,
-            ModelBase.SerializerOptions
-        );
+        var deserialized = JsonSerializer.Deserialize<Eventual>(json, ModelBase.SerializerOptions);
 
         Assert.Equal(model, deserialized);
     }
@@ -264,26 +386,26 @@ public class ConsistencyTest : TestBase
     [Fact]
     public void FieldRoundtripThroughSerialization_Works()
     {
-        var model = new Consistency { Level = Level.Strong, MaxStalenessSeconds = 1 };
+        var model = new Eventual { MaxStalenessSeconds = 1 };
 
         string element = JsonSerializer.Serialize(model, ModelBase.SerializerOptions);
-        var deserialized = JsonSerializer.Deserialize<Consistency>(
+        var deserialized = JsonSerializer.Deserialize<Eventual>(
             element,
             ModelBase.SerializerOptions
         );
         Assert.NotNull(deserialized);
 
-        ApiEnum<string, Level> expectedLevel = Level.Strong;
+        JsonElement expectedLevel = JsonSerializer.SerializeToElement("eventual");
         long expectedMaxStalenessSeconds = 1;
 
-        Assert.Equal(expectedLevel, deserialized.Level);
+        Assert.True(JsonElement.DeepEquals(expectedLevel, deserialized.Level));
         Assert.Equal(expectedMaxStalenessSeconds, deserialized.MaxStalenessSeconds);
     }
 
     [Fact]
     public void Validation_Works()
     {
-        var model = new Consistency { Level = Level.Strong, MaxStalenessSeconds = 1 };
+        var model = new Eventual { MaxStalenessSeconds = 1 };
 
         model.Validate();
     }
@@ -291,10 +413,8 @@ public class ConsistencyTest : TestBase
     [Fact]
     public void OptionalNonNullablePropertiesUnsetAreNotSet_Works()
     {
-        var model = new Consistency { };
+        var model = new Eventual { };
 
-        Assert.Null(model.Level);
-        Assert.False(model.RawData.ContainsKey("level"));
         Assert.Null(model.MaxStalenessSeconds);
         Assert.False(model.RawData.ContainsKey("max_staleness_seconds"));
     }
@@ -302,7 +422,7 @@ public class ConsistencyTest : TestBase
     [Fact]
     public void OptionalNonNullablePropertiesUnsetValidation_Works()
     {
-        var model = new Consistency { };
+        var model = new Eventual { };
 
         model.Validate();
     }
@@ -310,15 +430,12 @@ public class ConsistencyTest : TestBase
     [Fact]
     public void OptionalNonNullablePropertiesSetToNullAreNotSet_Works()
     {
-        var model = new Consistency
+        var model = new Eventual
         {
             // Null should be interpreted as omitted for these properties
-            Level = null,
             MaxStalenessSeconds = null,
         };
 
-        Assert.Null(model.Level);
-        Assert.False(model.RawData.ContainsKey("level"));
         Assert.Null(model.MaxStalenessSeconds);
         Assert.False(model.RawData.ContainsKey("max_staleness_seconds"));
     }
@@ -326,10 +443,9 @@ public class ConsistencyTest : TestBase
     [Fact]
     public void OptionalNonNullablePropertiesSetToNullValidation_Works()
     {
-        var model = new Consistency
+        var model = new Eventual
         {
             // Null should be interpreted as omitted for these properties
-            Level = null,
             MaxStalenessSeconds = null,
         };
 
@@ -339,69 +455,11 @@ public class ConsistencyTest : TestBase
     [Fact]
     public void CopyConstructor_Works()
     {
-        var model = new Consistency { Level = Level.Strong, MaxStalenessSeconds = 1 };
+        var model = new Eventual { MaxStalenessSeconds = 1 };
 
-        Consistency copied = new(model);
+        Eventual copied = new(model);
 
         Assert.Equal(model, copied);
-    }
-}
-
-public class LevelTest : TestBase
-{
-    [Theory]
-    [InlineData(Level.Strong)]
-    [InlineData(Level.Eventual)]
-    public void Validation_Works(Level rawValue)
-    {
-        // force implicit conversion because Theory can't do that for us
-        ApiEnum<string, Level> value = rawValue;
-        value.Validate();
-    }
-
-    [Fact]
-    public void InvalidEnumValidationThrows_Works()
-    {
-        var value = JsonSerializer.Deserialize<ApiEnum<string, Level>>(
-            JsonSerializer.SerializeToElement("invalid value"),
-            ModelBase.SerializerOptions
-        );
-
-        Assert.NotNull(value);
-        Assert.Throws<TurbopufferInvalidDataException>(() => value.Validate());
-    }
-
-    [Theory]
-    [InlineData(Level.Strong)]
-    [InlineData(Level.Eventual)]
-    public void SerializationRoundtrip_Works(Level rawValue)
-    {
-        // force implicit conversion because Theory can't do that for us
-        ApiEnum<string, Level> value = rawValue;
-
-        string json = JsonSerializer.Serialize(value, ModelBase.SerializerOptions);
-        var deserialized = JsonSerializer.Deserialize<ApiEnum<string, Level>>(
-            json,
-            ModelBase.SerializerOptions
-        );
-
-        Assert.Equal(value, deserialized);
-    }
-
-    [Fact]
-    public void InvalidEnumSerializationRoundtrip_Works()
-    {
-        var value = JsonSerializer.Deserialize<ApiEnum<string, Level>>(
-            JsonSerializer.SerializeToElement("invalid value"),
-            ModelBase.SerializerOptions
-        );
-        string json = JsonSerializer.Serialize(value, ModelBase.SerializerOptions);
-        var deserialized = JsonSerializer.Deserialize<ApiEnum<string, Level>>(
-            json,
-            ModelBase.SerializerOptions
-        );
-
-        Assert.Equal(value, deserialized);
     }
 }
 

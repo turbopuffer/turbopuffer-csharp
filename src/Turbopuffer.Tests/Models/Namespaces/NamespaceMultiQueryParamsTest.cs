@@ -38,11 +38,7 @@ public class NamespaceMultiQueryParamsTest : TestBase
                     TopK = 0,
                 },
             ],
-            Consistency = new()
-            {
-                Level = NamespaceMultiQueryParamsConsistencyLevel.Strong,
-                MaxStalenessSeconds = 1,
-            },
+            Consistency = new NamespaceMultiQueryParamsConsistencyStrong(),
             Limit = 0,
             Offset = 0,
             RerankBy = JsonSerializer.Deserialize<JsonElement>("{}"),
@@ -73,11 +69,8 @@ public class NamespaceMultiQueryParamsTest : TestBase
                 TopK = 0,
             },
         ];
-        NamespaceMultiQueryParamsConsistency expectedConsistency = new()
-        {
-            Level = NamespaceMultiQueryParamsConsistencyLevel.Strong,
-            MaxStalenessSeconds = 1,
-        };
+        NamespaceMultiQueryParamsConsistency expectedConsistency =
+            new NamespaceMultiQueryParamsConsistencyStrong();
         NamespaceMultiQueryParamsLimit expectedLimit = 0;
         long expectedOffset = 0;
         JsonElement expectedRerankBy = JsonSerializer.Deserialize<JsonElement>("{}");
@@ -262,11 +255,7 @@ public class NamespaceMultiQueryParamsTest : TestBase
                     TopK = 0,
                 },
             ],
-            Consistency = new()
-            {
-                Level = NamespaceMultiQueryParamsConsistencyLevel.Strong,
-                MaxStalenessSeconds = 1,
-            },
+            Consistency = new NamespaceMultiQueryParamsConsistencyStrong(),
             Limit = 0,
             Offset = 0,
             RerankBy = JsonSerializer.Deserialize<JsonElement>("{}"),
@@ -690,33 +679,162 @@ public class QueryLimitTest : TestBase
 public class NamespaceMultiQueryParamsConsistencyTest : TestBase
 {
     [Fact]
+    public void StrongValidationWorks()
+    {
+        NamespaceMultiQueryParamsConsistency value =
+            new NamespaceMultiQueryParamsConsistencyStrong();
+        value.Validate();
+    }
+
+    [Fact]
+    public void EventualValidationWorks()
+    {
+        NamespaceMultiQueryParamsConsistency value =
+            new NamespaceMultiQueryParamsConsistencyEventual() { MaxStalenessSeconds = 1 };
+        value.Validate();
+    }
+
+    [Fact]
+    public void StrongSerializationRoundtripWorks()
+    {
+        NamespaceMultiQueryParamsConsistency value =
+            new NamespaceMultiQueryParamsConsistencyStrong();
+        string element = JsonSerializer.Serialize(value, ModelBase.SerializerOptions);
+        var deserialized = JsonSerializer.Deserialize<NamespaceMultiQueryParamsConsistency>(
+            element,
+            ModelBase.SerializerOptions
+        );
+
+        Assert.Equal(value, deserialized);
+    }
+
+    [Fact]
+    public void EventualSerializationRoundtripWorks()
+    {
+        NamespaceMultiQueryParamsConsistency value =
+            new NamespaceMultiQueryParamsConsistencyEventual() { MaxStalenessSeconds = 1 };
+        string element = JsonSerializer.Serialize(value, ModelBase.SerializerOptions);
+        var deserialized = JsonSerializer.Deserialize<NamespaceMultiQueryParamsConsistency>(
+            element,
+            ModelBase.SerializerOptions
+        );
+
+        Assert.Equal(value, deserialized);
+    }
+}
+
+public class NamespaceMultiQueryParamsConsistencyStrongTest : TestBase
+{
+    [Fact]
+    public void DefaultValidation_Works()
+    {
+        var constant = new NamespaceMultiQueryParamsConsistencyStrong();
+        constant.Validate();
+    }
+
+    [Fact]
+    public void ValidConstantValidation_Works()
+    {
+        var constant = JsonSerializer.Deserialize<NamespaceMultiQueryParamsConsistencyStrong>(
+            JsonSerializer.Deserialize<JsonElement>(
+                """
+                {
+                  "level": "strong"
+                }
+                """
+            ),
+            ModelBase.SerializerOptions
+        );
+
+        Assert.NotNull(constant);
+        constant.Validate();
+    }
+
+    [Fact]
+    public void InvalidConstantValidationThrows_Works()
+    {
+        var constant = JsonSerializer.Deserialize<NamespaceMultiQueryParamsConsistencyStrong>(
+            JsonSerializer.SerializeToElement("invalid value"),
+            ModelBase.SerializerOptions
+        );
+
+        Assert.NotNull(constant);
+        Assert.Throws<TurbopufferInvalidDataException>(() => constant.Validate());
+    }
+
+    [Fact]
+    public void DefaultRoundtrip_Works()
+    {
+        var constant = new NamespaceMultiQueryParamsConsistencyStrong();
+        string element = JsonSerializer.Serialize(constant, ModelBase.SerializerOptions);
+        var deserialized = JsonSerializer.Deserialize<NamespaceMultiQueryParamsConsistencyStrong>(
+            element,
+            ModelBase.SerializerOptions
+        );
+
+        Assert.Equal(constant, deserialized);
+    }
+
+    [Fact]
+    public void ValidConstantRoundtrip_Works()
+    {
+        var constant = JsonSerializer.Deserialize<NamespaceMultiQueryParamsConsistencyStrong>(
+            JsonSerializer.Deserialize<JsonElement>(
+                """
+                {
+                  "level": "strong"
+                }
+                """
+            ),
+            ModelBase.SerializerOptions
+        );
+        string element = JsonSerializer.Serialize(constant, ModelBase.SerializerOptions);
+        var deserialized = JsonSerializer.Deserialize<NamespaceMultiQueryParamsConsistencyStrong>(
+            element,
+            ModelBase.SerializerOptions
+        );
+
+        Assert.Equal(constant, deserialized);
+    }
+
+    [Fact]
+    public void InvalidConstantRoundtrip_Works()
+    {
+        var constant = JsonSerializer.Deserialize<NamespaceMultiQueryParamsConsistencyStrong>(
+            JsonSerializer.SerializeToElement("invalid value"),
+            ModelBase.SerializerOptions
+        );
+        string element = JsonSerializer.Serialize(constant, ModelBase.SerializerOptions);
+        var deserialized = JsonSerializer.Deserialize<NamespaceMultiQueryParamsConsistencyStrong>(
+            element,
+            ModelBase.SerializerOptions
+        );
+
+        Assert.Equal(constant, deserialized);
+    }
+}
+
+public class NamespaceMultiQueryParamsConsistencyEventualTest : TestBase
+{
+    [Fact]
     public void FieldRoundtrip_Works()
     {
-        var model = new NamespaceMultiQueryParamsConsistency
-        {
-            Level = NamespaceMultiQueryParamsConsistencyLevel.Strong,
-            MaxStalenessSeconds = 1,
-        };
+        var model = new NamespaceMultiQueryParamsConsistencyEventual { MaxStalenessSeconds = 1 };
 
-        ApiEnum<string, NamespaceMultiQueryParamsConsistencyLevel> expectedLevel =
-            NamespaceMultiQueryParamsConsistencyLevel.Strong;
+        JsonElement expectedLevel = JsonSerializer.SerializeToElement("eventual");
         long expectedMaxStalenessSeconds = 1;
 
-        Assert.Equal(expectedLevel, model.Level);
+        Assert.True(JsonElement.DeepEquals(expectedLevel, model.Level));
         Assert.Equal(expectedMaxStalenessSeconds, model.MaxStalenessSeconds);
     }
 
     [Fact]
     public void SerializationRoundtrip_Works()
     {
-        var model = new NamespaceMultiQueryParamsConsistency
-        {
-            Level = NamespaceMultiQueryParamsConsistencyLevel.Strong,
-            MaxStalenessSeconds = 1,
-        };
+        var model = new NamespaceMultiQueryParamsConsistencyEventual { MaxStalenessSeconds = 1 };
 
         string json = JsonSerializer.Serialize(model, ModelBase.SerializerOptions);
-        var deserialized = JsonSerializer.Deserialize<NamespaceMultiQueryParamsConsistency>(
+        var deserialized = JsonSerializer.Deserialize<NamespaceMultiQueryParamsConsistencyEventual>(
             json,
             ModelBase.SerializerOptions
         );
@@ -727,35 +845,26 @@ public class NamespaceMultiQueryParamsConsistencyTest : TestBase
     [Fact]
     public void FieldRoundtripThroughSerialization_Works()
     {
-        var model = new NamespaceMultiQueryParamsConsistency
-        {
-            Level = NamespaceMultiQueryParamsConsistencyLevel.Strong,
-            MaxStalenessSeconds = 1,
-        };
+        var model = new NamespaceMultiQueryParamsConsistencyEventual { MaxStalenessSeconds = 1 };
 
         string element = JsonSerializer.Serialize(model, ModelBase.SerializerOptions);
-        var deserialized = JsonSerializer.Deserialize<NamespaceMultiQueryParamsConsistency>(
+        var deserialized = JsonSerializer.Deserialize<NamespaceMultiQueryParamsConsistencyEventual>(
             element,
             ModelBase.SerializerOptions
         );
         Assert.NotNull(deserialized);
 
-        ApiEnum<string, NamespaceMultiQueryParamsConsistencyLevel> expectedLevel =
-            NamespaceMultiQueryParamsConsistencyLevel.Strong;
+        JsonElement expectedLevel = JsonSerializer.SerializeToElement("eventual");
         long expectedMaxStalenessSeconds = 1;
 
-        Assert.Equal(expectedLevel, deserialized.Level);
+        Assert.True(JsonElement.DeepEquals(expectedLevel, deserialized.Level));
         Assert.Equal(expectedMaxStalenessSeconds, deserialized.MaxStalenessSeconds);
     }
 
     [Fact]
     public void Validation_Works()
     {
-        var model = new NamespaceMultiQueryParamsConsistency
-        {
-            Level = NamespaceMultiQueryParamsConsistencyLevel.Strong,
-            MaxStalenessSeconds = 1,
-        };
+        var model = new NamespaceMultiQueryParamsConsistencyEventual { MaxStalenessSeconds = 1 };
 
         model.Validate();
     }
@@ -763,10 +872,8 @@ public class NamespaceMultiQueryParamsConsistencyTest : TestBase
     [Fact]
     public void OptionalNonNullablePropertiesUnsetAreNotSet_Works()
     {
-        var model = new NamespaceMultiQueryParamsConsistency { };
+        var model = new NamespaceMultiQueryParamsConsistencyEventual { };
 
-        Assert.Null(model.Level);
-        Assert.False(model.RawData.ContainsKey("level"));
         Assert.Null(model.MaxStalenessSeconds);
         Assert.False(model.RawData.ContainsKey("max_staleness_seconds"));
     }
@@ -774,7 +881,7 @@ public class NamespaceMultiQueryParamsConsistencyTest : TestBase
     [Fact]
     public void OptionalNonNullablePropertiesUnsetValidation_Works()
     {
-        var model = new NamespaceMultiQueryParamsConsistency { };
+        var model = new NamespaceMultiQueryParamsConsistencyEventual { };
 
         model.Validate();
     }
@@ -782,15 +889,12 @@ public class NamespaceMultiQueryParamsConsistencyTest : TestBase
     [Fact]
     public void OptionalNonNullablePropertiesSetToNullAreNotSet_Works()
     {
-        var model = new NamespaceMultiQueryParamsConsistency
+        var model = new NamespaceMultiQueryParamsConsistencyEventual
         {
             // Null should be interpreted as omitted for these properties
-            Level = null,
             MaxStalenessSeconds = null,
         };
 
-        Assert.Null(model.Level);
-        Assert.False(model.RawData.ContainsKey("level"));
         Assert.Null(model.MaxStalenessSeconds);
         Assert.False(model.RawData.ContainsKey("max_staleness_seconds"));
     }
@@ -798,10 +902,9 @@ public class NamespaceMultiQueryParamsConsistencyTest : TestBase
     [Fact]
     public void OptionalNonNullablePropertiesSetToNullValidation_Works()
     {
-        var model = new NamespaceMultiQueryParamsConsistency
+        var model = new NamespaceMultiQueryParamsConsistencyEventual
         {
             // Null should be interpreted as omitted for these properties
-            Level = null,
             MaxStalenessSeconds = null,
         };
 
@@ -811,69 +914,11 @@ public class NamespaceMultiQueryParamsConsistencyTest : TestBase
     [Fact]
     public void CopyConstructor_Works()
     {
-        var model = new NamespaceMultiQueryParamsConsistency
-        {
-            Level = NamespaceMultiQueryParamsConsistencyLevel.Strong,
-            MaxStalenessSeconds = 1,
-        };
+        var model = new NamespaceMultiQueryParamsConsistencyEventual { MaxStalenessSeconds = 1 };
 
-        NamespaceMultiQueryParamsConsistency copied = new(model);
+        NamespaceMultiQueryParamsConsistencyEventual copied = new(model);
 
         Assert.Equal(model, copied);
-    }
-}
-
-public class NamespaceMultiQueryParamsConsistencyLevelTest : TestBase
-{
-    [Theory]
-    [InlineData(NamespaceMultiQueryParamsConsistencyLevel.Strong)]
-    [InlineData(NamespaceMultiQueryParamsConsistencyLevel.Eventual)]
-    public void Validation_Works(NamespaceMultiQueryParamsConsistencyLevel rawValue)
-    {
-        // force implicit conversion because Theory can't do that for us
-        ApiEnum<string, NamespaceMultiQueryParamsConsistencyLevel> value = rawValue;
-        value.Validate();
-    }
-
-    [Fact]
-    public void InvalidEnumValidationThrows_Works()
-    {
-        var value = JsonSerializer.Deserialize<
-            ApiEnum<string, NamespaceMultiQueryParamsConsistencyLevel>
-        >(JsonSerializer.SerializeToElement("invalid value"), ModelBase.SerializerOptions);
-
-        Assert.NotNull(value);
-        Assert.Throws<TurbopufferInvalidDataException>(() => value.Validate());
-    }
-
-    [Theory]
-    [InlineData(NamespaceMultiQueryParamsConsistencyLevel.Strong)]
-    [InlineData(NamespaceMultiQueryParamsConsistencyLevel.Eventual)]
-    public void SerializationRoundtrip_Works(NamespaceMultiQueryParamsConsistencyLevel rawValue)
-    {
-        // force implicit conversion because Theory can't do that for us
-        ApiEnum<string, NamespaceMultiQueryParamsConsistencyLevel> value = rawValue;
-
-        string json = JsonSerializer.Serialize(value, ModelBase.SerializerOptions);
-        var deserialized = JsonSerializer.Deserialize<
-            ApiEnum<string, NamespaceMultiQueryParamsConsistencyLevel>
-        >(json, ModelBase.SerializerOptions);
-
-        Assert.Equal(value, deserialized);
-    }
-
-    [Fact]
-    public void InvalidEnumSerializationRoundtrip_Works()
-    {
-        var value = JsonSerializer.Deserialize<
-            ApiEnum<string, NamespaceMultiQueryParamsConsistencyLevel>
-        >(JsonSerializer.SerializeToElement("invalid value"), ModelBase.SerializerOptions);
-        string json = JsonSerializer.Serialize(value, ModelBase.SerializerOptions);
-        var deserialized = JsonSerializer.Deserialize<
-            ApiEnum<string, NamespaceMultiQueryParamsConsistencyLevel>
-        >(json, ModelBase.SerializerOptions);
-
-        Assert.Equal(value, deserialized);
     }
 }
 
