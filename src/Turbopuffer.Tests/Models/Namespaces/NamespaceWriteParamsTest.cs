@@ -23,7 +23,11 @@ public class NamespaceWriteParamsTest : TestBase
             Deletes = ["182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"],
             DisableBackpressure = true,
             DistanceMetric = DistanceMetric.CosineDistance,
-            Encryption = new CustomerManaged("key_name"),
+            Encryption = new CustomerManaged()
+            {
+                KeyName = "key_name",
+                EncryptionContext = new Dictionary<string, string>() { { "foo", "string" } },
+            },
             PatchByFilter = new()
             {
                 Filters = JsonSerializer.Deserialize<JsonElement>("{}"),
@@ -62,7 +66,11 @@ public class NamespaceWriteParamsTest : TestBase
         List<ID> expectedDeletes = ["182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"];
         bool expectedDisableBackpressure = true;
         ApiEnum<string, DistanceMetric> expectedDistanceMetric = DistanceMetric.CosineDistance;
-        Encryption expectedEncryption = new CustomerManaged("key_name");
+        Encryption expectedEncryption = new CustomerManaged()
+        {
+            KeyName = "key_name",
+            EncryptionContext = new Dictionary<string, string>() { { "foo", "string" } },
+        };
         PatchByFilter expectedPatchByFilter = new()
         {
             Filters = JsonSerializer.Deserialize<JsonElement>("{}"),
@@ -308,7 +316,11 @@ public class NamespaceWriteParamsTest : TestBase
             Deletes = ["182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"],
             DisableBackpressure = true,
             DistanceMetric = DistanceMetric.CosineDistance,
-            Encryption = new CustomerManaged("key_name"),
+            Encryption = new CustomerManaged()
+            {
+                KeyName = "key_name",
+                EncryptionContext = new Dictionary<string, string>() { { "foo", "string" } },
+            },
             PatchByFilter = new()
             {
                 Filters = JsonSerializer.Deserialize<JsonElement>("{}"),
