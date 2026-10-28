@@ -1,5 +1,19 @@
 # Changelog
 
+## [0.13.0](https://github.com/turbopuffer/turbopuffer-csharp/compare/v0.12.0...v0.13.0) (2026-10-28)
+
+
+### Features
+
+* openapi: add encryption_context to customer-managed encryption ([f837016](https://github.com/turbopuffer/turbopuffer-csharp/commit/f8370164c43fac4ed4282a98f180d5a64786070e))
+* spec: split query consistency into strong and eventual variants ([14c67a3](https://github.com/turbopuffer/turbopuffer-csharp/commit/14c67a3dc5104a21103e53cf67ef3760ae85752b))
+* tpuf-engine: add max_staleness_seconds to eventual consistency ([76d3e41](https://github.com/turbopuffer/turbopuffer-csharp/commit/76d3e410d0a91a00073a6206552ecee5f174b64a))
+
+
+### Chores
+
+* keep custom code out of spec-driven generated files ([#58](https://github.com/turbopuffer/turbopuffer-csharp/issues/58)) ([32f2b19](https://github.com/turbopuffer/turbopuffer-csharp/commit/32f2b192d5c9e3c32945bde859f506574a0571cd))
+
 ## [0.12.0](https://github.com/turbopuffer/turbopuffer-csharp/compare/v0.11.0...v0.12.0) (2026-10-20)
 
 
