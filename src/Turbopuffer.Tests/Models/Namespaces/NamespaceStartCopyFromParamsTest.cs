@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using Turbopuffer.Models.Namespaces;
 
 namespace Turbopuffer.Tests.Models.Namespaces;
@@ -12,14 +13,22 @@ public class NamespaceStartCopyFromParamsTest : TestBase
         {
             Namespace = "namespace",
             SourceNamespace = "source_namespace",
-            DestEncryption = new CustomerManaged("key_name"),
+            DestEncryption = new CustomerManaged()
+            {
+                KeyName = "key_name",
+                EncryptionContext = new Dictionary<string, string>() { { "foo", "string" } },
+            },
             SourceApiKey = "source_api_key",
             SourceRegion = "source_region",
         };
 
         string expectedNamespace = "namespace";
         string expectedSourceNamespace = "source_namespace";
-        Encryption expectedDestEncryption = new CustomerManaged("key_name");
+        Encryption expectedDestEncryption = new CustomerManaged()
+        {
+            KeyName = "key_name",
+            EncryptionContext = new Dictionary<string, string>() { { "foo", "string" } },
+        };
         string expectedSourceApiKey = "source_api_key";
         string expectedSourceRegion = "source_region";
 
@@ -97,7 +106,11 @@ public class NamespaceStartCopyFromParamsTest : TestBase
         {
             Namespace = "namespace",
             SourceNamespace = "source_namespace",
-            DestEncryption = new CustomerManaged("key_name"),
+            DestEncryption = new CustomerManaged()
+            {
+                KeyName = "key_name",
+                EncryptionContext = new Dictionary<string, string>() { { "foo", "string" } },
+            },
             SourceApiKey = "source_api_key",
             SourceRegion = "source_region",
         };
