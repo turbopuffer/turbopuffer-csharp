@@ -28,9 +28,6 @@ public abstract record class ModelBase
             new ApiEnumConverter<string, SparseDistanceMetric>(),
             new ApiEnumConverter<string, Tokenizer>(),
             new ApiEnumConverter<string, VectorEncoding>(),
-            new ApiEnumConverter<string, Level>(),
-            new ApiEnumConverter<string, NamespaceMultiQueryParamsConsistencyLevel>(),
-            new ApiEnumConverter<string, NamespaceQueryParamsConsistencyLevel>(),
         },
     };
 
