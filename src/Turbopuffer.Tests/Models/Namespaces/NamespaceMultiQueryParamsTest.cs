@@ -38,7 +38,11 @@ public class NamespaceMultiQueryParamsTest : TestBase
                     TopK = 0,
                 },
             ],
-            Consistency = new() { Level = NamespaceMultiQueryParamsConsistencyLevel.Strong },
+            Consistency = new()
+            {
+                Level = NamespaceMultiQueryParamsConsistencyLevel.Strong,
+                MaxStalenessSeconds = 1,
+            },
             Limit = 0,
             Offset = 0,
             RerankBy = JsonSerializer.Deserialize<JsonElement>("{}"),
@@ -72,6 +76,7 @@ public class NamespaceMultiQueryParamsTest : TestBase
         NamespaceMultiQueryParamsConsistency expectedConsistency = new()
         {
             Level = NamespaceMultiQueryParamsConsistencyLevel.Strong,
+            MaxStalenessSeconds = 1,
         };
         NamespaceMultiQueryParamsLimit expectedLimit = 0;
         long expectedOffset = 0;
@@ -257,7 +262,11 @@ public class NamespaceMultiQueryParamsTest : TestBase
                     TopK = 0,
                 },
             ],
-            Consistency = new() { Level = NamespaceMultiQueryParamsConsistencyLevel.Strong },
+            Consistency = new()
+            {
+                Level = NamespaceMultiQueryParamsConsistencyLevel.Strong,
+                MaxStalenessSeconds = 1,
+            },
             Limit = 0,
             Offset = 0,
             RerankBy = JsonSerializer.Deserialize<JsonElement>("{}"),
@@ -686,12 +695,15 @@ public class NamespaceMultiQueryParamsConsistencyTest : TestBase
         var model = new NamespaceMultiQueryParamsConsistency
         {
             Level = NamespaceMultiQueryParamsConsistencyLevel.Strong,
+            MaxStalenessSeconds = 1,
         };
 
         ApiEnum<string, NamespaceMultiQueryParamsConsistencyLevel> expectedLevel =
             NamespaceMultiQueryParamsConsistencyLevel.Strong;
+        long expectedMaxStalenessSeconds = 1;
 
         Assert.Equal(expectedLevel, model.Level);
+        Assert.Equal(expectedMaxStalenessSeconds, model.MaxStalenessSeconds);
     }
 
     [Fact]
@@ -700,6 +712,7 @@ public class NamespaceMultiQueryParamsConsistencyTest : TestBase
         var model = new NamespaceMultiQueryParamsConsistency
         {
             Level = NamespaceMultiQueryParamsConsistencyLevel.Strong,
+            MaxStalenessSeconds = 1,
         };
 
         string json = JsonSerializer.Serialize(model, ModelBase.SerializerOptions);
@@ -717,6 +730,7 @@ public class NamespaceMultiQueryParamsConsistencyTest : TestBase
         var model = new NamespaceMultiQueryParamsConsistency
         {
             Level = NamespaceMultiQueryParamsConsistencyLevel.Strong,
+            MaxStalenessSeconds = 1,
         };
 
         string element = JsonSerializer.Serialize(model, ModelBase.SerializerOptions);
@@ -728,8 +742,10 @@ public class NamespaceMultiQueryParamsConsistencyTest : TestBase
 
         ApiEnum<string, NamespaceMultiQueryParamsConsistencyLevel> expectedLevel =
             NamespaceMultiQueryParamsConsistencyLevel.Strong;
+        long expectedMaxStalenessSeconds = 1;
 
         Assert.Equal(expectedLevel, deserialized.Level);
+        Assert.Equal(expectedMaxStalenessSeconds, deserialized.MaxStalenessSeconds);
     }
 
     [Fact]
@@ -738,6 +754,7 @@ public class NamespaceMultiQueryParamsConsistencyTest : TestBase
         var model = new NamespaceMultiQueryParamsConsistency
         {
             Level = NamespaceMultiQueryParamsConsistencyLevel.Strong,
+            MaxStalenessSeconds = 1,
         };
 
         model.Validate();
@@ -750,6 +767,8 @@ public class NamespaceMultiQueryParamsConsistencyTest : TestBase
 
         Assert.Null(model.Level);
         Assert.False(model.RawData.ContainsKey("level"));
+        Assert.Null(model.MaxStalenessSeconds);
+        Assert.False(model.RawData.ContainsKey("max_staleness_seconds"));
     }
 
     [Fact]
@@ -767,10 +786,13 @@ public class NamespaceMultiQueryParamsConsistencyTest : TestBase
         {
             // Null should be interpreted as omitted for these properties
             Level = null,
+            MaxStalenessSeconds = null,
         };
 
         Assert.Null(model.Level);
         Assert.False(model.RawData.ContainsKey("level"));
+        Assert.Null(model.MaxStalenessSeconds);
+        Assert.False(model.RawData.ContainsKey("max_staleness_seconds"));
     }
 
     [Fact]
@@ -780,6 +802,7 @@ public class NamespaceMultiQueryParamsConsistencyTest : TestBase
         {
             // Null should be interpreted as omitted for these properties
             Level = null,
+            MaxStalenessSeconds = null,
         };
 
         model.Validate();
@@ -791,6 +814,7 @@ public class NamespaceMultiQueryParamsConsistencyTest : TestBase
         var model = new NamespaceMultiQueryParamsConsistency
         {
             Level = NamespaceMultiQueryParamsConsistencyLevel.Strong,
+            MaxStalenessSeconds = 1,
         };
 
         NamespaceMultiQueryParamsConsistency copied = new(model);

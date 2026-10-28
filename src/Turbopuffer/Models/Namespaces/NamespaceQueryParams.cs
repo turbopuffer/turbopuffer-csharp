@@ -511,10 +511,34 @@ public sealed record class NamespaceQueryParamsConsistency : JsonModel
         }
     }
 
+    /// <summary>
+    /// How long an eventually consistent query may reuse the node's cached view
+    /// of the namespace before refreshing it from object storage. Only valid with
+    /// `level: eventual`. Defaults to 60.
+    /// </summary>
+    public long? MaxStalenessSeconds
+    {
+        get
+        {
+            this._rawData.Freeze();
+            return this._rawData.GetNullableStruct<long>("max_staleness_seconds");
+        }
+        init
+        {
+            if (value == null)
+            {
+                return;
+            }
+
+            this._rawData.Set("max_staleness_seconds", value);
+        }
+    }
+
     /// <inheritdoc/>
     public override void Validate()
     {
         this.Level?.Validate();
+        _ = this.MaxStalenessSeconds;
     }
 
     public NamespaceQueryParamsConsistency() { }

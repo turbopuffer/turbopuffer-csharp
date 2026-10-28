@@ -23,7 +23,7 @@ public class NamespaceExplainQueryParamsTest : TestBase
             {
                 { "foo", JsonSerializer.SerializeToElement("bar") },
             },
-            Consistency = new() { Level = Level.Strong },
+            Consistency = new() { Level = Level.Strong, MaxStalenessSeconds = 1 },
             DistanceMetric = DistanceMetric.CosineDistance,
             ExcludeAttributes = ["string"],
             Filters = JsonSerializer.Deserialize<JsonElement>("{}"),
@@ -45,7 +45,7 @@ public class NamespaceExplainQueryParamsTest : TestBase
         {
             { "foo", JsonSerializer.SerializeToElement("bar") },
         };
-        Consistency expectedConsistency = new() { Level = Level.Strong };
+        Consistency expectedConsistency = new() { Level = Level.Strong, MaxStalenessSeconds = 1 };
         ApiEnum<string, DistanceMetric> expectedDistanceMetric = DistanceMetric.CosineDistance;
         List<string> expectedExcludeAttributes = ["string"];
         JsonElement expectedFilters = JsonSerializer.Deserialize<JsonElement>("{}");
@@ -214,7 +214,7 @@ public class NamespaceExplainQueryParamsTest : TestBase
             {
                 { "foo", JsonSerializer.SerializeToElement("bar") },
             },
-            Consistency = new() { Level = Level.Strong },
+            Consistency = new() { Level = Level.Strong, MaxStalenessSeconds = 1 },
             DistanceMetric = DistanceMetric.CosineDistance,
             ExcludeAttributes = ["string"],
             Filters = JsonSerializer.Deserialize<JsonElement>("{}"),
@@ -238,17 +238,19 @@ public class ConsistencyTest : TestBase
     [Fact]
     public void FieldRoundtrip_Works()
     {
-        var model = new Consistency { Level = Level.Strong };
+        var model = new Consistency { Level = Level.Strong, MaxStalenessSeconds = 1 };
 
         ApiEnum<string, Level> expectedLevel = Level.Strong;
+        long expectedMaxStalenessSeconds = 1;
 
         Assert.Equal(expectedLevel, model.Level);
+        Assert.Equal(expectedMaxStalenessSeconds, model.MaxStalenessSeconds);
     }
 
     [Fact]
     public void SerializationRoundtrip_Works()
     {
-        var model = new Consistency { Level = Level.Strong };
+        var model = new Consistency { Level = Level.Strong, MaxStalenessSeconds = 1 };
 
         string json = JsonSerializer.Serialize(model, ModelBase.SerializerOptions);
         var deserialized = JsonSerializer.Deserialize<Consistency>(
@@ -262,7 +264,7 @@ public class ConsistencyTest : TestBase
     [Fact]
     public void FieldRoundtripThroughSerialization_Works()
     {
-        var model = new Consistency { Level = Level.Strong };
+        var model = new Consistency { Level = Level.Strong, MaxStalenessSeconds = 1 };
 
         string element = JsonSerializer.Serialize(model, ModelBase.SerializerOptions);
         var deserialized = JsonSerializer.Deserialize<Consistency>(
@@ -272,14 +274,16 @@ public class ConsistencyTest : TestBase
         Assert.NotNull(deserialized);
 
         ApiEnum<string, Level> expectedLevel = Level.Strong;
+        long expectedMaxStalenessSeconds = 1;
 
         Assert.Equal(expectedLevel, deserialized.Level);
+        Assert.Equal(expectedMaxStalenessSeconds, deserialized.MaxStalenessSeconds);
     }
 
     [Fact]
     public void Validation_Works()
     {
-        var model = new Consistency { Level = Level.Strong };
+        var model = new Consistency { Level = Level.Strong, MaxStalenessSeconds = 1 };
 
         model.Validate();
     }
@@ -291,6 +295,8 @@ public class ConsistencyTest : TestBase
 
         Assert.Null(model.Level);
         Assert.False(model.RawData.ContainsKey("level"));
+        Assert.Null(model.MaxStalenessSeconds);
+        Assert.False(model.RawData.ContainsKey("max_staleness_seconds"));
     }
 
     [Fact]
@@ -308,10 +314,13 @@ public class ConsistencyTest : TestBase
         {
             // Null should be interpreted as omitted for these properties
             Level = null,
+            MaxStalenessSeconds = null,
         };
 
         Assert.Null(model.Level);
         Assert.False(model.RawData.ContainsKey("level"));
+        Assert.Null(model.MaxStalenessSeconds);
+        Assert.False(model.RawData.ContainsKey("max_staleness_seconds"));
     }
 
     [Fact]
@@ -321,6 +330,7 @@ public class ConsistencyTest : TestBase
         {
             // Null should be interpreted as omitted for these properties
             Level = null,
+            MaxStalenessSeconds = null,
         };
 
         model.Validate();
@@ -329,7 +339,7 @@ public class ConsistencyTest : TestBase
     [Fact]
     public void CopyConstructor_Works()
     {
-        var model = new Consistency { Level = Level.Strong };
+        var model = new Consistency { Level = Level.Strong, MaxStalenessSeconds = 1 };
 
         Consistency copied = new(model);
 
