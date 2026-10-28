@@ -23,7 +23,11 @@ public class NamespaceQueryParamsTest : TestBase
             {
                 { "foo", new ExprRaw(JsonSerializer.SerializeToElement("bar")) },
             },
-            Consistency = new() { Level = NamespaceQueryParamsConsistencyLevel.Strong },
+            Consistency = new()
+            {
+                Level = NamespaceQueryParamsConsistencyLevel.Strong,
+                MaxStalenessSeconds = 1,
+            },
             DistanceMetric = DistanceMetric.CosineDistance,
             ExcludeAttributes = ["string"],
             Filters = new FilterRaw(JsonSerializer.Deserialize<JsonElement>("{}")),
@@ -54,6 +58,7 @@ public class NamespaceQueryParamsTest : TestBase
         NamespaceQueryParamsConsistency expectedConsistency = new()
         {
             Level = NamespaceQueryParamsConsistencyLevel.Strong,
+            MaxStalenessSeconds = 1,
         };
         ApiEnum<string, DistanceMetric> expectedDistanceMetric = DistanceMetric.CosineDistance;
         List<string> expectedExcludeAttributes = ["string"];
@@ -247,7 +252,11 @@ public class NamespaceQueryParamsTest : TestBase
             {
                 { "foo", new ExprRaw(JsonSerializer.SerializeToElement("bar")) },
             },
-            Consistency = new() { Level = NamespaceQueryParamsConsistencyLevel.Strong },
+            Consistency = new()
+            {
+                Level = NamespaceQueryParamsConsistencyLevel.Strong,
+                MaxStalenessSeconds = 1,
+            },
             DistanceMetric = DistanceMetric.CosineDistance,
             ExcludeAttributes = ["string"],
             Filters = new FilterRaw(JsonSerializer.Deserialize<JsonElement>("{}")),
@@ -280,12 +289,15 @@ public class NamespaceQueryParamsConsistencyTest : TestBase
         var model = new NamespaceQueryParamsConsistency
         {
             Level = NamespaceQueryParamsConsistencyLevel.Strong,
+            MaxStalenessSeconds = 1,
         };
 
         ApiEnum<string, NamespaceQueryParamsConsistencyLevel> expectedLevel =
             NamespaceQueryParamsConsistencyLevel.Strong;
+        long expectedMaxStalenessSeconds = 1;
 
         Assert.Equal(expectedLevel, model.Level);
+        Assert.Equal(expectedMaxStalenessSeconds, model.MaxStalenessSeconds);
     }
 
     [Fact]
@@ -294,6 +306,7 @@ public class NamespaceQueryParamsConsistencyTest : TestBase
         var model = new NamespaceQueryParamsConsistency
         {
             Level = NamespaceQueryParamsConsistencyLevel.Strong,
+            MaxStalenessSeconds = 1,
         };
 
         string json = JsonSerializer.Serialize(model, ModelBase.SerializerOptions);
@@ -311,6 +324,7 @@ public class NamespaceQueryParamsConsistencyTest : TestBase
         var model = new NamespaceQueryParamsConsistency
         {
             Level = NamespaceQueryParamsConsistencyLevel.Strong,
+            MaxStalenessSeconds = 1,
         };
 
         string element = JsonSerializer.Serialize(model, ModelBase.SerializerOptions);
@@ -322,8 +336,10 @@ public class NamespaceQueryParamsConsistencyTest : TestBase
 
         ApiEnum<string, NamespaceQueryParamsConsistencyLevel> expectedLevel =
             NamespaceQueryParamsConsistencyLevel.Strong;
+        long expectedMaxStalenessSeconds = 1;
 
         Assert.Equal(expectedLevel, deserialized.Level);
+        Assert.Equal(expectedMaxStalenessSeconds, deserialized.MaxStalenessSeconds);
     }
 
     [Fact]
@@ -332,6 +348,7 @@ public class NamespaceQueryParamsConsistencyTest : TestBase
         var model = new NamespaceQueryParamsConsistency
         {
             Level = NamespaceQueryParamsConsistencyLevel.Strong,
+            MaxStalenessSeconds = 1,
         };
 
         model.Validate();
@@ -344,6 +361,8 @@ public class NamespaceQueryParamsConsistencyTest : TestBase
 
         Assert.Null(model.Level);
         Assert.False(model.RawData.ContainsKey("level"));
+        Assert.Null(model.MaxStalenessSeconds);
+        Assert.False(model.RawData.ContainsKey("max_staleness_seconds"));
     }
 
     [Fact]
@@ -361,10 +380,13 @@ public class NamespaceQueryParamsConsistencyTest : TestBase
         {
             // Null should be interpreted as omitted for these properties
             Level = null,
+            MaxStalenessSeconds = null,
         };
 
         Assert.Null(model.Level);
         Assert.False(model.RawData.ContainsKey("level"));
+        Assert.Null(model.MaxStalenessSeconds);
+        Assert.False(model.RawData.ContainsKey("max_staleness_seconds"));
     }
 
     [Fact]
@@ -374,6 +396,7 @@ public class NamespaceQueryParamsConsistencyTest : TestBase
         {
             // Null should be interpreted as omitted for these properties
             Level = null,
+            MaxStalenessSeconds = null,
         };
 
         model.Validate();
@@ -385,6 +408,7 @@ public class NamespaceQueryParamsConsistencyTest : TestBase
         var model = new NamespaceQueryParamsConsistency
         {
             Level = NamespaceQueryParamsConsistencyLevel.Strong,
+            MaxStalenessSeconds = 1,
         };
 
         NamespaceQueryParamsConsistency copied = new(model);
