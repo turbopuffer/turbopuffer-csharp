@@ -23,11 +23,7 @@ public class NamespaceQueryParamsTest : TestBase
             {
                 { "foo", JsonSerializer.SerializeToElement("bar") },
             },
-            Consistency = new()
-            {
-                Level = NamespaceQueryParamsConsistencyLevel.Strong,
-                MaxStalenessSeconds = 1,
-            },
+            Consistency = new NamespaceQueryParamsConsistencyStrong(),
             DistanceMetric = DistanceMetric.CosineDistance,
             ExcludeAttributes = ["string"],
             Filters = JsonSerializer.Deserialize<JsonElement>("{}"),
@@ -55,11 +51,8 @@ public class NamespaceQueryParamsTest : TestBase
         {
             { "foo", JsonSerializer.SerializeToElement("bar") },
         };
-        NamespaceQueryParamsConsistency expectedConsistency = new()
-        {
-            Level = NamespaceQueryParamsConsistencyLevel.Strong,
-            MaxStalenessSeconds = 1,
-        };
+        NamespaceQueryParamsConsistency expectedConsistency =
+            new NamespaceQueryParamsConsistencyStrong();
         ApiEnum<string, DistanceMetric> expectedDistanceMetric = DistanceMetric.CosineDistance;
         List<string> expectedExcludeAttributes = ["string"];
         JsonElement expectedFilters = JsonSerializer.Deserialize<JsonElement>("{}");
@@ -238,11 +231,7 @@ public class NamespaceQueryParamsTest : TestBase
             {
                 { "foo", JsonSerializer.SerializeToElement("bar") },
             },
-            Consistency = new()
-            {
-                Level = NamespaceQueryParamsConsistencyLevel.Strong,
-                MaxStalenessSeconds = 1,
-            },
+            Consistency = new NamespaceQueryParamsConsistencyStrong(),
             DistanceMetric = DistanceMetric.CosineDistance,
             ExcludeAttributes = ["string"],
             Filters = JsonSerializer.Deserialize<JsonElement>("{}"),
@@ -270,33 +259,164 @@ public class NamespaceQueryParamsTest : TestBase
 public class NamespaceQueryParamsConsistencyTest : TestBase
 {
     [Fact]
-    public void FieldRoundtrip_Works()
+    public void StrongValidationWorks()
     {
-        var model = new NamespaceQueryParamsConsistency
+        NamespaceQueryParamsConsistency value = new NamespaceQueryParamsConsistencyStrong();
+        value.Validate();
+    }
+
+    [Fact]
+    public void EventualValidationWorks()
+    {
+        NamespaceQueryParamsConsistency value = new NamespaceQueryParamsConsistencyEventual()
         {
-            Level = NamespaceQueryParamsConsistencyLevel.Strong,
             MaxStalenessSeconds = 1,
         };
+        value.Validate();
+    }
 
-        ApiEnum<string, NamespaceQueryParamsConsistencyLevel> expectedLevel =
-            NamespaceQueryParamsConsistencyLevel.Strong;
+    [Fact]
+    public void StrongSerializationRoundtripWorks()
+    {
+        NamespaceQueryParamsConsistency value = new NamespaceQueryParamsConsistencyStrong();
+        string element = JsonSerializer.Serialize(value, ModelBase.SerializerOptions);
+        var deserialized = JsonSerializer.Deserialize<NamespaceQueryParamsConsistency>(
+            element,
+            ModelBase.SerializerOptions
+        );
+
+        Assert.Equal(value, deserialized);
+    }
+
+    [Fact]
+    public void EventualSerializationRoundtripWorks()
+    {
+        NamespaceQueryParamsConsistency value = new NamespaceQueryParamsConsistencyEventual()
+        {
+            MaxStalenessSeconds = 1,
+        };
+        string element = JsonSerializer.Serialize(value, ModelBase.SerializerOptions);
+        var deserialized = JsonSerializer.Deserialize<NamespaceQueryParamsConsistency>(
+            element,
+            ModelBase.SerializerOptions
+        );
+
+        Assert.Equal(value, deserialized);
+    }
+}
+
+public class NamespaceQueryParamsConsistencyStrongTest : TestBase
+{
+    [Fact]
+    public void DefaultValidation_Works()
+    {
+        var constant = new NamespaceQueryParamsConsistencyStrong();
+        constant.Validate();
+    }
+
+    [Fact]
+    public void ValidConstantValidation_Works()
+    {
+        var constant = JsonSerializer.Deserialize<NamespaceQueryParamsConsistencyStrong>(
+            JsonSerializer.Deserialize<JsonElement>(
+                """
+                {
+                  "level": "strong"
+                }
+                """
+            ),
+            ModelBase.SerializerOptions
+        );
+
+        Assert.NotNull(constant);
+        constant.Validate();
+    }
+
+    [Fact]
+    public void InvalidConstantValidationThrows_Works()
+    {
+        var constant = JsonSerializer.Deserialize<NamespaceQueryParamsConsistencyStrong>(
+            JsonSerializer.SerializeToElement("invalid value"),
+            ModelBase.SerializerOptions
+        );
+
+        Assert.NotNull(constant);
+        Assert.Throws<TurbopufferInvalidDataException>(() => constant.Validate());
+    }
+
+    [Fact]
+    public void DefaultRoundtrip_Works()
+    {
+        var constant = new NamespaceQueryParamsConsistencyStrong();
+        string element = JsonSerializer.Serialize(constant, ModelBase.SerializerOptions);
+        var deserialized = JsonSerializer.Deserialize<NamespaceQueryParamsConsistencyStrong>(
+            element,
+            ModelBase.SerializerOptions
+        );
+
+        Assert.Equal(constant, deserialized);
+    }
+
+    [Fact]
+    public void ValidConstantRoundtrip_Works()
+    {
+        var constant = JsonSerializer.Deserialize<NamespaceQueryParamsConsistencyStrong>(
+            JsonSerializer.Deserialize<JsonElement>(
+                """
+                {
+                  "level": "strong"
+                }
+                """
+            ),
+            ModelBase.SerializerOptions
+        );
+        string element = JsonSerializer.Serialize(constant, ModelBase.SerializerOptions);
+        var deserialized = JsonSerializer.Deserialize<NamespaceQueryParamsConsistencyStrong>(
+            element,
+            ModelBase.SerializerOptions
+        );
+
+        Assert.Equal(constant, deserialized);
+    }
+
+    [Fact]
+    public void InvalidConstantRoundtrip_Works()
+    {
+        var constant = JsonSerializer.Deserialize<NamespaceQueryParamsConsistencyStrong>(
+            JsonSerializer.SerializeToElement("invalid value"),
+            ModelBase.SerializerOptions
+        );
+        string element = JsonSerializer.Serialize(constant, ModelBase.SerializerOptions);
+        var deserialized = JsonSerializer.Deserialize<NamespaceQueryParamsConsistencyStrong>(
+            element,
+            ModelBase.SerializerOptions
+        );
+
+        Assert.Equal(constant, deserialized);
+    }
+}
+
+public class NamespaceQueryParamsConsistencyEventualTest : TestBase
+{
+    [Fact]
+    public void FieldRoundtrip_Works()
+    {
+        var model = new NamespaceQueryParamsConsistencyEventual { MaxStalenessSeconds = 1 };
+
+        JsonElement expectedLevel = JsonSerializer.SerializeToElement("eventual");
         long expectedMaxStalenessSeconds = 1;
 
-        Assert.Equal(expectedLevel, model.Level);
+        Assert.True(JsonElement.DeepEquals(expectedLevel, model.Level));
         Assert.Equal(expectedMaxStalenessSeconds, model.MaxStalenessSeconds);
     }
 
     [Fact]
     public void SerializationRoundtrip_Works()
     {
-        var model = new NamespaceQueryParamsConsistency
-        {
-            Level = NamespaceQueryParamsConsistencyLevel.Strong,
-            MaxStalenessSeconds = 1,
-        };
+        var model = new NamespaceQueryParamsConsistencyEventual { MaxStalenessSeconds = 1 };
 
         string json = JsonSerializer.Serialize(model, ModelBase.SerializerOptions);
-        var deserialized = JsonSerializer.Deserialize<NamespaceQueryParamsConsistency>(
+        var deserialized = JsonSerializer.Deserialize<NamespaceQueryParamsConsistencyEventual>(
             json,
             ModelBase.SerializerOptions
         );
@@ -307,35 +427,26 @@ public class NamespaceQueryParamsConsistencyTest : TestBase
     [Fact]
     public void FieldRoundtripThroughSerialization_Works()
     {
-        var model = new NamespaceQueryParamsConsistency
-        {
-            Level = NamespaceQueryParamsConsistencyLevel.Strong,
-            MaxStalenessSeconds = 1,
-        };
+        var model = new NamespaceQueryParamsConsistencyEventual { MaxStalenessSeconds = 1 };
 
         string element = JsonSerializer.Serialize(model, ModelBase.SerializerOptions);
-        var deserialized = JsonSerializer.Deserialize<NamespaceQueryParamsConsistency>(
+        var deserialized = JsonSerializer.Deserialize<NamespaceQueryParamsConsistencyEventual>(
             element,
             ModelBase.SerializerOptions
         );
         Assert.NotNull(deserialized);
 
-        ApiEnum<string, NamespaceQueryParamsConsistencyLevel> expectedLevel =
-            NamespaceQueryParamsConsistencyLevel.Strong;
+        JsonElement expectedLevel = JsonSerializer.SerializeToElement("eventual");
         long expectedMaxStalenessSeconds = 1;
 
-        Assert.Equal(expectedLevel, deserialized.Level);
+        Assert.True(JsonElement.DeepEquals(expectedLevel, deserialized.Level));
         Assert.Equal(expectedMaxStalenessSeconds, deserialized.MaxStalenessSeconds);
     }
 
     [Fact]
     public void Validation_Works()
     {
-        var model = new NamespaceQueryParamsConsistency
-        {
-            Level = NamespaceQueryParamsConsistencyLevel.Strong,
-            MaxStalenessSeconds = 1,
-        };
+        var model = new NamespaceQueryParamsConsistencyEventual { MaxStalenessSeconds = 1 };
 
         model.Validate();
     }
@@ -343,10 +454,8 @@ public class NamespaceQueryParamsConsistencyTest : TestBase
     [Fact]
     public void OptionalNonNullablePropertiesUnsetAreNotSet_Works()
     {
-        var model = new NamespaceQueryParamsConsistency { };
+        var model = new NamespaceQueryParamsConsistencyEventual { };
 
-        Assert.Null(model.Level);
-        Assert.False(model.RawData.ContainsKey("level"));
         Assert.Null(model.MaxStalenessSeconds);
         Assert.False(model.RawData.ContainsKey("max_staleness_seconds"));
     }
@@ -354,7 +463,7 @@ public class NamespaceQueryParamsConsistencyTest : TestBase
     [Fact]
     public void OptionalNonNullablePropertiesUnsetValidation_Works()
     {
-        var model = new NamespaceQueryParamsConsistency { };
+        var model = new NamespaceQueryParamsConsistencyEventual { };
 
         model.Validate();
     }
@@ -362,15 +471,12 @@ public class NamespaceQueryParamsConsistencyTest : TestBase
     [Fact]
     public void OptionalNonNullablePropertiesSetToNullAreNotSet_Works()
     {
-        var model = new NamespaceQueryParamsConsistency
+        var model = new NamespaceQueryParamsConsistencyEventual
         {
             // Null should be interpreted as omitted for these properties
-            Level = null,
             MaxStalenessSeconds = null,
         };
 
-        Assert.Null(model.Level);
-        Assert.False(model.RawData.ContainsKey("level"));
         Assert.Null(model.MaxStalenessSeconds);
         Assert.False(model.RawData.ContainsKey("max_staleness_seconds"));
     }
@@ -378,10 +484,9 @@ public class NamespaceQueryParamsConsistencyTest : TestBase
     [Fact]
     public void OptionalNonNullablePropertiesSetToNullValidation_Works()
     {
-        var model = new NamespaceQueryParamsConsistency
+        var model = new NamespaceQueryParamsConsistencyEventual
         {
             // Null should be interpreted as omitted for these properties
-            Level = null,
             MaxStalenessSeconds = null,
         };
 
@@ -391,69 +496,11 @@ public class NamespaceQueryParamsConsistencyTest : TestBase
     [Fact]
     public void CopyConstructor_Works()
     {
-        var model = new NamespaceQueryParamsConsistency
-        {
-            Level = NamespaceQueryParamsConsistencyLevel.Strong,
-            MaxStalenessSeconds = 1,
-        };
+        var model = new NamespaceQueryParamsConsistencyEventual { MaxStalenessSeconds = 1 };
 
-        NamespaceQueryParamsConsistency copied = new(model);
+        NamespaceQueryParamsConsistencyEventual copied = new(model);
 
         Assert.Equal(model, copied);
-    }
-}
-
-public class NamespaceQueryParamsConsistencyLevelTest : TestBase
-{
-    [Theory]
-    [InlineData(NamespaceQueryParamsConsistencyLevel.Strong)]
-    [InlineData(NamespaceQueryParamsConsistencyLevel.Eventual)]
-    public void Validation_Works(NamespaceQueryParamsConsistencyLevel rawValue)
-    {
-        // force implicit conversion because Theory can't do that for us
-        ApiEnum<string, NamespaceQueryParamsConsistencyLevel> value = rawValue;
-        value.Validate();
-    }
-
-    [Fact]
-    public void InvalidEnumValidationThrows_Works()
-    {
-        var value = JsonSerializer.Deserialize<
-            ApiEnum<string, NamespaceQueryParamsConsistencyLevel>
-        >(JsonSerializer.SerializeToElement("invalid value"), ModelBase.SerializerOptions);
-
-        Assert.NotNull(value);
-        Assert.Throws<TurbopufferInvalidDataException>(() => value.Validate());
-    }
-
-    [Theory]
-    [InlineData(NamespaceQueryParamsConsistencyLevel.Strong)]
-    [InlineData(NamespaceQueryParamsConsistencyLevel.Eventual)]
-    public void SerializationRoundtrip_Works(NamespaceQueryParamsConsistencyLevel rawValue)
-    {
-        // force implicit conversion because Theory can't do that for us
-        ApiEnum<string, NamespaceQueryParamsConsistencyLevel> value = rawValue;
-
-        string json = JsonSerializer.Serialize(value, ModelBase.SerializerOptions);
-        var deserialized = JsonSerializer.Deserialize<
-            ApiEnum<string, NamespaceQueryParamsConsistencyLevel>
-        >(json, ModelBase.SerializerOptions);
-
-        Assert.Equal(value, deserialized);
-    }
-
-    [Fact]
-    public void InvalidEnumSerializationRoundtrip_Works()
-    {
-        var value = JsonSerializer.Deserialize<
-            ApiEnum<string, NamespaceQueryParamsConsistencyLevel>
-        >(JsonSerializer.SerializeToElement("invalid value"), ModelBase.SerializerOptions);
-        string json = JsonSerializer.Serialize(value, ModelBase.SerializerOptions);
-        var deserialized = JsonSerializer.Deserialize<
-            ApiEnum<string, NamespaceQueryParamsConsistencyLevel>
-        >(json, ModelBase.SerializerOptions);
-
-        Assert.Equal(value, deserialized);
     }
 }
 
