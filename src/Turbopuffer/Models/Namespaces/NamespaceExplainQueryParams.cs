@@ -457,34 +457,371 @@ public record class NamespaceExplainQueryParams : ParamsBase
 /// <summary>
 /// The consistency level for a query.
 /// </summary>
-[JsonConverter(typeof(JsonModelConverter<Consistency, ConsistencyFromRaw>))]
-public sealed record class Consistency : JsonModel
+[JsonConverter(typeof(ConsistencyConverter))]
+public record class Consistency : ModelBase
 {
-    /// <summary>
-    /// The query's consistency level.
-    /// </summary>
-    public ApiEnum<string, Level>? Level
+    public object? Value { get; } = null;
+
+    JsonElement? _element = null;
+
+    public JsonElement Json
     {
         get
         {
-            this._rawData.Freeze();
-            return this._rawData.GetNullableClass<ApiEnum<string, Level>>("level");
+            return this._element ??= JsonSerializer.SerializeToElement(
+                this.Value,
+                ModelBase.SerializerOptions
+            );
         }
-        init
-        {
-            if (value == null)
-            {
-                return;
-            }
+    }
 
-            this._rawData.Set("level", value);
+    public Consistency(Strong value, JsonElement? element = null)
+    {
+        this.Value = value;
+        this._element = element;
+    }
+
+    public Consistency(Eventual value, JsonElement? element = null)
+    {
+        this.Value = value;
+        this._element = element;
+    }
+
+    public Consistency(JsonElement element)
+    {
+        this._element = element;
+    }
+
+    /// <summary>
+    /// Returns true and sets the <c>out</c> parameter if the instance was constructed with a variant of
+    /// type <see cref="Strong"/>.
+    ///
+    /// <para>Consider using <see cref="Switch"/> or <see cref="Match"/> if you need to handle every variant.</para>
+    ///
+    /// <example>
+    /// <code>
+    /// if (instance.TryPickStrong(out var value)) {
+    ///     // `value` is of type `Strong`
+    ///     Console.WriteLine(value);
+    /// }
+    /// </code>
+    /// </example>
+    /// </summary>
+    public bool TryPickStrong([NotNullWhen(true)] out Strong? value)
+    {
+        value = this.Value as Strong;
+        return value != null;
+    }
+
+    /// <summary>
+    /// Returns true and sets the <c>out</c> parameter if the instance was constructed with a variant of
+    /// type <see cref="Eventual"/>.
+    ///
+    /// <para>Consider using <see cref="Switch"/> or <see cref="Match"/> if you need to handle every variant.</para>
+    ///
+    /// <example>
+    /// <code>
+    /// if (instance.TryPickEventual(out var value)) {
+    ///     // `value` is of type `Eventual`
+    ///     Console.WriteLine(value);
+    /// }
+    /// </code>
+    /// </example>
+    /// </summary>
+    public bool TryPickEventual([NotNullWhen(true)] out Eventual? value)
+    {
+        value = this.Value as Eventual;
+        return value != null;
+    }
+
+    /// <summary>
+    /// Calls the function parameter corresponding to the variant the instance was constructed with.
+    ///
+    /// <para>Use the <c>TryPick</c> method(s) if you don't need to handle every variant, or <see cref="Match"/>
+    /// if you need your function parameters to return something.</para>
+    ///
+    /// <exception cref="TurbopufferInvalidDataException">
+    /// Thrown when the instance was constructed with an unknown variant (e.g. deserialized from raw data
+    /// that doesn't match any variant's expected shape).
+    /// </exception>
+    ///
+    /// <example>
+    /// <code>
+    /// instance.Switch(
+    ///     (Strong value) =&gt; {...},
+    ///     (Eventual value) =&gt; {...}
+    /// );
+    /// </code>
+    /// </example>
+    /// </summary>
+    public void Switch(Action<Strong> strong, Action<Eventual> eventual)
+    {
+        switch (this.Value)
+        {
+            case Strong value:
+                strong(value);
+                break;
+            case Eventual value:
+                eventual(value);
+                break;
+            default:
+                throw new TurbopufferInvalidDataException(
+                    "Data did not match any variant of Consistency"
+                );
         }
     }
 
     /// <summary>
-    /// How long an eventually consistent query may reuse the node's cached view
-    /// of the namespace before refreshing it from object storage. Only valid with
-    /// `level: eventual`. Defaults to 60.
+    /// Calls the function parameter corresponding to the variant the instance was constructed with and
+    /// returns its result.
+    ///
+    /// <para>Use the <c>TryPick</c> method(s) if you don't need to handle every variant, or <see cref="Switch"/>
+    /// if you don't need your function parameters to return a value.</para>
+    ///
+    /// <exception cref="TurbopufferInvalidDataException">
+    /// Thrown when the instance was constructed with an unknown variant (e.g. deserialized from raw data
+    /// that doesn't match any variant's expected shape).
+    /// </exception>
+    ///
+    /// <example>
+    /// <code>
+    /// var result = instance.Match(
+    ///     (Strong value) =&gt; {...},
+    ///     (Eventual value) =&gt; {...}
+    /// );
+    /// </code>
+    /// </example>
+    /// </summary>
+    public T Match<T>(Func<Strong, T> strong, Func<Eventual, T> eventual)
+    {
+        return this.Value switch
+        {
+            Strong value => strong(value),
+            Eventual value => eventual(value),
+            _ => throw new TurbopufferInvalidDataException(
+                "Data did not match any variant of Consistency"
+            ),
+        };
+    }
+
+    public static implicit operator Consistency(Strong value) => new(value);
+
+    public static implicit operator Consistency(Eventual value) => new(value);
+
+    /// <summary>
+    /// Validates that the instance was constructed with a known variant and that this variant is valid
+    /// (based on its own <c>Validate</c> method).
+    ///
+    /// <para>This is useful for instances constructed from raw JSON data (e.g. deserialized from an API response).</para>
+    ///
+    /// <exception cref="TurbopufferInvalidDataException">
+    /// Thrown when the instance does not pass validation.
+    /// </exception>
+    /// </summary>
+    public override void Validate()
+    {
+        if (this.Value == null)
+        {
+            throw new TurbopufferInvalidDataException(
+                "Data did not match any variant of Consistency"
+            );
+        }
+        this.Switch((strong) => strong.Validate(), (eventual) => eventual.Validate());
+    }
+
+    public virtual bool Equals(Consistency? other) =>
+        other != null
+        && this.VariantIndex() == other.VariantIndex()
+        && JsonElement.DeepEquals(this.Json, other.Json);
+
+    public override int GetHashCode()
+    {
+        return 0;
+    }
+
+    public override string ToString() =>
+        JsonSerializer.Serialize(
+            FriendlyJsonPrinter.PrintValue(this.Json),
+            ModelBase.ToStringSerializerOptions
+        );
+
+    int VariantIndex()
+    {
+        return this.Value switch
+        {
+            Strong _ => 0,
+            Eventual _ => 1,
+            _ => -1,
+        };
+    }
+}
+
+sealed class ConsistencyConverter : JsonConverter<Consistency>
+{
+    public override Consistency? Read(
+        ref Utf8JsonReader reader,
+        Type typeToConvert,
+        JsonSerializerOptions options
+    )
+    {
+        var element = JsonSerializer.Deserialize<JsonElement>(ref reader, options);
+        string? level;
+        try
+        {
+            level = element.GetProperty("level").GetString();
+        }
+        catch
+        {
+            level = null;
+        }
+
+        switch (level)
+        {
+            case "strong":
+            {
+                try
+                {
+                    var deserialized = JsonSerializer.Deserialize<Strong>(element, options);
+                    if (deserialized != null)
+                    {
+                        return new(deserialized, element);
+                    }
+                }
+                catch (JsonException)
+                {
+                    // ignore
+                }
+
+                return new(element);
+            }
+            case "eventual":
+            {
+                try
+                {
+                    var deserialized = JsonSerializer.Deserialize<Eventual>(element, options);
+                    if (deserialized != null)
+                    {
+                        return new(deserialized, element);
+                    }
+                }
+                catch (JsonException)
+                {
+                    // ignore
+                }
+
+                return new(element);
+            }
+            default:
+            {
+                return new Consistency(element);
+            }
+        }
+    }
+
+    public override void Write(
+        Utf8JsonWriter writer,
+        Consistency value,
+        JsonSerializerOptions options
+    )
+    {
+        JsonSerializer.Serialize(writer, value.Json, options);
+    }
+}
+
+/// <summary>
+/// Strong consistency. Requires a round-trip to object storage to fetch the latest writes.
+/// </summary>
+[JsonConverter(typeof(StrongConverter))]
+public record class Strong
+{
+    public JsonElement Element { get; private init; }
+
+    public Strong()
+    {
+        Element = JsonSerializer.Deserialize<JsonElement>(
+            """
+            {
+              "level": "strong"
+            }
+            """
+        );
+    }
+
+    internal Strong(JsonElement element)
+    {
+        Element = element;
+    }
+
+    /// <summary>
+    /// Validates that the instance's underlying value is the expected constant.
+    ///
+    /// <para>This is useful for instances constructed from raw JSON data (e.g. deserialized from an API response).</para>
+    ///
+    /// <exception cref="TurbopufferInvalidDataException">
+    /// Thrown when the instance does not pass validation.
+    /// </exception>
+    /// </summary>
+    public void Validate()
+    {
+        if (this != new Strong())
+        {
+            throw new TurbopufferInvalidDataException("Invalid value given for 'Strong'");
+        }
+    }
+
+    public override int GetHashCode()
+    {
+        return 0;
+    }
+
+    public virtual bool Equals(Strong? other)
+    {
+        if (other == null)
+        {
+            return false;
+        }
+
+        return JsonElement.DeepEquals(this.Element, other.Element);
+    }
+}
+
+class StrongConverter : JsonConverter<Strong>
+{
+    public override Strong? Read(
+        ref Utf8JsonReader reader,
+        Type typeToConvert,
+        JsonSerializerOptions options
+    )
+    {
+        return new(JsonSerializer.Deserialize<JsonElement>(ref reader, options));
+    }
+
+    public override void Write(Utf8JsonWriter writer, Strong value, JsonSerializerOptions options)
+    {
+        JsonSerializer.Serialize(writer, value.Element, options);
+    }
+}
+
+/// <summary>
+/// Eventual consistency. Does not require a round-trip to object storage, but may
+/// not see the latest writes.
+/// </summary>
+[JsonConverter(typeof(JsonModelConverter<Eventual, EventualFromRaw>))]
+public sealed record class Eventual : JsonModel
+{
+    public JsonElement Level
+    {
+        get
+        {
+            this._rawData.Freeze();
+            return this._rawData.GetNotNullStruct<JsonElement>("level");
+        }
+        init { this._rawData.Set("level", value); }
+    }
+
+    /// <summary>
+    /// How long the query may reuse the node's cached view of the namespace before
+    /// refreshing it from object storage. Defaults to 60.
     /// </summary>
     public long? MaxStalenessSeconds
     {
@@ -507,94 +844,51 @@ public sealed record class Consistency : JsonModel
     /// <inheritdoc/>
     public override void Validate()
     {
-        this.Level?.Validate();
+        if (!JsonElement.DeepEquals(this.Level, JsonSerializer.SerializeToElement("eventual")))
+        {
+            throw new TurbopufferInvalidDataException("Invalid value given for constant");
+        }
         _ = this.MaxStalenessSeconds;
     }
 
-    public Consistency() { }
-
-#pragma warning disable CS8618
-    [SetsRequiredMembers]
-    public Consistency(Consistency consistency)
-        : base(consistency) { }
-#pragma warning restore CS8618
-
-    public Consistency(IReadOnlyDictionary<string, JsonElement> rawData)
+    public Eventual()
     {
-        this._rawData = new(rawData);
+        this.Level = JsonSerializer.SerializeToElement("eventual");
     }
 
 #pragma warning disable CS8618
     [SetsRequiredMembers]
-    Consistency(FrozenDictionary<string, JsonElement> rawData)
+    public Eventual(Eventual eventual)
+        : base(eventual) { }
+#pragma warning restore CS8618
+
+    public Eventual(IReadOnlyDictionary<string, JsonElement> rawData)
+    {
+        this._rawData = new(rawData);
+
+        this.Level = JsonSerializer.SerializeToElement("eventual");
+    }
+
+#pragma warning disable CS8618
+    [SetsRequiredMembers]
+    Eventual(FrozenDictionary<string, JsonElement> rawData)
     {
         this._rawData = new(rawData);
     }
 #pragma warning restore CS8618
 
-    /// <inheritdoc cref="ConsistencyFromRaw.FromRawUnchecked"/>
-    public static Consistency FromRawUnchecked(IReadOnlyDictionary<string, JsonElement> rawData)
+    /// <inheritdoc cref="EventualFromRaw.FromRawUnchecked"/>
+    public static Eventual FromRawUnchecked(IReadOnlyDictionary<string, JsonElement> rawData)
     {
         return new(FrozenDictionary.ToFrozenDictionary(rawData));
     }
 }
 
-class ConsistencyFromRaw : IFromRawJson<Consistency>
+class EventualFromRaw : IFromRawJson<Eventual>
 {
     /// <inheritdoc/>
-    public Consistency FromRawUnchecked(IReadOnlyDictionary<string, JsonElement> rawData) =>
-        Consistency.FromRawUnchecked(rawData);
-}
-
-/// <summary>
-/// The query's consistency level.
-/// </summary>
-[JsonConverter(typeof(LevelConverter))]
-public enum Level
-{
-    /// <summary>
-    /// Strong consistency. Requires a round-trip to object storage to fetch the latest writes.
-    /// </summary>
-    Strong,
-
-    /// <summary>
-    /// Eventual consistency. Does not require a round-trip to object storage, but
-    /// may not see the latest writes.
-    /// </summary>
-    Eventual,
-}
-
-sealed class LevelConverter : JsonConverter<Level>
-{
-    public override Level Read(
-        ref Utf8JsonReader reader,
-        Type typeToConvert,
-        JsonSerializerOptions options
-    )
-    {
-        return JsonSerializer.Deserialize<string>(ref reader, options) switch
-        {
-            "strong" => Level.Strong,
-            "eventual" => Level.Eventual,
-            _ => (Level)(-1),
-        };
-    }
-
-    public override void Write(Utf8JsonWriter writer, Level value, JsonSerializerOptions options)
-    {
-        JsonSerializer.Serialize(
-            writer,
-            value switch
-            {
-                Level.Strong => "strong",
-                Level.Eventual => "eventual",
-                _ => throw new TurbopufferInvalidDataException(
-                    string.Format("Invalid value '{0}' in {1}", value, nameof(value))
-                ),
-            },
-            options
-        );
-    }
+    public Eventual FromRawUnchecked(IReadOnlyDictionary<string, JsonElement> rawData) =>
+        Eventual.FromRawUnchecked(rawData);
 }
 
 /// <summary>
