@@ -17,7 +17,11 @@ public class NamespaceMetadataTest : TestBase
             ApproxLogicalBytes = 0,
             ApproxRowCount = 0,
             CreatedAt = DateTimeOffset.Parse("2019-12-27T18:11:19.117Z"),
-            Encryption = new Namespaces::CustomerManaged("key_name"),
+            Encryption = new Namespaces::CustomerManaged()
+            {
+                KeyName = "key_name",
+                EncryptionContext = new Dictionary<string, string>() { { "foo", "string" } },
+            },
             Index = new Namespaces::IndexUpToDate(),
             Schema = new Dictionary<string, Namespaces::AttributeSchemaConfig>()
             {
@@ -56,7 +60,11 @@ public class NamespaceMetadataTest : TestBase
         long expectedApproxLogicalBytes = 0;
         long expectedApproxRowCount = 0;
         DateTimeOffset expectedCreatedAt = DateTimeOffset.Parse("2019-12-27T18:11:19.117Z");
-        Namespaces::Encryption expectedEncryption = new Namespaces::CustomerManaged("key_name");
+        Namespaces::Encryption expectedEncryption = new Namespaces::CustomerManaged()
+        {
+            KeyName = "key_name",
+            EncryptionContext = new Dictionary<string, string>() { { "foo", "string" } },
+        };
         Namespaces::Index expectedIndex = new Namespaces::IndexUpToDate();
         Dictionary<string, Namespaces::AttributeSchemaConfig> expectedSchema = new()
         {
@@ -117,7 +125,11 @@ public class NamespaceMetadataTest : TestBase
             ApproxLogicalBytes = 0,
             ApproxRowCount = 0,
             CreatedAt = DateTimeOffset.Parse("2019-12-27T18:11:19.117Z"),
-            Encryption = new Namespaces::CustomerManaged("key_name"),
+            Encryption = new Namespaces::CustomerManaged()
+            {
+                KeyName = "key_name",
+                EncryptionContext = new Dictionary<string, string>() { { "foo", "string" } },
+            },
             Index = new Namespaces::IndexUpToDate(),
             Schema = new Dictionary<string, Namespaces::AttributeSchemaConfig>()
             {
@@ -170,7 +182,11 @@ public class NamespaceMetadataTest : TestBase
             ApproxLogicalBytes = 0,
             ApproxRowCount = 0,
             CreatedAt = DateTimeOffset.Parse("2019-12-27T18:11:19.117Z"),
-            Encryption = new Namespaces::CustomerManaged("key_name"),
+            Encryption = new Namespaces::CustomerManaged()
+            {
+                KeyName = "key_name",
+                EncryptionContext = new Dictionary<string, string>() { { "foo", "string" } },
+            },
             Index = new Namespaces::IndexUpToDate(),
             Schema = new Dictionary<string, Namespaces::AttributeSchemaConfig>()
             {
@@ -216,7 +232,11 @@ public class NamespaceMetadataTest : TestBase
         long expectedApproxLogicalBytes = 0;
         long expectedApproxRowCount = 0;
         DateTimeOffset expectedCreatedAt = DateTimeOffset.Parse("2019-12-27T18:11:19.117Z");
-        Namespaces::Encryption expectedEncryption = new Namespaces::CustomerManaged("key_name");
+        Namespaces::Encryption expectedEncryption = new Namespaces::CustomerManaged()
+        {
+            KeyName = "key_name",
+            EncryptionContext = new Dictionary<string, string>() { { "foo", "string" } },
+        };
         Namespaces::Index expectedIndex = new Namespaces::IndexUpToDate();
         Dictionary<string, Namespaces::AttributeSchemaConfig> expectedSchema = new()
         {
@@ -277,7 +297,11 @@ public class NamespaceMetadataTest : TestBase
             ApproxLogicalBytes = 0,
             ApproxRowCount = 0,
             CreatedAt = DateTimeOffset.Parse("2019-12-27T18:11:19.117Z"),
-            Encryption = new Namespaces::CustomerManaged("key_name"),
+            Encryption = new Namespaces::CustomerManaged()
+            {
+                KeyName = "key_name",
+                EncryptionContext = new Dictionary<string, string>() { { "foo", "string" } },
+            },
             Index = new Namespaces::IndexUpToDate(),
             Schema = new Dictionary<string, Namespaces::AttributeSchemaConfig>()
             {
@@ -324,7 +348,11 @@ public class NamespaceMetadataTest : TestBase
             ApproxLogicalBytes = 0,
             ApproxRowCount = 0,
             CreatedAt = DateTimeOffset.Parse("2019-12-27T18:11:19.117Z"),
-            Encryption = new Namespaces::CustomerManaged("key_name"),
+            Encryption = new Namespaces::CustomerManaged()
+            {
+                KeyName = "key_name",
+                EncryptionContext = new Dictionary<string, string>() { { "foo", "string" } },
+            },
             Index = new Namespaces::IndexUpToDate(),
             Schema = new Dictionary<string, Namespaces::AttributeSchemaConfig>()
             {
@@ -363,7 +391,11 @@ public class NamespaceMetadataTest : TestBase
             ApproxLogicalBytes = 0,
             ApproxRowCount = 0,
             CreatedAt = DateTimeOffset.Parse("2019-12-27T18:11:19.117Z"),
-            Encryption = new Namespaces::CustomerManaged("key_name"),
+            Encryption = new Namespaces::CustomerManaged()
+            {
+                KeyName = "key_name",
+                EncryptionContext = new Dictionary<string, string>() { { "foo", "string" } },
+            },
             Index = new Namespaces::IndexUpToDate(),
             Schema = new Dictionary<string, Namespaces::AttributeSchemaConfig>()
             {
@@ -397,7 +429,11 @@ public class NamespaceMetadataTest : TestBase
             ApproxLogicalBytes = 0,
             ApproxRowCount = 0,
             CreatedAt = DateTimeOffset.Parse("2019-12-27T18:11:19.117Z"),
-            Encryption = new Namespaces::CustomerManaged("key_name"),
+            Encryption = new Namespaces::CustomerManaged()
+            {
+                KeyName = "key_name",
+                EncryptionContext = new Dictionary<string, string>() { { "foo", "string" } },
+            },
             Index = new Namespaces::IndexUpToDate(),
             Schema = new Dictionary<string, Namespaces::AttributeSchemaConfig>()
             {
@@ -441,7 +477,11 @@ public class NamespaceMetadataTest : TestBase
             ApproxLogicalBytes = 0,
             ApproxRowCount = 0,
             CreatedAt = DateTimeOffset.Parse("2019-12-27T18:11:19.117Z"),
-            Encryption = new Namespaces::CustomerManaged("key_name"),
+            Encryption = new Namespaces::CustomerManaged()
+            {
+                KeyName = "key_name",
+                EncryptionContext = new Dictionary<string, string>() { { "foo", "string" } },
+            },
             Index = new Namespaces::IndexUpToDate(),
             Schema = new Dictionary<string, Namespaces::AttributeSchemaConfig>()
             {
@@ -480,7 +520,11 @@ public class NamespaceMetadataTest : TestBase
             ApproxLogicalBytes = 0,
             ApproxRowCount = 0,
             CreatedAt = DateTimeOffset.Parse("2019-12-27T18:11:19.117Z"),
-            Encryption = new Namespaces::CustomerManaged("key_name"),
+            Encryption = new Namespaces::CustomerManaged()
+            {
+                KeyName = "key_name",
+                EncryptionContext = new Dictionary<string, string>() { { "foo", "string" } },
+            },
             Index = new Namespaces::IndexUpToDate(),
             Schema = new Dictionary<string, Namespaces::AttributeSchemaConfig>()
             {

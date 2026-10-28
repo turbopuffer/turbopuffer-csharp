@@ -294,6 +294,34 @@ public sealed record class CustomerManaged : JsonModel
         init { this._rawData.Set("mode", value); }
     }
 
+    /// <summary>
+    /// The AWS KMS encryption context to send with every request that uses the key.
+    /// Only supported on AWS, and must be enabled for your organization. Keys may
+    /// not start with `tpuf:` or `aws:`.
+    /// </summary>
+    public IReadOnlyDictionary<string, string>? EncryptionContext
+    {
+        get
+        {
+            this._rawData.Freeze();
+            return this._rawData.GetNullableClass<FrozenDictionary<string, string>>(
+                "encryption_context"
+            );
+        }
+        init
+        {
+            if (value == null)
+            {
+                return;
+            }
+
+            this._rawData.Set<FrozenDictionary<string, string>?>(
+                "encryption_context",
+                value == null ? null : FrozenDictionary.ToFrozenDictionary(value)
+            );
+        }
+    }
+
     /// <inheritdoc/>
     public override void Validate()
     {
@@ -307,6 +335,7 @@ public sealed record class CustomerManaged : JsonModel
         {
             throw new TurbopufferInvalidDataException("Invalid value given for constant");
         }
+        _ = this.EncryptionContext;
     }
 
     public CustomerManaged()
