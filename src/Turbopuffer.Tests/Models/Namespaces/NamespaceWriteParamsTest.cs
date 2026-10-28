@@ -17,16 +17,16 @@ public class NamespaceWriteParamsTest : TestBase
             BranchFromNamespace = "string",
             CopyFromNamespace = "string",
             CreateNamespace = true,
-            DeleteByFilter = new FilterRaw(JsonSerializer.Deserialize<JsonElement>("{}")),
+            DeleteByFilter = JsonSerializer.Deserialize<JsonElement>("{}"),
             DeleteByFilterAllowPartial = true,
-            DeleteCondition = new FilterRaw(JsonSerializer.Deserialize<JsonElement>("{}")),
+            DeleteCondition = JsonSerializer.Deserialize<JsonElement>("{}"),
             Deletes = ["182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"],
             DisableBackpressure = true,
             DistanceMetric = DistanceMetric.CosineDistance,
             Encryption = new CustomerManaged("key_name"),
             PatchByFilter = new()
             {
-                Filters = new FilterRaw(JsonSerializer.Deserialize<JsonElement>("{}")),
+                Filters = JsonSerializer.Deserialize<JsonElement>("{}"),
                 Patch = new Dictionary<string, JsonElement>()
                 {
                     { "foo", JsonSerializer.SerializeToElement("bar") },
@@ -38,7 +38,7 @@ public class NamespaceWriteParamsTest : TestBase
                 ID = ["182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"],
                 Vector = new([new([0])]),
             },
-            PatchCondition = new FilterRaw(JsonSerializer.Deserialize<JsonElement>("{}")),
+            PatchCondition = JsonSerializer.Deserialize<JsonElement>("{}"),
             PatchRows = [new() { ID = "182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e", Vector = new([0]) }],
             ReturnAffectedIds = true,
             Schema = new Dictionary<string, AttributeSchema>() { { "foo", "string" } },
@@ -48,7 +48,7 @@ public class NamespaceWriteParamsTest : TestBase
                 ID = ["182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"],
                 Vector = new([new([0])]),
             },
-            UpsertCondition = new FilterRaw(JsonSerializer.Deserialize<JsonElement>("{}")),
+            UpsertCondition = JsonSerializer.Deserialize<JsonElement>("{}"),
             UpsertRows = [new() { ID = "182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e", Vector = new([0]) }],
         };
 
@@ -65,7 +65,7 @@ public class NamespaceWriteParamsTest : TestBase
         Encryption expectedEncryption = new CustomerManaged("key_name");
         PatchByFilter expectedPatchByFilter = new()
         {
-            Filters = new FilterRaw(JsonSerializer.Deserialize<JsonElement>("{}")),
+            Filters = JsonSerializer.Deserialize<JsonElement>("{}"),
             Patch = new Dictionary<string, JsonElement>()
             {
                 { "foo", JsonSerializer.SerializeToElement("bar") },
@@ -102,18 +102,12 @@ public class NamespaceWriteParamsTest : TestBase
         Assert.Equal(expectedCreateNamespace, parameters.CreateNamespace);
         Assert.NotNull(parameters.DeleteByFilter);
         Assert.True(
-            JsonElement.DeepEquals(
-                expectedDeleteByFilter,
-                ((FilterRaw)parameters.DeleteByFilter).Value
-            )
+            JsonElement.DeepEquals(expectedDeleteByFilter, parameters.DeleteByFilter.Value)
         );
         Assert.Equal(expectedDeleteByFilterAllowPartial, parameters.DeleteByFilterAllowPartial);
         Assert.NotNull(parameters.DeleteCondition);
         Assert.True(
-            JsonElement.DeepEquals(
-                expectedDeleteCondition,
-                ((FilterRaw)parameters.DeleteCondition).Value
-            )
+            JsonElement.DeepEquals(expectedDeleteCondition, parameters.DeleteCondition.Value)
         );
         Assert.NotNull(parameters.Deletes);
         Assert.Equal(expectedDeletes.Count, parameters.Deletes.Count);
@@ -129,10 +123,7 @@ public class NamespaceWriteParamsTest : TestBase
         Assert.Equal(expectedPatchColumns, parameters.PatchColumns);
         Assert.NotNull(parameters.PatchCondition);
         Assert.True(
-            JsonElement.DeepEquals(
-                expectedPatchCondition,
-                ((FilterRaw)parameters.PatchCondition).Value
-            )
+            JsonElement.DeepEquals(expectedPatchCondition, parameters.PatchCondition.Value)
         );
         Assert.NotNull(parameters.PatchRows);
         Assert.Equal(expectedPatchRows.Count, parameters.PatchRows.Count);
@@ -153,10 +144,7 @@ public class NamespaceWriteParamsTest : TestBase
         Assert.Equal(expectedUpsertColumns, parameters.UpsertColumns);
         Assert.NotNull(parameters.UpsertCondition);
         Assert.True(
-            JsonElement.DeepEquals(
-                expectedUpsertCondition,
-                ((FilterRaw)parameters.UpsertCondition).Value
-            )
+            JsonElement.DeepEquals(expectedUpsertCondition, parameters.UpsertCondition.Value)
         );
         Assert.NotNull(parameters.UpsertRows);
         Assert.Equal(expectedUpsertRows.Count, parameters.UpsertRows.Count);
@@ -314,16 +302,16 @@ public class NamespaceWriteParamsTest : TestBase
             BranchFromNamespace = "string",
             CopyFromNamespace = "string",
             CreateNamespace = true,
-            DeleteByFilter = new FilterRaw(JsonSerializer.Deserialize<JsonElement>("{}")),
+            DeleteByFilter = JsonSerializer.Deserialize<JsonElement>("{}"),
             DeleteByFilterAllowPartial = true,
-            DeleteCondition = new FilterRaw(JsonSerializer.Deserialize<JsonElement>("{}")),
+            DeleteCondition = JsonSerializer.Deserialize<JsonElement>("{}"),
             Deletes = ["182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"],
             DisableBackpressure = true,
             DistanceMetric = DistanceMetric.CosineDistance,
             Encryption = new CustomerManaged("key_name"),
             PatchByFilter = new()
             {
-                Filters = new FilterRaw(JsonSerializer.Deserialize<JsonElement>("{}")),
+                Filters = JsonSerializer.Deserialize<JsonElement>("{}"),
                 Patch = new Dictionary<string, JsonElement>()
                 {
                     { "foo", JsonSerializer.SerializeToElement("bar") },
@@ -335,7 +323,7 @@ public class NamespaceWriteParamsTest : TestBase
                 ID = ["182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"],
                 Vector = new([new([0])]),
             },
-            PatchCondition = new FilterRaw(JsonSerializer.Deserialize<JsonElement>("{}")),
+            PatchCondition = JsonSerializer.Deserialize<JsonElement>("{}"),
             PatchRows = [new() { ID = "182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e", Vector = new([0]) }],
             ReturnAffectedIds = true,
             Schema = new Dictionary<string, AttributeSchema>() { { "foo", "string" } },
@@ -345,7 +333,7 @@ public class NamespaceWriteParamsTest : TestBase
                 ID = ["182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"],
                 Vector = new([new([0])]),
             },
-            UpsertCondition = new FilterRaw(JsonSerializer.Deserialize<JsonElement>("{}")),
+            UpsertCondition = JsonSerializer.Deserialize<JsonElement>("{}"),
             UpsertRows = [new() { ID = "182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e", Vector = new([0]) }],
         };
 
@@ -362,7 +350,7 @@ public class PatchByFilterTest : TestBase
     {
         var model = new PatchByFilter
         {
-            Filters = new FilterRaw(JsonSerializer.Deserialize<JsonElement>("{}")),
+            Filters = JsonSerializer.Deserialize<JsonElement>("{}"),
             Patch = new Dictionary<string, JsonElement>()
             {
                 { "foo", JsonSerializer.SerializeToElement("bar") },
@@ -375,7 +363,7 @@ public class PatchByFilterTest : TestBase
             { "foo", JsonSerializer.SerializeToElement("bar") },
         };
 
-        Assert.True(JsonElement.DeepEquals(expectedFilters, ((FilterRaw)model.Filters).Value));
+        Assert.True(JsonElement.DeepEquals(expectedFilters, model.Filters));
         Assert.Equal(expectedPatch.Count, model.Patch.Count);
         foreach (var item in expectedPatch)
         {
@@ -390,7 +378,7 @@ public class PatchByFilterTest : TestBase
     {
         var model = new PatchByFilter
         {
-            Filters = new FilterRaw(JsonSerializer.Deserialize<JsonElement>("{}")),
+            Filters = JsonSerializer.Deserialize<JsonElement>("{}"),
             Patch = new Dictionary<string, JsonElement>()
             {
                 { "foo", JsonSerializer.SerializeToElement("bar") },
@@ -411,7 +399,7 @@ public class PatchByFilterTest : TestBase
     {
         var model = new PatchByFilter
         {
-            Filters = new FilterRaw(JsonSerializer.Deserialize<JsonElement>("{}")),
+            Filters = JsonSerializer.Deserialize<JsonElement>("{}"),
             Patch = new Dictionary<string, JsonElement>()
             {
                 { "foo", JsonSerializer.SerializeToElement("bar") },
@@ -431,9 +419,7 @@ public class PatchByFilterTest : TestBase
             { "foo", JsonSerializer.SerializeToElement("bar") },
         };
 
-        Assert.True(
-            JsonElement.DeepEquals(expectedFilters, ((FilterRaw)deserialized.Filters).Value)
-        );
+        Assert.True(JsonElement.DeepEquals(expectedFilters, deserialized.Filters));
         Assert.Equal(expectedPatch.Count, deserialized.Patch.Count);
         foreach (var item in expectedPatch)
         {
@@ -448,7 +434,7 @@ public class PatchByFilterTest : TestBase
     {
         var model = new PatchByFilter
         {
-            Filters = new FilterRaw(JsonSerializer.Deserialize<JsonElement>("{}")),
+            Filters = JsonSerializer.Deserialize<JsonElement>("{}"),
             Patch = new Dictionary<string, JsonElement>()
             {
                 { "foo", JsonSerializer.SerializeToElement("bar") },
@@ -463,7 +449,7 @@ public class PatchByFilterTest : TestBase
     {
         var model = new PatchByFilter
         {
-            Filters = new FilterRaw(JsonSerializer.Deserialize<JsonElement>("{}")),
+            Filters = JsonSerializer.Deserialize<JsonElement>("{}"),
             Patch = new Dictionary<string, JsonElement>()
             {
                 { "foo", JsonSerializer.SerializeToElement("bar") },

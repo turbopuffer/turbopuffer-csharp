@@ -21,6 +21,8 @@
     <ProjectReference Include="..\Turbopuffer\Turbopuffer.csproj" />
     <Using Include="Xunit" />
   </ItemGroup>
+  <!-- Generated tests that don't compile against the custom types and client.
+  CustomParamsTest.cs and ParamsWireFormatTest.cs cover what they would. -->
   <ItemGroup>
     <Compile Remove="Models\Namespaces\AttributeSchemaTest.cs" />
     <Compile Remove="Models\Namespaces\ColumnsTest.cs" />
@@ -30,5 +32,10 @@
     <Compile Remove="Models\Namespaces\NamespaceQueryResponseTest.cs" />
     <Compile Remove="Models\Namespaces\NamespaceMultiQueryResponseTest.cs" />
     <Compile Remove="Models\Namespaces\NamespaceRecallResponseTest.cs" />
+    <Compile Remove="Models\Namespaces\NamespaceQueryParamsTest.cs" />
+    <Compile Remove="Models\Namespaces\NamespaceExplainQueryParamsTest.cs" />
+    <Compile Remove="Models\Namespaces\NamespaceMultiQueryParamsTest.cs" />
+    <Compile Remove="Models\Namespaces\NamespaceRecallParamsTest.cs" />
+    <Compile Remove="Services\NamespaceServiceTest.cs" />
   </ItemGroup>
 </Project>
