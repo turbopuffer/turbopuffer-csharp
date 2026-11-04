@@ -14,6 +14,7 @@ public class NamespaceWriteParamsTest : TestBase
         var parameters = new NamespaceWriteParams
         {
             Namespace = "namespace",
+            ArrangeBy = "arrange_by",
             BranchFromNamespace = "string",
             CopyFromNamespace = "string",
             CreateNamespace = true,
@@ -57,6 +58,7 @@ public class NamespaceWriteParamsTest : TestBase
         };
 
         string expectedNamespace = "namespace";
+        string expectedArrangeBy = "arrange_by";
         BranchFromNamespaceParams expectedBranchFromNamespace = "string";
         CopyFromNamespaceParams expectedCopyFromNamespace = "string";
         bool expectedCreateNamespace = true;
@@ -105,6 +107,7 @@ public class NamespaceWriteParamsTest : TestBase
         ];
 
         Assert.Equal(expectedNamespace, parameters.Namespace);
+        Assert.Equal(expectedArrangeBy, parameters.ArrangeBy);
         Assert.Equal(expectedBranchFromNamespace, parameters.BranchFromNamespace);
         Assert.Equal(expectedCopyFromNamespace, parameters.CopyFromNamespace);
         Assert.Equal(expectedCreateNamespace, parameters.CreateNamespace);
@@ -167,6 +170,8 @@ public class NamespaceWriteParamsTest : TestBase
     {
         var parameters = new NamespaceWriteParams { Namespace = "namespace" };
 
+        Assert.Null(parameters.ArrangeBy);
+        Assert.False(parameters.RawBodyData.ContainsKey("arrange_by"));
         Assert.Null(parameters.BranchFromNamespace);
         Assert.False(parameters.RawBodyData.ContainsKey("branch_from_namespace"));
         Assert.Null(parameters.CopyFromNamespace);
@@ -219,6 +224,7 @@ public class NamespaceWriteParamsTest : TestBase
             Namespace = "namespace",
 
             // Null should be interpreted as omitted for these properties
+            ArrangeBy = null,
             BranchFromNamespace = null,
             CopyFromNamespace = null,
             CreateNamespace = null,
@@ -242,6 +248,8 @@ public class NamespaceWriteParamsTest : TestBase
             UpsertRows = null,
         };
 
+        Assert.Null(parameters.ArrangeBy);
+        Assert.False(parameters.RawBodyData.ContainsKey("arrange_by"));
         Assert.Null(parameters.BranchFromNamespace);
         Assert.False(parameters.RawBodyData.ContainsKey("branch_from_namespace"));
         Assert.Null(parameters.CopyFromNamespace);
@@ -307,6 +315,7 @@ public class NamespaceWriteParamsTest : TestBase
         var parameters = new NamespaceWriteParams
         {
             Namespace = "namespace",
+            ArrangeBy = "arrange_by",
             BranchFromNamespace = "string",
             CopyFromNamespace = "string",
             CreateNamespace = true,

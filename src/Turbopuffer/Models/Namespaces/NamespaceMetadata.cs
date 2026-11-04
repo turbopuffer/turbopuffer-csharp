@@ -117,6 +117,27 @@ public sealed record class NamespaceMetadata : JsonModel
     }
 
     /// <summary>
+    /// The attribute the namespace is arranged by. Omitted when not set.
+    /// </summary>
+    public string? ArrangeBy
+    {
+        get
+        {
+            this._rawData.Freeze();
+            return this._rawData.GetNullableClass<string>("arrange_by");
+        }
+        init
+        {
+            if (value == null)
+            {
+                return;
+            }
+
+            this._rawData.Set("arrange_by", value);
+        }
+    }
+
+    /// <summary>
     /// Configuration for namespace pinning, along with the current status of the
     /// pinned namespace.
     /// </summary>
@@ -196,6 +217,7 @@ public sealed record class NamespaceMetadata : JsonModel
             item.Validate();
         }
         _ = this.UpdatedAt;
+        _ = this.ArrangeBy;
         this.Pinning?.Validate();
         _ = this.ReadOnly;
         this.Sharding?.Validate();
