@@ -29,6 +29,31 @@ public record class NamespaceWriteParams : ParamsBase
     public string? Namespace { get; init; }
 
     /// <summary>
+    /// Experimental. Stores documents in ranges of this attribute, ordered by it,
+    /// so queries filtering on a narrow range of it or ordered by it skip the rest.
+    /// Documents should be written in roughly ascending order of it. Must have type
+    /// `int`, `uint`, `datetime` or `string`, and can only be set on a namespace's
+    /// inaugural write.
+    /// </summary>
+    public string? ArrangeBy
+    {
+        get
+        {
+            this._rawBodyData.Freeze();
+            return this._rawBodyData.GetNullableClass<string>("arrange_by");
+        }
+        init
+        {
+            if (value == null)
+            {
+                return;
+            }
+
+            this._rawBodyData.Set("arrange_by", value);
+        }
+    }
+
+    /// <summary>
     /// The namespace to create an instant, copy-on-write clone of.
     /// </summary>
     public BranchFromNamespaceParams? BranchFromNamespace

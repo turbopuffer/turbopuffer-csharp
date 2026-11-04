@@ -42,6 +42,7 @@ public class NamespaceMetadataTest : TestBase
                 },
             },
             UpdatedAt = DateTimeOffset.Parse("2019-12-27T18:11:19.117Z"),
+            ArrangeBy = "arrange_by",
             Pinning = new()
             {
                 Replicas = 1,
@@ -85,6 +86,7 @@ public class NamespaceMetadataTest : TestBase
             },
         };
         DateTimeOffset expectedUpdatedAt = DateTimeOffset.Parse("2019-12-27T18:11:19.117Z");
+        string expectedArrangeBy = "arrange_by";
         Namespaces::NamespaceMetadataPinning expectedPinning = new()
         {
             Replicas = 1,
@@ -112,6 +114,7 @@ public class NamespaceMetadataTest : TestBase
             Assert.Equal(value, model.Schema[item.Key]);
         }
         Assert.Equal(expectedUpdatedAt, model.UpdatedAt);
+        Assert.Equal(expectedArrangeBy, model.ArrangeBy);
         Assert.Equal(expectedPinning, model.Pinning);
         Assert.Equal(expectedReadOnly, model.ReadOnly);
         Assert.Equal(expectedSharding, model.Sharding);
@@ -150,6 +153,7 @@ public class NamespaceMetadataTest : TestBase
                 },
             },
             UpdatedAt = DateTimeOffset.Parse("2019-12-27T18:11:19.117Z"),
+            ArrangeBy = "arrange_by",
             Pinning = new()
             {
                 Replicas = 1,
@@ -207,6 +211,7 @@ public class NamespaceMetadataTest : TestBase
                 },
             },
             UpdatedAt = DateTimeOffset.Parse("2019-12-27T18:11:19.117Z"),
+            ArrangeBy = "arrange_by",
             Pinning = new()
             {
                 Replicas = 1,
@@ -257,6 +262,7 @@ public class NamespaceMetadataTest : TestBase
             },
         };
         DateTimeOffset expectedUpdatedAt = DateTimeOffset.Parse("2019-12-27T18:11:19.117Z");
+        string expectedArrangeBy = "arrange_by";
         Namespaces::NamespaceMetadataPinning expectedPinning = new()
         {
             Replicas = 1,
@@ -284,6 +290,7 @@ public class NamespaceMetadataTest : TestBase
             Assert.Equal(value, deserialized.Schema[item.Key]);
         }
         Assert.Equal(expectedUpdatedAt, deserialized.UpdatedAt);
+        Assert.Equal(expectedArrangeBy, deserialized.ArrangeBy);
         Assert.Equal(expectedPinning, deserialized.Pinning);
         Assert.Equal(expectedReadOnly, deserialized.ReadOnly);
         Assert.Equal(expectedSharding, deserialized.Sharding);
@@ -322,6 +329,7 @@ public class NamespaceMetadataTest : TestBase
                 },
             },
             UpdatedAt = DateTimeOffset.Parse("2019-12-27T18:11:19.117Z"),
+            ArrangeBy = "arrange_by",
             Pinning = new()
             {
                 Replicas = 1,
@@ -375,6 +383,8 @@ public class NamespaceMetadataTest : TestBase
             UpdatedAt = DateTimeOffset.Parse("2019-12-27T18:11:19.117Z"),
         };
 
+        Assert.Null(model.ArrangeBy);
+        Assert.False(model.RawData.ContainsKey("arrange_by"));
         Assert.Null(model.Pinning);
         Assert.False(model.RawData.ContainsKey("pinning"));
         Assert.Null(model.ReadOnly);
@@ -456,11 +466,14 @@ public class NamespaceMetadataTest : TestBase
             UpdatedAt = DateTimeOffset.Parse("2019-12-27T18:11:19.117Z"),
 
             // Null should be interpreted as omitted for these properties
+            ArrangeBy = null,
             Pinning = null,
             ReadOnly = null,
             Sharding = null,
         };
 
+        Assert.Null(model.ArrangeBy);
+        Assert.False(model.RawData.ContainsKey("arrange_by"));
         Assert.Null(model.Pinning);
         Assert.False(model.RawData.ContainsKey("pinning"));
         Assert.Null(model.ReadOnly);
@@ -504,6 +517,7 @@ public class NamespaceMetadataTest : TestBase
             UpdatedAt = DateTimeOffset.Parse("2019-12-27T18:11:19.117Z"),
 
             // Null should be interpreted as omitted for these properties
+            ArrangeBy = null,
             Pinning = null,
             ReadOnly = null,
             Sharding = null,
@@ -545,6 +559,7 @@ public class NamespaceMetadataTest : TestBase
                 },
             },
             UpdatedAt = DateTimeOffset.Parse("2019-12-27T18:11:19.117Z"),
+            ArrangeBy = "arrange_by",
             Pinning = new()
             {
                 Replicas = 1,
