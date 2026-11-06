@@ -117,14 +117,15 @@ public sealed record class NamespaceMetadata : JsonModel
     }
 
     /// <summary>
-    /// The attribute the namespace is arranged by. Omitted when not set.
+    /// Experimental. How a namespace stores its documents. Can only be set on a namespace's
+    /// inaugural write, and cannot be changed later.
     /// </summary>
-    public string? ArrangeBy
+    public NamespaceMetadataLayout? Layout
     {
         get
         {
             this._rawData.Freeze();
-            return this._rawData.GetNullableClass<string>("arrange_by");
+            return this._rawData.GetNullableClass<NamespaceMetadataLayout>("layout");
         }
         init
         {
@@ -133,7 +134,7 @@ public sealed record class NamespaceMetadata : JsonModel
                 return;
             }
 
-            this._rawData.Set("arrange_by", value);
+            this._rawData.Set("layout", value);
         }
     }
 
@@ -217,7 +218,7 @@ public sealed record class NamespaceMetadata : JsonModel
             item.Validate();
         }
         _ = this.UpdatedAt;
-        _ = this.ArrangeBy;
+        this.Layout?.Validate();
         this.Pinning?.Validate();
         _ = this.ReadOnly;
         this.Sharding?.Validate();
@@ -684,6 +685,81 @@ class IndexUpdatingFromRaw : IFromRawJson<IndexUpdating>
     /// <inheritdoc/>
     public IndexUpdating FromRawUnchecked(IReadOnlyDictionary<string, JsonElement> rawData) =>
         IndexUpdating.FromRawUnchecked(rawData);
+}
+
+/// <summary>
+/// Experimental. How a namespace stores its documents. Can only be set on a namespace's
+/// inaugural write, and cannot be changed later.
+/// </summary>
+[JsonConverter(typeof(JsonModelConverter<NamespaceMetadataLayout, NamespaceMetadataLayoutFromRaw>))]
+public sealed record class NamespaceMetadataLayout : JsonModel
+{
+    /// <summary>
+    /// Stores documents in ranges of this attribute, ordered by it, so queries filtering
+    /// on a narrow range of it or ordered by it skip the rest. Documents should
+    /// be written in roughly ascending order of it. Must have type `int`, `uint`,
+    /// `datetime` or `string`.
+    /// </summary>
+    public string? ArrangeBy
+    {
+        get
+        {
+            this._rawData.Freeze();
+            return this._rawData.GetNullableClass<string>("arrange_by");
+        }
+        init
+        {
+            if (value == null)
+            {
+                return;
+            }
+
+            this._rawData.Set("arrange_by", value);
+        }
+    }
+
+    /// <inheritdoc/>
+    public override void Validate()
+    {
+        _ = this.ArrangeBy;
+    }
+
+    public NamespaceMetadataLayout() { }
+
+#pragma warning disable CS8618
+    [SetsRequiredMembers]
+    public NamespaceMetadataLayout(NamespaceMetadataLayout namespaceMetadataLayout)
+        : base(namespaceMetadataLayout) { }
+#pragma warning restore CS8618
+
+    public NamespaceMetadataLayout(IReadOnlyDictionary<string, JsonElement> rawData)
+    {
+        this._rawData = new(rawData);
+    }
+
+#pragma warning disable CS8618
+    [SetsRequiredMembers]
+    NamespaceMetadataLayout(FrozenDictionary<string, JsonElement> rawData)
+    {
+        this._rawData = new(rawData);
+    }
+#pragma warning restore CS8618
+
+    /// <inheritdoc cref="NamespaceMetadataLayoutFromRaw.FromRawUnchecked"/>
+    public static NamespaceMetadataLayout FromRawUnchecked(
+        IReadOnlyDictionary<string, JsonElement> rawData
+    )
+    {
+        return new(FrozenDictionary.ToFrozenDictionary(rawData));
+    }
+}
+
+class NamespaceMetadataLayoutFromRaw : IFromRawJson<NamespaceMetadataLayout>
+{
+    /// <inheritdoc/>
+    public NamespaceMetadataLayout FromRawUnchecked(
+        IReadOnlyDictionary<string, JsonElement> rawData
+    ) => NamespaceMetadataLayout.FromRawUnchecked(rawData);
 }
 
 /// <summary>

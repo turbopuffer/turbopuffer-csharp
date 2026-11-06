@@ -14,7 +14,6 @@ public class NamespaceWriteParamsTest : TestBase
         var parameters = new NamespaceWriteParams
         {
             Namespace = "namespace",
-            ArrangeBy = "arrange_by",
             BranchFromNamespace = "string",
             CopyFromNamespace = "string",
             CreateNamespace = true,
@@ -29,6 +28,7 @@ public class NamespaceWriteParamsTest : TestBase
                 KeyName = "key_name",
                 EncryptionContext = new Dictionary<string, string>() { { "foo", "string" } },
             },
+            Layout = new() { ArrangeBy = "arrange_by" },
             PatchByFilter = new()
             {
                 Filters = JsonSerializer.Deserialize<JsonElement>("{}"),
@@ -58,7 +58,6 @@ public class NamespaceWriteParamsTest : TestBase
         };
 
         string expectedNamespace = "namespace";
-        string expectedArrangeBy = "arrange_by";
         BranchFromNamespaceParams expectedBranchFromNamespace = "string";
         CopyFromNamespaceParams expectedCopyFromNamespace = "string";
         bool expectedCreateNamespace = true;
@@ -73,6 +72,7 @@ public class NamespaceWriteParamsTest : TestBase
             KeyName = "key_name",
             EncryptionContext = new Dictionary<string, string>() { { "foo", "string" } },
         };
+        Layout expectedLayout = new() { ArrangeBy = "arrange_by" };
         PatchByFilter expectedPatchByFilter = new()
         {
             Filters = JsonSerializer.Deserialize<JsonElement>("{}"),
@@ -107,7 +107,6 @@ public class NamespaceWriteParamsTest : TestBase
         ];
 
         Assert.Equal(expectedNamespace, parameters.Namespace);
-        Assert.Equal(expectedArrangeBy, parameters.ArrangeBy);
         Assert.Equal(expectedBranchFromNamespace, parameters.BranchFromNamespace);
         Assert.Equal(expectedCopyFromNamespace, parameters.CopyFromNamespace);
         Assert.Equal(expectedCreateNamespace, parameters.CreateNamespace);
@@ -129,6 +128,7 @@ public class NamespaceWriteParamsTest : TestBase
         Assert.Equal(expectedDisableBackpressure, parameters.DisableBackpressure);
         Assert.Equal(expectedDistanceMetric, parameters.DistanceMetric);
         Assert.Equal(expectedEncryption, parameters.Encryption);
+        Assert.Equal(expectedLayout, parameters.Layout);
         Assert.Equal(expectedPatchByFilter, parameters.PatchByFilter);
         Assert.Equal(expectedPatchByFilterAllowPartial, parameters.PatchByFilterAllowPartial);
         Assert.Equal(expectedPatchColumns, parameters.PatchColumns);
@@ -170,8 +170,6 @@ public class NamespaceWriteParamsTest : TestBase
     {
         var parameters = new NamespaceWriteParams { Namespace = "namespace" };
 
-        Assert.Null(parameters.ArrangeBy);
-        Assert.False(parameters.RawBodyData.ContainsKey("arrange_by"));
         Assert.Null(parameters.BranchFromNamespace);
         Assert.False(parameters.RawBodyData.ContainsKey("branch_from_namespace"));
         Assert.Null(parameters.CopyFromNamespace);
@@ -192,6 +190,8 @@ public class NamespaceWriteParamsTest : TestBase
         Assert.False(parameters.RawBodyData.ContainsKey("distance_metric"));
         Assert.Null(parameters.Encryption);
         Assert.False(parameters.RawBodyData.ContainsKey("encryption"));
+        Assert.Null(parameters.Layout);
+        Assert.False(parameters.RawBodyData.ContainsKey("layout"));
         Assert.Null(parameters.PatchByFilter);
         Assert.False(parameters.RawBodyData.ContainsKey("patch_by_filter"));
         Assert.Null(parameters.PatchByFilterAllowPartial);
@@ -224,7 +224,6 @@ public class NamespaceWriteParamsTest : TestBase
             Namespace = "namespace",
 
             // Null should be interpreted as omitted for these properties
-            ArrangeBy = null,
             BranchFromNamespace = null,
             CopyFromNamespace = null,
             CreateNamespace = null,
@@ -235,6 +234,7 @@ public class NamespaceWriteParamsTest : TestBase
             DisableBackpressure = null,
             DistanceMetric = null,
             Encryption = null,
+            Layout = null,
             PatchByFilter = null,
             PatchByFilterAllowPartial = null,
             PatchColumns = null,
@@ -248,8 +248,6 @@ public class NamespaceWriteParamsTest : TestBase
             UpsertRows = null,
         };
 
-        Assert.Null(parameters.ArrangeBy);
-        Assert.False(parameters.RawBodyData.ContainsKey("arrange_by"));
         Assert.Null(parameters.BranchFromNamespace);
         Assert.False(parameters.RawBodyData.ContainsKey("branch_from_namespace"));
         Assert.Null(parameters.CopyFromNamespace);
@@ -270,6 +268,8 @@ public class NamespaceWriteParamsTest : TestBase
         Assert.False(parameters.RawBodyData.ContainsKey("distance_metric"));
         Assert.Null(parameters.Encryption);
         Assert.False(parameters.RawBodyData.ContainsKey("encryption"));
+        Assert.Null(parameters.Layout);
+        Assert.False(parameters.RawBodyData.ContainsKey("layout"));
         Assert.Null(parameters.PatchByFilter);
         Assert.False(parameters.RawBodyData.ContainsKey("patch_by_filter"));
         Assert.Null(parameters.PatchByFilterAllowPartial);
@@ -315,7 +315,6 @@ public class NamespaceWriteParamsTest : TestBase
         var parameters = new NamespaceWriteParams
         {
             Namespace = "namespace",
-            ArrangeBy = "arrange_by",
             BranchFromNamespace = "string",
             CopyFromNamespace = "string",
             CreateNamespace = true,
@@ -330,6 +329,7 @@ public class NamespaceWriteParamsTest : TestBase
                 KeyName = "key_name",
                 EncryptionContext = new Dictionary<string, string>() { { "foo", "string" } },
             },
+            Layout = new() { ArrangeBy = "arrange_by" },
             PatchByFilter = new()
             {
                 Filters = JsonSerializer.Deserialize<JsonElement>("{}"),
@@ -361,6 +361,104 @@ public class NamespaceWriteParamsTest : TestBase
         NamespaceWriteParams copied = new(parameters);
 
         Assert.Equal(parameters, copied);
+    }
+}
+
+public class LayoutTest : TestBase
+{
+    [Fact]
+    public void FieldRoundtrip_Works()
+    {
+        var model = new Layout { ArrangeBy = "arrange_by" };
+
+        string expectedArrangeBy = "arrange_by";
+
+        Assert.Equal(expectedArrangeBy, model.ArrangeBy);
+    }
+
+    [Fact]
+    public void SerializationRoundtrip_Works()
+    {
+        var model = new Layout { ArrangeBy = "arrange_by" };
+
+        string json = JsonSerializer.Serialize(model, ModelBase.SerializerOptions);
+        var deserialized = JsonSerializer.Deserialize<Layout>(json, ModelBase.SerializerOptions);
+
+        Assert.Equal(model, deserialized);
+    }
+
+    [Fact]
+    public void FieldRoundtripThroughSerialization_Works()
+    {
+        var model = new Layout { ArrangeBy = "arrange_by" };
+
+        string element = JsonSerializer.Serialize(model, ModelBase.SerializerOptions);
+        var deserialized = JsonSerializer.Deserialize<Layout>(element, ModelBase.SerializerOptions);
+        Assert.NotNull(deserialized);
+
+        string expectedArrangeBy = "arrange_by";
+
+        Assert.Equal(expectedArrangeBy, deserialized.ArrangeBy);
+    }
+
+    [Fact]
+    public void Validation_Works()
+    {
+        var model = new Layout { ArrangeBy = "arrange_by" };
+
+        model.Validate();
+    }
+
+    [Fact]
+    public void OptionalNonNullablePropertiesUnsetAreNotSet_Works()
+    {
+        var model = new Layout { };
+
+        Assert.Null(model.ArrangeBy);
+        Assert.False(model.RawData.ContainsKey("arrange_by"));
+    }
+
+    [Fact]
+    public void OptionalNonNullablePropertiesUnsetValidation_Works()
+    {
+        var model = new Layout { };
+
+        model.Validate();
+    }
+
+    [Fact]
+    public void OptionalNonNullablePropertiesSetToNullAreNotSet_Works()
+    {
+        var model = new Layout
+        {
+            // Null should be interpreted as omitted for these properties
+            ArrangeBy = null,
+        };
+
+        Assert.Null(model.ArrangeBy);
+        Assert.False(model.RawData.ContainsKey("arrange_by"));
+    }
+
+    [Fact]
+    public void OptionalNonNullablePropertiesSetToNullValidation_Works()
+    {
+        var model = new Layout
+        {
+            // Null should be interpreted as omitted for these properties
+            ArrangeBy = null,
+        };
+
+        model.Validate();
+    }
+
+    [Fact]
+    public void CopyConstructor_Works()
+    {
+        var model = new Layout { ArrangeBy = "arrange_by" };
+
+        Layout copied = new(model);
+
+        Assert.Equal(model, copied);
     }
 }
 

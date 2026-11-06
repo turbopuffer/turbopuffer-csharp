@@ -407,7 +407,7 @@ using Turbopuffer.Models.Namespaces;
 
 NamespaceWriteParams parameters = new()
 {
-    PatchByFilter = new
+    Layout = new
     (
         new Dictionary<string, JsonElement>
         {
@@ -426,7 +426,7 @@ using Turbopuffer.Models.Namespaces;
 
 NamespaceWriteParams parameters = new()
 {
-    PatchByFilter = PatchByFilter.FromRawUnchecked
+    Layout = Layout.FromRawUnchecked
     (
         new Dictionary<string, JsonElement>
         {
