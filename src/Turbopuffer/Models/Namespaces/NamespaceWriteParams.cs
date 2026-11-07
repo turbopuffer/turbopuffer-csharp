@@ -250,6 +250,28 @@ public record class NamespaceWriteParams : ParamsBase
     }
 
     /// <summary>
+    /// Experimental. How a namespace stores its documents. A change applies to documents
+    /// indexed after it.
+    /// </summary>
+    public Layout? Layout
+    {
+        get
+        {
+            this._rawBodyData.Freeze();
+            return this._rawBodyData.GetNullableClass<Layout>("layout");
+        }
+        init
+        {
+            if (value == null)
+            {
+                return;
+            }
+
+            this._rawBodyData.Set("layout", value);
+        }
+    }
+
+    /// <summary>
     /// Sets the attributes in `patch` on every document that matches `filters`.
     /// </summary>
     public PatchByFilter? PatchByFilter
@@ -616,6 +638,82 @@ public record class NamespaceWriteParams : ParamsBase
     {
         return 0;
     }
+}
+
+/// <summary>
+/// Experimental. How a namespace stores its documents. A change applies to documents
+/// indexed after it.
+/// </summary>
+[JsonConverter(typeof(JsonModelConverter<Layout, LayoutFromRaw>))]
+public sealed record class Layout : JsonModel
+{
+    /// <summary>
+    /// Stores documents in ranges of an attribute, in ascending order, so queries
+    /// filtering on a narrow range of it or ranking by it skip the rest. Documents
+    /// should be written in roughly ascending order of it. Must have type `int`,
+    /// `uint`, `datetime` or `string`. `["id", "asc"]` resets the namespace to the
+    /// default layout.
+    /// </summary>
+    public IReadOnlyList<JsonElement>? RankBy
+    {
+        get
+        {
+            this._rawData.Freeze();
+            return this._rawData.GetNullableStruct<ImmutableArray<JsonElement>>("rank_by");
+        }
+        init
+        {
+            if (value == null)
+            {
+                return;
+            }
+
+            this._rawData.Set<ImmutableArray<JsonElement>?>(
+                "rank_by",
+                value == null ? null : ImmutableArray.ToImmutableArray(value)
+            );
+        }
+    }
+
+    /// <inheritdoc/>
+    public override void Validate()
+    {
+        _ = this.RankBy;
+    }
+
+    public Layout() { }
+
+#pragma warning disable CS8618
+    [SetsRequiredMembers]
+    public Layout(Layout layout)
+        : base(layout) { }
+#pragma warning restore CS8618
+
+    public Layout(IReadOnlyDictionary<string, JsonElement> rawData)
+    {
+        this._rawData = new(rawData);
+    }
+
+#pragma warning disable CS8618
+    [SetsRequiredMembers]
+    Layout(FrozenDictionary<string, JsonElement> rawData)
+    {
+        this._rawData = new(rawData);
+    }
+#pragma warning restore CS8618
+
+    /// <inheritdoc cref="LayoutFromRaw.FromRawUnchecked"/>
+    public static Layout FromRawUnchecked(IReadOnlyDictionary<string, JsonElement> rawData)
+    {
+        return new(FrozenDictionary.ToFrozenDictionary(rawData));
+    }
+}
+
+class LayoutFromRaw : IFromRawJson<Layout>
+{
+    /// <inheritdoc/>
+    public Layout FromRawUnchecked(IReadOnlyDictionary<string, JsonElement> rawData) =>
+        Layout.FromRawUnchecked(rawData);
 }
 
 /// <summary>
