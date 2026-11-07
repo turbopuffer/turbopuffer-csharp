@@ -42,7 +42,7 @@ public class NamespaceMetadataTest : TestBase
                 },
             },
             UpdatedAt = DateTimeOffset.Parse("2019-12-27T18:11:19.117Z"),
-            Layout = new() { ArrangeBy = "arrange_by" },
+            Layout = new() { RankBy = [JsonSerializer.Deserialize<JsonElement>("{}")] },
             Pinning = new()
             {
                 Replicas = 1,
@@ -86,7 +86,10 @@ public class NamespaceMetadataTest : TestBase
             },
         };
         DateTimeOffset expectedUpdatedAt = DateTimeOffset.Parse("2019-12-27T18:11:19.117Z");
-        Namespaces::NamespaceMetadataLayout expectedLayout = new() { ArrangeBy = "arrange_by" };
+        Namespaces::NamespaceMetadataLayout expectedLayout = new()
+        {
+            RankBy = [JsonSerializer.Deserialize<JsonElement>("{}")],
+        };
         Namespaces::NamespaceMetadataPinning expectedPinning = new()
         {
             Replicas = 1,
@@ -153,7 +156,7 @@ public class NamespaceMetadataTest : TestBase
                 },
             },
             UpdatedAt = DateTimeOffset.Parse("2019-12-27T18:11:19.117Z"),
-            Layout = new() { ArrangeBy = "arrange_by" },
+            Layout = new() { RankBy = [JsonSerializer.Deserialize<JsonElement>("{}")] },
             Pinning = new()
             {
                 Replicas = 1,
@@ -211,7 +214,7 @@ public class NamespaceMetadataTest : TestBase
                 },
             },
             UpdatedAt = DateTimeOffset.Parse("2019-12-27T18:11:19.117Z"),
-            Layout = new() { ArrangeBy = "arrange_by" },
+            Layout = new() { RankBy = [JsonSerializer.Deserialize<JsonElement>("{}")] },
             Pinning = new()
             {
                 Replicas = 1,
@@ -262,7 +265,10 @@ public class NamespaceMetadataTest : TestBase
             },
         };
         DateTimeOffset expectedUpdatedAt = DateTimeOffset.Parse("2019-12-27T18:11:19.117Z");
-        Namespaces::NamespaceMetadataLayout expectedLayout = new() { ArrangeBy = "arrange_by" };
+        Namespaces::NamespaceMetadataLayout expectedLayout = new()
+        {
+            RankBy = [JsonSerializer.Deserialize<JsonElement>("{}")],
+        };
         Namespaces::NamespaceMetadataPinning expectedPinning = new()
         {
             Replicas = 1,
@@ -329,7 +335,7 @@ public class NamespaceMetadataTest : TestBase
                 },
             },
             UpdatedAt = DateTimeOffset.Parse("2019-12-27T18:11:19.117Z"),
-            Layout = new() { ArrangeBy = "arrange_by" },
+            Layout = new() { RankBy = [JsonSerializer.Deserialize<JsonElement>("{}")] },
             Pinning = new()
             {
                 Replicas = 1,
@@ -559,7 +565,7 @@ public class NamespaceMetadataTest : TestBase
                 },
             },
             UpdatedAt = DateTimeOffset.Parse("2019-12-27T18:11:19.117Z"),
-            Layout = new() { ArrangeBy = "arrange_by" },
+            Layout = new() { RankBy = [JsonSerializer.Deserialize<JsonElement>("{}")] },
             Pinning = new()
             {
                 Replicas = 1,
@@ -798,17 +804,28 @@ public class NamespaceMetadataLayoutTest : TestBase
     [Fact]
     public void FieldRoundtrip_Works()
     {
-        var model = new Namespaces::NamespaceMetadataLayout { ArrangeBy = "arrange_by" };
+        var model = new Namespaces::NamespaceMetadataLayout
+        {
+            RankBy = [JsonSerializer.Deserialize<JsonElement>("{}")],
+        };
 
-        string expectedArrangeBy = "arrange_by";
+        List<JsonElement> expectedRankBy = [JsonSerializer.Deserialize<JsonElement>("{}")];
 
-        Assert.Equal(expectedArrangeBy, model.ArrangeBy);
+        Assert.NotNull(model.RankBy);
+        Assert.Equal(expectedRankBy.Count, model.RankBy.Count);
+        for (int i = 0; i < expectedRankBy.Count; i++)
+        {
+            Assert.True(JsonElement.DeepEquals(expectedRankBy[i], model.RankBy[i]));
+        }
     }
 
     [Fact]
     public void SerializationRoundtrip_Works()
     {
-        var model = new Namespaces::NamespaceMetadataLayout { ArrangeBy = "arrange_by" };
+        var model = new Namespaces::NamespaceMetadataLayout
+        {
+            RankBy = [JsonSerializer.Deserialize<JsonElement>("{}")],
+        };
 
         string json = JsonSerializer.Serialize(model, ModelBase.SerializerOptions);
         var deserialized = JsonSerializer.Deserialize<Namespaces::NamespaceMetadataLayout>(
@@ -822,7 +839,10 @@ public class NamespaceMetadataLayoutTest : TestBase
     [Fact]
     public void FieldRoundtripThroughSerialization_Works()
     {
-        var model = new Namespaces::NamespaceMetadataLayout { ArrangeBy = "arrange_by" };
+        var model = new Namespaces::NamespaceMetadataLayout
+        {
+            RankBy = [JsonSerializer.Deserialize<JsonElement>("{}")],
+        };
 
         string element = JsonSerializer.Serialize(model, ModelBase.SerializerOptions);
         var deserialized = JsonSerializer.Deserialize<Namespaces::NamespaceMetadataLayout>(
@@ -831,15 +851,23 @@ public class NamespaceMetadataLayoutTest : TestBase
         );
         Assert.NotNull(deserialized);
 
-        string expectedArrangeBy = "arrange_by";
+        List<JsonElement> expectedRankBy = [JsonSerializer.Deserialize<JsonElement>("{}")];
 
-        Assert.Equal(expectedArrangeBy, deserialized.ArrangeBy);
+        Assert.NotNull(deserialized.RankBy);
+        Assert.Equal(expectedRankBy.Count, deserialized.RankBy.Count);
+        for (int i = 0; i < expectedRankBy.Count; i++)
+        {
+            Assert.True(JsonElement.DeepEquals(expectedRankBy[i], deserialized.RankBy[i]));
+        }
     }
 
     [Fact]
     public void Validation_Works()
     {
-        var model = new Namespaces::NamespaceMetadataLayout { ArrangeBy = "arrange_by" };
+        var model = new Namespaces::NamespaceMetadataLayout
+        {
+            RankBy = [JsonSerializer.Deserialize<JsonElement>("{}")],
+        };
 
         model.Validate();
     }
@@ -849,8 +877,8 @@ public class NamespaceMetadataLayoutTest : TestBase
     {
         var model = new Namespaces::NamespaceMetadataLayout { };
 
-        Assert.Null(model.ArrangeBy);
-        Assert.False(model.RawData.ContainsKey("arrange_by"));
+        Assert.Null(model.RankBy);
+        Assert.False(model.RawData.ContainsKey("rank_by"));
     }
 
     [Fact]
@@ -867,11 +895,11 @@ public class NamespaceMetadataLayoutTest : TestBase
         var model = new Namespaces::NamespaceMetadataLayout
         {
             // Null should be interpreted as omitted for these properties
-            ArrangeBy = null,
+            RankBy = null,
         };
 
-        Assert.Null(model.ArrangeBy);
-        Assert.False(model.RawData.ContainsKey("arrange_by"));
+        Assert.Null(model.RankBy);
+        Assert.False(model.RawData.ContainsKey("rank_by"));
     }
 
     [Fact]
@@ -880,7 +908,7 @@ public class NamespaceMetadataLayoutTest : TestBase
         var model = new Namespaces::NamespaceMetadataLayout
         {
             // Null should be interpreted as omitted for these properties
-            ArrangeBy = null,
+            RankBy = null,
         };
 
         model.Validate();
@@ -889,7 +917,10 @@ public class NamespaceMetadataLayoutTest : TestBase
     [Fact]
     public void CopyConstructor_Works()
     {
-        var model = new Namespaces::NamespaceMetadataLayout { ArrangeBy = "arrange_by" };
+        var model = new Namespaces::NamespaceMetadataLayout
+        {
+            RankBy = [JsonSerializer.Deserialize<JsonElement>("{}")],
+        };
 
         Namespaces::NamespaceMetadataLayout copied = new(model);
 

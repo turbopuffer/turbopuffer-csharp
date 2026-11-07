@@ -28,7 +28,7 @@ public class NamespaceWriteParamsTest : TestBase
                 KeyName = "key_name",
                 EncryptionContext = new Dictionary<string, string>() { { "foo", "string" } },
             },
-            Layout = new() { ArrangeBy = "arrange_by" },
+            Layout = new() { RankBy = [JsonSerializer.Deserialize<JsonElement>("{}")] },
             PatchByFilter = new()
             {
                 Filters = JsonSerializer.Deserialize<JsonElement>("{}"),
@@ -72,7 +72,7 @@ public class NamespaceWriteParamsTest : TestBase
             KeyName = "key_name",
             EncryptionContext = new Dictionary<string, string>() { { "foo", "string" } },
         };
-        Layout expectedLayout = new() { ArrangeBy = "arrange_by" };
+        Layout expectedLayout = new() { RankBy = [JsonSerializer.Deserialize<JsonElement>("{}")] };
         PatchByFilter expectedPatchByFilter = new()
         {
             Filters = JsonSerializer.Deserialize<JsonElement>("{}"),
@@ -329,7 +329,7 @@ public class NamespaceWriteParamsTest : TestBase
                 KeyName = "key_name",
                 EncryptionContext = new Dictionary<string, string>() { { "foo", "string" } },
             },
-            Layout = new() { ArrangeBy = "arrange_by" },
+            Layout = new() { RankBy = [JsonSerializer.Deserialize<JsonElement>("{}")] },
             PatchByFilter = new()
             {
                 Filters = JsonSerializer.Deserialize<JsonElement>("{}"),
@@ -369,17 +369,22 @@ public class LayoutTest : TestBase
     [Fact]
     public void FieldRoundtrip_Works()
     {
-        var model = new Layout { ArrangeBy = "arrange_by" };
+        var model = new Layout { RankBy = [JsonSerializer.Deserialize<JsonElement>("{}")] };
 
-        string expectedArrangeBy = "arrange_by";
+        List<JsonElement> expectedRankBy = [JsonSerializer.Deserialize<JsonElement>("{}")];
 
-        Assert.Equal(expectedArrangeBy, model.ArrangeBy);
+        Assert.NotNull(model.RankBy);
+        Assert.Equal(expectedRankBy.Count, model.RankBy.Count);
+        for (int i = 0; i < expectedRankBy.Count; i++)
+        {
+            Assert.True(JsonElement.DeepEquals(expectedRankBy[i], model.RankBy[i]));
+        }
     }
 
     [Fact]
     public void SerializationRoundtrip_Works()
     {
-        var model = new Layout { ArrangeBy = "arrange_by" };
+        var model = new Layout { RankBy = [JsonSerializer.Deserialize<JsonElement>("{}")] };
 
         string json = JsonSerializer.Serialize(model, ModelBase.SerializerOptions);
         var deserialized = JsonSerializer.Deserialize<Layout>(json, ModelBase.SerializerOptions);
@@ -390,21 +395,26 @@ public class LayoutTest : TestBase
     [Fact]
     public void FieldRoundtripThroughSerialization_Works()
     {
-        var model = new Layout { ArrangeBy = "arrange_by" };
+        var model = new Layout { RankBy = [JsonSerializer.Deserialize<JsonElement>("{}")] };
 
         string element = JsonSerializer.Serialize(model, ModelBase.SerializerOptions);
         var deserialized = JsonSerializer.Deserialize<Layout>(element, ModelBase.SerializerOptions);
         Assert.NotNull(deserialized);
 
-        string expectedArrangeBy = "arrange_by";
+        List<JsonElement> expectedRankBy = [JsonSerializer.Deserialize<JsonElement>("{}")];
 
-        Assert.Equal(expectedArrangeBy, deserialized.ArrangeBy);
+        Assert.NotNull(deserialized.RankBy);
+        Assert.Equal(expectedRankBy.Count, deserialized.RankBy.Count);
+        for (int i = 0; i < expectedRankBy.Count; i++)
+        {
+            Assert.True(JsonElement.DeepEquals(expectedRankBy[i], deserialized.RankBy[i]));
+        }
     }
 
     [Fact]
     public void Validation_Works()
     {
-        var model = new Layout { ArrangeBy = "arrange_by" };
+        var model = new Layout { RankBy = [JsonSerializer.Deserialize<JsonElement>("{}")] };
 
         model.Validate();
     }
@@ -414,8 +424,8 @@ public class LayoutTest : TestBase
     {
         var model = new Layout { };
 
-        Assert.Null(model.ArrangeBy);
-        Assert.False(model.RawData.ContainsKey("arrange_by"));
+        Assert.Null(model.RankBy);
+        Assert.False(model.RawData.ContainsKey("rank_by"));
     }
 
     [Fact]
@@ -432,11 +442,11 @@ public class LayoutTest : TestBase
         var model = new Layout
         {
             // Null should be interpreted as omitted for these properties
-            ArrangeBy = null,
+            RankBy = null,
         };
 
-        Assert.Null(model.ArrangeBy);
-        Assert.False(model.RawData.ContainsKey("arrange_by"));
+        Assert.Null(model.RankBy);
+        Assert.False(model.RawData.ContainsKey("rank_by"));
     }
 
     [Fact]
@@ -445,7 +455,7 @@ public class LayoutTest : TestBase
         var model = new Layout
         {
             // Null should be interpreted as omitted for these properties
-            ArrangeBy = null,
+            RankBy = null,
         };
 
         model.Validate();
@@ -454,7 +464,7 @@ public class LayoutTest : TestBase
     [Fact]
     public void CopyConstructor_Works()
     {
-        var model = new Layout { ArrangeBy = "arrange_by" };
+        var model = new Layout { RankBy = [JsonSerializer.Deserialize<JsonElement>("{}")] };
 
         Layout copied = new(model);
 

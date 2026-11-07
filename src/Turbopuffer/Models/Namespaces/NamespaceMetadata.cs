@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Frozen;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Diagnostics.CodeAnalysis;
 using System.Text.Json;
 using System.Text.Json.Serialization;
@@ -695,17 +696,18 @@ class IndexUpdatingFromRaw : IFromRawJson<IndexUpdating>
 public sealed record class NamespaceMetadataLayout : JsonModel
 {
     /// <summary>
-    /// Stores documents in ranges of this attribute, ordered by it, so queries filtering
-    /// on a narrow range of it or ordered by it skip the rest. Documents should
-    /// be written in roughly ascending order of it. Must have type `int`, `uint`,
-    /// `datetime` or `string`. `id` resets the namespace to the default layout.
+    /// Stores documents in ranges of an attribute, in ascending order, so queries
+    /// filtering on a narrow range of it or ranking by it skip the rest. Documents
+    /// should be written in roughly ascending order of it. Must have type `int`,
+    /// `uint`, `datetime` or `string`. `["id", "asc"]` resets the namespace to the
+    /// default layout.
     /// </summary>
-    public string? ArrangeBy
+    public IReadOnlyList<JsonElement>? RankBy
     {
         get
         {
             this._rawData.Freeze();
-            return this._rawData.GetNullableClass<string>("arrange_by");
+            return this._rawData.GetNullableStruct<ImmutableArray<JsonElement>>("rank_by");
         }
         init
         {
@@ -714,14 +716,17 @@ public sealed record class NamespaceMetadataLayout : JsonModel
                 return;
             }
 
-            this._rawData.Set("arrange_by", value);
+            this._rawData.Set<ImmutableArray<JsonElement>?>(
+                "rank_by",
+                value == null ? null : ImmutableArray.ToImmutableArray(value)
+            );
         }
     }
 
     /// <inheritdoc/>
     public override void Validate()
     {
-        _ = this.ArrangeBy;
+        _ = this.RankBy;
     }
 
     public NamespaceMetadataLayout() { }
