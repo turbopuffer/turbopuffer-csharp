@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Frozen;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Diagnostics.CodeAnalysis;
 using System.Text.Json;
 using System.Text.Json.Serialization;
@@ -117,6 +118,28 @@ public sealed record class NamespaceMetadata : JsonModel
     }
 
     /// <summary>
+    /// Experimental. How a namespace stores its documents. A change applies to documents
+    /// indexed after it.
+    /// </summary>
+    public NamespaceMetadataLayout? Layout
+    {
+        get
+        {
+            this._rawData.Freeze();
+            return this._rawData.GetNullableClass<NamespaceMetadataLayout>("layout");
+        }
+        init
+        {
+            if (value == null)
+            {
+                return;
+            }
+
+            this._rawData.Set("layout", value);
+        }
+    }
+
+    /// <summary>
     /// Configuration for namespace pinning, along with the current status of the
     /// pinned namespace.
     /// </summary>
@@ -196,6 +219,7 @@ public sealed record class NamespaceMetadata : JsonModel
             item.Validate();
         }
         _ = this.UpdatedAt;
+        this.Layout?.Validate();
         this.Pinning?.Validate();
         _ = this.ReadOnly;
         this.Sharding?.Validate();
@@ -662,6 +686,85 @@ class IndexUpdatingFromRaw : IFromRawJson<IndexUpdating>
     /// <inheritdoc/>
     public IndexUpdating FromRawUnchecked(IReadOnlyDictionary<string, JsonElement> rawData) =>
         IndexUpdating.FromRawUnchecked(rawData);
+}
+
+/// <summary>
+/// Experimental. How a namespace stores its documents. A change applies to documents
+/// indexed after it.
+/// </summary>
+[JsonConverter(typeof(JsonModelConverter<NamespaceMetadataLayout, NamespaceMetadataLayoutFromRaw>))]
+public sealed record class NamespaceMetadataLayout : JsonModel
+{
+    /// <summary>
+    /// Stores documents in ranges of an attribute, in ascending order, so queries
+    /// filtering on a narrow range of it or ranking by it skip the rest. Documents
+    /// should be written in roughly ascending order of it. Must have type `int`,
+    /// `uint`, `datetime` or `string`. `["id", "asc"]` resets the namespace to the
+    /// default layout.
+    /// </summary>
+    public IReadOnlyList<JsonElement>? RankBy
+    {
+        get
+        {
+            this._rawData.Freeze();
+            return this._rawData.GetNullableStruct<ImmutableArray<JsonElement>>("rank_by");
+        }
+        init
+        {
+            if (value == null)
+            {
+                return;
+            }
+
+            this._rawData.Set<ImmutableArray<JsonElement>?>(
+                "rank_by",
+                value == null ? null : ImmutableArray.ToImmutableArray(value)
+            );
+        }
+    }
+
+    /// <inheritdoc/>
+    public override void Validate()
+    {
+        _ = this.RankBy;
+    }
+
+    public NamespaceMetadataLayout() { }
+
+#pragma warning disable CS8618
+    [SetsRequiredMembers]
+    public NamespaceMetadataLayout(NamespaceMetadataLayout namespaceMetadataLayout)
+        : base(namespaceMetadataLayout) { }
+#pragma warning restore CS8618
+
+    public NamespaceMetadataLayout(IReadOnlyDictionary<string, JsonElement> rawData)
+    {
+        this._rawData = new(rawData);
+    }
+
+#pragma warning disable CS8618
+    [SetsRequiredMembers]
+    NamespaceMetadataLayout(FrozenDictionary<string, JsonElement> rawData)
+    {
+        this._rawData = new(rawData);
+    }
+#pragma warning restore CS8618
+
+    /// <inheritdoc cref="NamespaceMetadataLayoutFromRaw.FromRawUnchecked"/>
+    public static NamespaceMetadataLayout FromRawUnchecked(
+        IReadOnlyDictionary<string, JsonElement> rawData
+    )
+    {
+        return new(FrozenDictionary.ToFrozenDictionary(rawData));
+    }
+}
+
+class NamespaceMetadataLayoutFromRaw : IFromRawJson<NamespaceMetadataLayout>
+{
+    /// <inheritdoc/>
+    public NamespaceMetadataLayout FromRawUnchecked(
+        IReadOnlyDictionary<string, JsonElement> rawData
+    ) => NamespaceMetadataLayout.FromRawUnchecked(rawData);
 }
 
 /// <summary>
