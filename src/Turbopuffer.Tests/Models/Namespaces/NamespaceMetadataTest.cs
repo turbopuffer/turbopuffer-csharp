@@ -42,6 +42,7 @@ public class NamespaceMetadataTest : TestBase
                 },
             },
             UpdatedAt = DateTimeOffset.Parse("2019-12-27T18:11:19.117Z"),
+            Layout = new() { RankBy = [JsonSerializer.Deserialize<JsonElement>("{}")] },
             Pinning = new()
             {
                 Replicas = 1,
@@ -85,6 +86,10 @@ public class NamespaceMetadataTest : TestBase
             },
         };
         DateTimeOffset expectedUpdatedAt = DateTimeOffset.Parse("2019-12-27T18:11:19.117Z");
+        Namespaces::NamespaceMetadataLayout expectedLayout = new()
+        {
+            RankBy = [JsonSerializer.Deserialize<JsonElement>("{}")],
+        };
         Namespaces::NamespaceMetadataPinning expectedPinning = new()
         {
             Replicas = 1,
@@ -112,6 +117,7 @@ public class NamespaceMetadataTest : TestBase
             Assert.Equal(value, model.Schema[item.Key]);
         }
         Assert.Equal(expectedUpdatedAt, model.UpdatedAt);
+        Assert.Equal(expectedLayout, model.Layout);
         Assert.Equal(expectedPinning, model.Pinning);
         Assert.Equal(expectedReadOnly, model.ReadOnly);
         Assert.Equal(expectedSharding, model.Sharding);
@@ -150,6 +156,7 @@ public class NamespaceMetadataTest : TestBase
                 },
             },
             UpdatedAt = DateTimeOffset.Parse("2019-12-27T18:11:19.117Z"),
+            Layout = new() { RankBy = [JsonSerializer.Deserialize<JsonElement>("{}")] },
             Pinning = new()
             {
                 Replicas = 1,
@@ -207,6 +214,7 @@ public class NamespaceMetadataTest : TestBase
                 },
             },
             UpdatedAt = DateTimeOffset.Parse("2019-12-27T18:11:19.117Z"),
+            Layout = new() { RankBy = [JsonSerializer.Deserialize<JsonElement>("{}")] },
             Pinning = new()
             {
                 Replicas = 1,
@@ -257,6 +265,10 @@ public class NamespaceMetadataTest : TestBase
             },
         };
         DateTimeOffset expectedUpdatedAt = DateTimeOffset.Parse("2019-12-27T18:11:19.117Z");
+        Namespaces::NamespaceMetadataLayout expectedLayout = new()
+        {
+            RankBy = [JsonSerializer.Deserialize<JsonElement>("{}")],
+        };
         Namespaces::NamespaceMetadataPinning expectedPinning = new()
         {
             Replicas = 1,
@@ -284,6 +296,7 @@ public class NamespaceMetadataTest : TestBase
             Assert.Equal(value, deserialized.Schema[item.Key]);
         }
         Assert.Equal(expectedUpdatedAt, deserialized.UpdatedAt);
+        Assert.Equal(expectedLayout, deserialized.Layout);
         Assert.Equal(expectedPinning, deserialized.Pinning);
         Assert.Equal(expectedReadOnly, deserialized.ReadOnly);
         Assert.Equal(expectedSharding, deserialized.Sharding);
@@ -322,6 +335,7 @@ public class NamespaceMetadataTest : TestBase
                 },
             },
             UpdatedAt = DateTimeOffset.Parse("2019-12-27T18:11:19.117Z"),
+            Layout = new() { RankBy = [JsonSerializer.Deserialize<JsonElement>("{}")] },
             Pinning = new()
             {
                 Replicas = 1,
@@ -375,6 +389,8 @@ public class NamespaceMetadataTest : TestBase
             UpdatedAt = DateTimeOffset.Parse("2019-12-27T18:11:19.117Z"),
         };
 
+        Assert.Null(model.Layout);
+        Assert.False(model.RawData.ContainsKey("layout"));
         Assert.Null(model.Pinning);
         Assert.False(model.RawData.ContainsKey("pinning"));
         Assert.Null(model.ReadOnly);
@@ -456,11 +472,14 @@ public class NamespaceMetadataTest : TestBase
             UpdatedAt = DateTimeOffset.Parse("2019-12-27T18:11:19.117Z"),
 
             // Null should be interpreted as omitted for these properties
+            Layout = null,
             Pinning = null,
             ReadOnly = null,
             Sharding = null,
         };
 
+        Assert.Null(model.Layout);
+        Assert.False(model.RawData.ContainsKey("layout"));
         Assert.Null(model.Pinning);
         Assert.False(model.RawData.ContainsKey("pinning"));
         Assert.Null(model.ReadOnly);
@@ -504,6 +523,7 @@ public class NamespaceMetadataTest : TestBase
             UpdatedAt = DateTimeOffset.Parse("2019-12-27T18:11:19.117Z"),
 
             // Null should be interpreted as omitted for these properties
+            Layout = null,
             Pinning = null,
             ReadOnly = null,
             Sharding = null,
@@ -545,6 +565,7 @@ public class NamespaceMetadataTest : TestBase
                 },
             },
             UpdatedAt = DateTimeOffset.Parse("2019-12-27T18:11:19.117Z"),
+            Layout = new() { RankBy = [JsonSerializer.Deserialize<JsonElement>("{}")] },
             Pinning = new()
             {
                 Replicas = 1,
@@ -773,6 +794,135 @@ public class IndexUpdatingTest : TestBase
         var model = new Namespaces::IndexUpdating { UnindexedBytes = 0, UnindexedRows = 0 };
 
         Namespaces::IndexUpdating copied = new(model);
+
+        Assert.Equal(model, copied);
+    }
+}
+
+public class NamespaceMetadataLayoutTest : TestBase
+{
+    [Fact]
+    public void FieldRoundtrip_Works()
+    {
+        var model = new Namespaces::NamespaceMetadataLayout
+        {
+            RankBy = [JsonSerializer.Deserialize<JsonElement>("{}")],
+        };
+
+        List<JsonElement> expectedRankBy = [JsonSerializer.Deserialize<JsonElement>("{}")];
+
+        Assert.NotNull(model.RankBy);
+        Assert.Equal(expectedRankBy.Count, model.RankBy.Count);
+        for (int i = 0; i < expectedRankBy.Count; i++)
+        {
+            Assert.True(JsonElement.DeepEquals(expectedRankBy[i], model.RankBy[i]));
+        }
+    }
+
+    [Fact]
+    public void SerializationRoundtrip_Works()
+    {
+        var model = new Namespaces::NamespaceMetadataLayout
+        {
+            RankBy = [JsonSerializer.Deserialize<JsonElement>("{}")],
+        };
+
+        string json = JsonSerializer.Serialize(model, ModelBase.SerializerOptions);
+        var deserialized = JsonSerializer.Deserialize<Namespaces::NamespaceMetadataLayout>(
+            json,
+            ModelBase.SerializerOptions
+        );
+
+        Assert.Equal(model, deserialized);
+    }
+
+    [Fact]
+    public void FieldRoundtripThroughSerialization_Works()
+    {
+        var model = new Namespaces::NamespaceMetadataLayout
+        {
+            RankBy = [JsonSerializer.Deserialize<JsonElement>("{}")],
+        };
+
+        string element = JsonSerializer.Serialize(model, ModelBase.SerializerOptions);
+        var deserialized = JsonSerializer.Deserialize<Namespaces::NamespaceMetadataLayout>(
+            element,
+            ModelBase.SerializerOptions
+        );
+        Assert.NotNull(deserialized);
+
+        List<JsonElement> expectedRankBy = [JsonSerializer.Deserialize<JsonElement>("{}")];
+
+        Assert.NotNull(deserialized.RankBy);
+        Assert.Equal(expectedRankBy.Count, deserialized.RankBy.Count);
+        for (int i = 0; i < expectedRankBy.Count; i++)
+        {
+            Assert.True(JsonElement.DeepEquals(expectedRankBy[i], deserialized.RankBy[i]));
+        }
+    }
+
+    [Fact]
+    public void Validation_Works()
+    {
+        var model = new Namespaces::NamespaceMetadataLayout
+        {
+            RankBy = [JsonSerializer.Deserialize<JsonElement>("{}")],
+        };
+
+        model.Validate();
+    }
+
+    [Fact]
+    public void OptionalNonNullablePropertiesUnsetAreNotSet_Works()
+    {
+        var model = new Namespaces::NamespaceMetadataLayout { };
+
+        Assert.Null(model.RankBy);
+        Assert.False(model.RawData.ContainsKey("rank_by"));
+    }
+
+    [Fact]
+    public void OptionalNonNullablePropertiesUnsetValidation_Works()
+    {
+        var model = new Namespaces::NamespaceMetadataLayout { };
+
+        model.Validate();
+    }
+
+    [Fact]
+    public void OptionalNonNullablePropertiesSetToNullAreNotSet_Works()
+    {
+        var model = new Namespaces::NamespaceMetadataLayout
+        {
+            // Null should be interpreted as omitted for these properties
+            RankBy = null,
+        };
+
+        Assert.Null(model.RankBy);
+        Assert.False(model.RawData.ContainsKey("rank_by"));
+    }
+
+    [Fact]
+    public void OptionalNonNullablePropertiesSetToNullValidation_Works()
+    {
+        var model = new Namespaces::NamespaceMetadataLayout
+        {
+            // Null should be interpreted as omitted for these properties
+            RankBy = null,
+        };
+
+        model.Validate();
+    }
+
+    [Fact]
+    public void CopyConstructor_Works()
+    {
+        var model = new Namespaces::NamespaceMetadataLayout
+        {
+            RankBy = [JsonSerializer.Deserialize<JsonElement>("{}")],
+        };
+
+        Namespaces::NamespaceMetadataLayout copied = new(model);
 
         Assert.Equal(model, copied);
     }
