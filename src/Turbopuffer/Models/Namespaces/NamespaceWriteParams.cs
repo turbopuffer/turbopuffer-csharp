@@ -250,8 +250,8 @@ public record class NamespaceWriteParams : ParamsBase
     }
 
     /// <summary>
-    /// Experimental. How a namespace stores its documents. Can only be set on a namespace's
-    /// inaugural write, and cannot be changed later.
+    /// Experimental. How a namespace stores its documents. A change applies to documents
+    /// indexed after it.
     /// </summary>
     public Layout? Layout
     {
@@ -641,8 +641,8 @@ public record class NamespaceWriteParams : ParamsBase
 }
 
 /// <summary>
-/// Experimental. How a namespace stores its documents. Can only be set on a namespace's
-/// inaugural write, and cannot be changed later.
+/// Experimental. How a namespace stores its documents. A change applies to documents
+/// indexed after it.
 /// </summary>
 [JsonConverter(typeof(JsonModelConverter<Layout, LayoutFromRaw>))]
 public sealed record class Layout : JsonModel
@@ -651,7 +651,7 @@ public sealed record class Layout : JsonModel
     /// Stores documents in ranges of this attribute, ordered by it, so queries filtering
     /// on a narrow range of it or ordered by it skip the rest. Documents should
     /// be written in roughly ascending order of it. Must have type `int`, `uint`,
-    /// `datetime` or `string`.
+    /// `datetime` or `string`. `id` resets the namespace to the default layout.
     /// </summary>
     public string? ArrangeBy
     {
