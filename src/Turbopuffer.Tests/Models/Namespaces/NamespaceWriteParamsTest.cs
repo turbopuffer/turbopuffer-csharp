@@ -28,6 +28,7 @@ public class NamespaceWriteParamsTest : TestBase
                 KeyName = "key_name",
                 EncryptionContext = new Dictionary<string, string>() { { "foo", "string" } },
             },
+            Layout = new() { RankBy = [JsonSerializer.Deserialize<JsonElement>("{}")] },
             PatchByFilter = new()
             {
                 Filters = JsonSerializer.Deserialize<JsonElement>("{}"),
@@ -71,6 +72,7 @@ public class NamespaceWriteParamsTest : TestBase
             KeyName = "key_name",
             EncryptionContext = new Dictionary<string, string>() { { "foo", "string" } },
         };
+        Layout expectedLayout = new() { RankBy = [JsonSerializer.Deserialize<JsonElement>("{}")] };
         PatchByFilter expectedPatchByFilter = new()
         {
             Filters = JsonSerializer.Deserialize<JsonElement>("{}"),
@@ -126,6 +128,7 @@ public class NamespaceWriteParamsTest : TestBase
         Assert.Equal(expectedDisableBackpressure, parameters.DisableBackpressure);
         Assert.Equal(expectedDistanceMetric, parameters.DistanceMetric);
         Assert.Equal(expectedEncryption, parameters.Encryption);
+        Assert.Equal(expectedLayout, parameters.Layout);
         Assert.Equal(expectedPatchByFilter, parameters.PatchByFilter);
         Assert.Equal(expectedPatchByFilterAllowPartial, parameters.PatchByFilterAllowPartial);
         Assert.Equal(expectedPatchColumns, parameters.PatchColumns);
@@ -187,6 +190,8 @@ public class NamespaceWriteParamsTest : TestBase
         Assert.False(parameters.RawBodyData.ContainsKey("distance_metric"));
         Assert.Null(parameters.Encryption);
         Assert.False(parameters.RawBodyData.ContainsKey("encryption"));
+        Assert.Null(parameters.Layout);
+        Assert.False(parameters.RawBodyData.ContainsKey("layout"));
         Assert.Null(parameters.PatchByFilter);
         Assert.False(parameters.RawBodyData.ContainsKey("patch_by_filter"));
         Assert.Null(parameters.PatchByFilterAllowPartial);
@@ -229,6 +234,7 @@ public class NamespaceWriteParamsTest : TestBase
             DisableBackpressure = null,
             DistanceMetric = null,
             Encryption = null,
+            Layout = null,
             PatchByFilter = null,
             PatchByFilterAllowPartial = null,
             PatchColumns = null,
@@ -262,6 +268,8 @@ public class NamespaceWriteParamsTest : TestBase
         Assert.False(parameters.RawBodyData.ContainsKey("distance_metric"));
         Assert.Null(parameters.Encryption);
         Assert.False(parameters.RawBodyData.ContainsKey("encryption"));
+        Assert.Null(parameters.Layout);
+        Assert.False(parameters.RawBodyData.ContainsKey("layout"));
         Assert.Null(parameters.PatchByFilter);
         Assert.False(parameters.RawBodyData.ContainsKey("patch_by_filter"));
         Assert.Null(parameters.PatchByFilterAllowPartial);
@@ -321,6 +329,7 @@ public class NamespaceWriteParamsTest : TestBase
                 KeyName = "key_name",
                 EncryptionContext = new Dictionary<string, string>() { { "foo", "string" } },
             },
+            Layout = new() { RankBy = [JsonSerializer.Deserialize<JsonElement>("{}")] },
             PatchByFilter = new()
             {
                 Filters = JsonSerializer.Deserialize<JsonElement>("{}"),
@@ -352,6 +361,114 @@ public class NamespaceWriteParamsTest : TestBase
         NamespaceWriteParams copied = new(parameters);
 
         Assert.Equal(parameters, copied);
+    }
+}
+
+public class LayoutTest : TestBase
+{
+    [Fact]
+    public void FieldRoundtrip_Works()
+    {
+        var model = new Layout { RankBy = [JsonSerializer.Deserialize<JsonElement>("{}")] };
+
+        List<JsonElement> expectedRankBy = [JsonSerializer.Deserialize<JsonElement>("{}")];
+
+        Assert.NotNull(model.RankBy);
+        Assert.Equal(expectedRankBy.Count, model.RankBy.Count);
+        for (int i = 0; i < expectedRankBy.Count; i++)
+        {
+            Assert.True(JsonElement.DeepEquals(expectedRankBy[i], model.RankBy[i]));
+        }
+    }
+
+    [Fact]
+    public void SerializationRoundtrip_Works()
+    {
+        var model = new Layout { RankBy = [JsonSerializer.Deserialize<JsonElement>("{}")] };
+
+        string json = JsonSerializer.Serialize(model, ModelBase.SerializerOptions);
+        var deserialized = JsonSerializer.Deserialize<Layout>(json, ModelBase.SerializerOptions);
+
+        Assert.Equal(model, deserialized);
+    }
+
+    [Fact]
+    public void FieldRoundtripThroughSerialization_Works()
+    {
+        var model = new Layout { RankBy = [JsonSerializer.Deserialize<JsonElement>("{}")] };
+
+        string element = JsonSerializer.Serialize(model, ModelBase.SerializerOptions);
+        var deserialized = JsonSerializer.Deserialize<Layout>(element, ModelBase.SerializerOptions);
+        Assert.NotNull(deserialized);
+
+        List<JsonElement> expectedRankBy = [JsonSerializer.Deserialize<JsonElement>("{}")];
+
+        Assert.NotNull(deserialized.RankBy);
+        Assert.Equal(expectedRankBy.Count, deserialized.RankBy.Count);
+        for (int i = 0; i < expectedRankBy.Count; i++)
+        {
+            Assert.True(JsonElement.DeepEquals(expectedRankBy[i], deserialized.RankBy[i]));
+        }
+    }
+
+    [Fact]
+    public void Validation_Works()
+    {
+        var model = new Layout { RankBy = [JsonSerializer.Deserialize<JsonElement>("{}")] };
+
+        model.Validate();
+    }
+
+    [Fact]
+    public void OptionalNonNullablePropertiesUnsetAreNotSet_Works()
+    {
+        var model = new Layout { };
+
+        Assert.Null(model.RankBy);
+        Assert.False(model.RawData.ContainsKey("rank_by"));
+    }
+
+    [Fact]
+    public void OptionalNonNullablePropertiesUnsetValidation_Works()
+    {
+        var model = new Layout { };
+
+        model.Validate();
+    }
+
+    [Fact]
+    public void OptionalNonNullablePropertiesSetToNullAreNotSet_Works()
+    {
+        var model = new Layout
+        {
+            // Null should be interpreted as omitted for these properties
+            RankBy = null,
+        };
+
+        Assert.Null(model.RankBy);
+        Assert.False(model.RawData.ContainsKey("rank_by"));
+    }
+
+    [Fact]
+    public void OptionalNonNullablePropertiesSetToNullValidation_Works()
+    {
+        var model = new Layout
+        {
+            // Null should be interpreted as omitted for these properties
+            RankBy = null,
+        };
+
+        model.Validate();
+    }
+
+    [Fact]
+    public void CopyConstructor_Works()
+    {
+        var model = new Layout { RankBy = [JsonSerializer.Deserialize<JsonElement>("{}")] };
+
+        Layout copied = new(model);
+
+        Assert.Equal(model, copied);
     }
 }
 
